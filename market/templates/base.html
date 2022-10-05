@@ -226,17 +226,50 @@
           </div>
         </div>
       </header>
+
+      <!-- Блок, присутствующий только в index.html -->
+      {% block header_slider %}
+
+      {% endblock header_slider %}
+
     {% endblock body_header %}
 
-    {% block middle_midle_top %}
+    {% block middle %}
 
-    {% endblock middle_midle_top %}
+      <div class="Middle Middle_top">
 
+        <div class="Middle-top">
+          <div class="wrap">
+            <div class="Middle-header">
+              <h1 class="Middle-title">
 
-    {% block content %}
+                  <!-- Название страницы в левой части -->
+                  {{ middle_title_left }}
 
-    {% endblock content %}
+              </h1>
+              <ul class="breadcrumbs Middle-breadcrumbs">
+                <li class="breadcrumbs-item">
+                    <a href="index.html">home</a>
+                </li>
+                <li class="breadcrumbs-item breadcrumbs-item_current">
+                    <span>
 
+                      <!-- Название страницы в правой части -->
+                      {{ middle_title_right }}
+
+                    </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {% block content %}
+        {% endblock content %}
+
+      </div>
+
+    {% endblock middle %}
 
     {% block footer %}
       <footer class="Footer">
