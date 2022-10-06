@@ -23,3 +23,9 @@ class CartView(TemplateView):
     """Cart"""
     template_name = 'cart.html'
     extra_context = {'middle_title_left': 'Корзина', 'middle_title_right': 'Корзина'}
+
+
+class CatalogView(TemplateView):
+    """Catalog"""
+    template_name = 'catalog.html'
+    extra_context = {'middle_title_left': 'Catalog Megano', 'middle_title_right': 'Catalog'}
