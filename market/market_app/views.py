@@ -17,3 +17,9 @@ class AccountView(TemplateView):
     """Account"""
     template_name = 'account.html'
     extra_context = {'middle_title_left': 'Личный кабинет', 'middle_title_right': 'Личный кабинет'}
+
+
+class CartView(TemplateView):
+    """Cart"""
+    template_name = 'cart.html'
+    extra_context = {'middle_title_left': 'Корзина', 'middle_title_right': 'Корзина'}
