@@ -12,3 +12,8 @@ class AboutView(TemplateView):
     template_name = 'about.html'
     extra_context = {'middle_title_left': 'About Megano', 'middle_title_right': 'About Us'}
 
+
+class AccountView(TemplateView):
+    """Account"""
+    template_name = 'account.html'
+    extra_context = {'middle_title_left': 'Личный кабинет', 'middle_title_right': 'Личный кабинет'}
