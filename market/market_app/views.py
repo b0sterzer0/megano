@@ -91,6 +91,7 @@ class ProfileView(TemplateView):
 
 
 # Пометка: исходные страницы profile.html и profileAvatar.html почти ничем не отличаются.
+# Возможно, для них нужен один шаблон.
 class ProfileAvatarView(TemplateView):
     """Profile avatar"""
     template_name = 'profileAvatar.html'
