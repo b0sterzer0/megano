@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views.generic import TemplateView
 
 
@@ -62,7 +61,7 @@ class OneOrderView(TemplateView):
 
 
 class OrderView(TemplateView):
-    """Оrder"""
+    """Order"""
     template_name = 'order.html'
     extra_context = {'middle_title_left': 'Оформление заказа', 'middle_title_right': 'Оформление заказа'}
 
@@ -117,9 +116,3 @@ class ShopView(TemplateView):
     """Shop"""
     template_name = 'shop.html'
     # extra_context = {'middle_title_left': 'Megano Blog', 'middle_title_right': 'Blog'}
-
-
-
-
-
-
