@@ -294,10 +294,14 @@
 
         {% block content %}
         {% endblock content %}
-
       </div>
 
     {% endblock middle %}
+
+    {% block pagination %}
+        {# Пагинация присутствует только на странице sale.html  #}
+    {% endblock pagination %}
+
 
     {% block footer %}
       <footer class="Footer">
