@@ -265,7 +265,7 @@
             <div class="Middle-header">
               <h1 class="Middle-title">
 
-                  <!-- Название страницы в левой части -->
+                  {# Название страницы в левой части #}
                   {{ middle_title_left }}
 
               </h1>
@@ -275,14 +275,14 @@
                 </li>
 
                 {% block sub_link %}
-                    <!-- Этот блок встречается на страницах второго уровня вложенности
-                     (например oneorder.html) -->
+                    {# Этот блок встречается на страницах второго уровня вложенности #}
+                    {# (например oneorder.html) #}
                 {% endblock sub_link %}
 
                 <li class="breadcrumbs-item breadcrumbs-item_current">
                     <span>
 
-                      <!-- Название страницы в правой части -->
+                      {# Название страницы в правой части #}
                       {{ middle_title_right }}
 
                     </span>
@@ -301,7 +301,6 @@
     {% block pagination %}
         {# Пагинация присутствует только на странице sale.html  #}
     {% endblock pagination %}
-
 
     {% block footer %}
       <footer class="Footer">
