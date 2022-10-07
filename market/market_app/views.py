@@ -72,8 +72,6 @@ class PaymentView(TemplateView):
     extra_context = {'middle_title_left': 'Оплата', 'middle_title_right': 'Оплата'}
 
 
-# Пометка: исходные страницы payment.html и paymentsomeone.html почти ничем не отличаются.
-# Подумать: может быть оставить только одну?
 class PaymentSomeOneView(TemplateView):
     """Payment someone"""
     template_name = 'paymentsomeone.html'
