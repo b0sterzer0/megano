@@ -110,8 +110,7 @@ class SaleView(TemplateView):
     extra_context = {'middle_title_left': 'Megano Blog', 'middle_title_right': 'Blog'}
 
 
-# Пометка: shop.html очень похожа на about.html
 class ShopView(TemplateView):
     """Shop"""
     template_name = 'shop.html'
-    # extra_context = {'middle_title_left': 'Megano Blog', 'middle_title_right': 'Blog'}
+    extra_context = {'middle_title_left': 'About Megano', 'middle_title_right': 'About Us'}
