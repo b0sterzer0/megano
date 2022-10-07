@@ -273,6 +273,12 @@
                 <li class="breadcrumbs-item">
                     <a href="index.html">home</a>
                 </li>
+
+                {% block sub_link %}
+                    <!-- Этот блок встречается на страницах второго уровня вложенности
+                     (например oneorder.html) -->
+                {% endblock sub_link %}
+
                 <li class="breadcrumbs-item breadcrumbs-item_current">
                     <span>
 
