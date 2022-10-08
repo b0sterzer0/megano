@@ -1,7 +1,8 @@
+from django.views import View
 from django.views.generic import TemplateView
 
 
-class MainPageView(TemplateView):
+class HomeView(TemplateView):
     """Главная страница"""
     template_name = 'index.html'
 
@@ -90,8 +91,6 @@ class ProfileView(TemplateView):
     extra_context = {'middle_title_left': 'Профиль', 'middle_title_right': 'Профиль'}
 
 
-# Пометка: исходные страницы profile.html и profileAvatar.html почти ничем не отличаются.
-# Возможно, для них нужен один шаблон.
 class ProfileAvatarView(TemplateView):
     """Profile avatar"""
     template_name = 'profileAvatar.html'
@@ -114,3 +113,8 @@ class ShopView(TemplateView):
     """Shop"""
     template_name = 'shop.html'
     extra_context = {'middle_title_left': 'About Megano', 'middle_title_right': 'About Us'}
+
+
+class LoginOrRegisterView(View):
+    """Login or register"""
+    pass
