@@ -1,28 +1,77 @@
 from django.views import View
 from django.views.generic import TemplateView
 
+# Поскольку меню категорий присутствует на всех страницах сайта, то
+# вероятно, его лучше реализовать через контекст-процессор
+
+# Зашлушка для меню категорий товара
+categories = [
+    {
+        'name': 'Компьютеры',
+        'link': '#',
+        'icon': '/static/assets/img/icons/departments/1.svg',
+        'icon_alt': '1.svg'
+    },
+    {
+        'name': 'Мониторы',
+        'link': '#',
+        'icon': '/static/assets/img/icons/departments/2.svg',
+        'icon_alt': '2.svg'
+    },
+    {
+        'name': 'Аксессуары',
+        'link': '#',
+        'icon': '/static/assets/img/icons/departments/3.svg',
+        'icon_alt': '3.svg',
+        'sub_categories': [
+            {
+                'name': 'Мышки',
+                'link': '#',
+                'icon': '/static/assets/img/icons/departments/4.svg',
+                'icon_alt': '4.svg'
+            },
+            {
+                'name': 'Коврики',
+                'link': '#',
+                'icon': '/static/assets/img/icons/departments/5.svg',
+                'icon_alt': '5.svg'
+            },
+        ]
+    },
+]
+
 
 class HomeView(TemplateView):
     """Главная страница"""
     template_name = 'index.html'
+    extra_context = {'categories': categories}
 
 
 class AboutView(TemplateView):
     """About"""
     template_name = 'about.html'
-    extra_context = {'middle_title_left': 'About Megano', 'middle_title_right': 'About Us'}
+    extra_context = {'middle_title_left': 'About Megano',
+                     'middle_title_right': 'About Us',
+                     'categories': categories
+                     }
 
 
 class AccountView(TemplateView):
     """Account"""
     template_name = 'account.html'
-    extra_context = {'middle_title_left': 'Личный кабинет', 'middle_title_right': 'Личный кабинет'}
+    extra_context = {'middle_title_left': 'Личный кабинет',
+                     'middle_title_right': 'Личный кабинет',
+                     'categories': categories
+                     }
 
 
 class CartView(TemplateView):
     """Cart"""
     template_name = 'cart.html'
-    extra_context = {'middle_title_left': 'Корзина', 'middle_title_right': 'Корзина'}
+    extra_context = {'middle_title_left': 'Корзина',
+                     'middle_title_right': 'Корзина',
+                     'categories': categories
+                     }
 
 
 class CatalogView(TemplateView):
