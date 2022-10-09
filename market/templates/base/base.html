@@ -276,6 +276,7 @@
               <strong class="Footer-title">Useful Links
               </strong>
               <ul class="menu menu_vt Footer-menu">
+
                 <li class="menu-item"><a class="menu-link" href="#">Checkout</a>
                 </li>
                 <li class="menu-item"><a class="menu-link" href="#">My Cart</a>
@@ -294,18 +295,14 @@
               <strong class="Footer-title">My Account
               </strong>
               <ul class="menu menu_vt Footer-menu">
-                <li class="menu-item"><a class="menu-link" href="#">Accessories</a>
-                </li>
-                <li class="menu-item"><a class="menu-link" href="#">Bags</a>
-                </li>
-                <li class="menu-item"><a class="menu-link" href="#">Cameras</a>
-                </li>
-                <li class="menu-item"><a class="menu-link" href="#">Clothings</a>
-                </li>
-                <li class="menu-item"><a class="menu-link" href="#">Electronics</a>
-                </li>
-                <li class="menu-item"><a class="menu-link" href="#">Fashion</a>
-                </li>
+
+                {# Список категорий (выводим не более 6 категорий) #}
+                {% for category in categories|slice:":6" %}
+                  <li class="menu-item">
+                      <a class="menu-link" href="{{ category.link }}">{{ category.name }}</a>
+                  </li>
+                {% endfor %}
+
               </ul>
             </div>
             <div class="row-block">
