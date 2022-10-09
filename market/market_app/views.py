@@ -56,12 +56,53 @@ class AboutView(TemplateView):
                      }
 
 
+# Заглушка для списка истории просмотров покупателя
+history_view_list = [
+    {
+        'link': '#',
+        'image': '/static/assets/img/content/home/card.jpg',
+        'image_alt': 'card.jpg',
+        'title': 'Corsair Carbide Series Arctic White Steel',
+        'category': 'Games / XBox'
+    },
+    {
+        'link': '#',
+        'image': '/static/assets/img/content/home/card.jpg',
+        'image_alt': 'card.jpg',
+        'title': 'Corsair Carbide Series Arctic White Steel',
+        'category': 'Games / XBox'
+    },
+    {
+        'link': '#',
+        'image': '/static/assets/img/content/home/card.jpg',
+        'image_alt': 'card.jpg',
+        'title': 'Corsair Carbide Series Arctic White Steel',
+        'category': 'Games / XBox'
+    },
+    {
+        'link': '#',
+        'image': '/static/assets/img/content/home/card.jpg',
+        'image_alt': 'card.jpg',
+        'title': 'Corsair Carbide Series Arctic White Steel',
+        'category': 'Games / XBox'
+    },
+    {
+        'link': '#',
+        'image': '/static/assets/img/content/home/card.jpg',
+        'image_alt': 'card.jpg',
+        'title': 'Corsair Carbide Series Arctic White Steel',
+        'category': 'Games / XBox'
+    },
+]
+
+
 class AccountView(TemplateView):
     """Account"""
     template_name = 'account.html'
     extra_context = {'middle_title_left': 'Личный кабинет',
                      'middle_title_right': 'Личный кабинет',
-                     'categories': categories
+                     'categories': categories,
+                     'history_view_list': history_view_list
                      }
 
 
