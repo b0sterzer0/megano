@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block sub_link %}
-    <li class="breadcrumbs-item"><a href="historyorder.html">История заказов</a>
+    <li class="breadcrumbs-item">
+    <a href="{% url 'historyorder' %}">История заказов</a>
 {% endblock sub_link %}
 
 {% block content %}
