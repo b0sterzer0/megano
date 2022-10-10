@@ -62,11 +62,25 @@ product_list = [
     }
 ] * 20
 
+# Заглушка для списка элементов слайдера на главной странице
+slider_items = [
+    {
+        'title1': 'Mavic Pro',
+        'title2': '5 ',
+        'title3': 'mini drone',
+        'text': 'Get the best phoneyou ever seen with modern Windows OS plus 70% Off this summer.',
+        'link': '#',
+        'image': '/static/assets/img/content/home/slider.png',
+        'image_alt': 'slider.png'
+    }
+] * 3
+
 
 class HomeView(TemplateView):
     """Главная страница"""
     template_name = 'index.html'
-    extra_context = {'categories': categories}
+    extra_context = {'categories': categories,
+                     'slider_items': slider_items}
 
 
 class AboutView(TemplateView):
