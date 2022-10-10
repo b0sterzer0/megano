@@ -50,49 +50,33 @@
   <div class="Middle">
     <div class="Section">
       <div class="wrap">
-        <div class="BannersHome"><a class="BannersHomeBlock" href="#">
+        <div class="BannersHome">
+
+          {# Список баннеров #}
+          {% for banner in banners_list %}
+
+            <a class="BannersHomeBlock" href="{{ banner.link }}">
             <div class="BannersHomeBlock-row">
               <div class="BannersHomeBlock-block">
-                <strong class="BannersHomeBlock-title">Video Cards
+                <strong class="BannersHomeBlock-title">{{ banner.title }}
                 </strong>
-                <div class="BannersHomeBlock-content">from&#32;<span class="BannersHomeBlock-price">$199.00</span>
+                <div class="BannersHomeBlock-content">from&#32;<span class="BannersHomeBlock-price">{{ banner.price }}</span>
                 </div>
               </div>
               <div class="BannersHomeBlock-block">
                 <div class="BannersHomeBlock-img">
-                    <img src="{% static "assets/img/content/home/videoca.png" %}" alt="videoca.png"/>
+                    <img src="{{ banner.image }}" alt="{{ banner.image_alt }}"/>
                 </div>
               </div>
-            </div></a><a class="BannersHomeBlock" href="#">
-            <div class="BannersHomeBlock-row">
-              <div class="BannersHomeBlock-block">
-                <strong class="BannersHomeBlock-title">Head Phones
-                </strong>
-                <div class="BannersHomeBlock-content">from&#32;<span class="BannersHomeBlock-price">$210.00</span>
-                </div>
-              </div>
-              <div class="BannersHomeBlock-block">
-                <div class="BannersHomeBlock-img">
-                    <img src="{% static "assets/img/content/home/videoca.png" %}" alt="videoca.png"/>
-                </div>
-              </div>
-            </div></a><a class="BannersHomeBlock" href="#">
-            <div class="BannersHomeBlock-row">
-              <div class="BannersHomeBlock-block">
-                <strong class="BannersHomeBlock-title">Bass Speakers
-                </strong>
-                <div class="BannersHomeBlock-content">from&#32;<span class="BannersHomeBlock-price">$159.00</span>
-                </div>
-              </div>
-              <div class="BannersHomeBlock-block">
-                <div class="BannersHomeBlock-img">
-                    <img src="{% static "assets/img/content/home/videoca.png" %}" alt="videoca.png"/>
-                </div>
-              </div>
-            </div></a>
+            </div>
+          </a>
+
+          {% endfor %}
+
         </div>
       </div>
     </div>
+
     <div class="Section Section_column Section_columnLeft Section_columnDesktop">
       <div class="wrap">
         <div class="Section-column">

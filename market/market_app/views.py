@@ -75,12 +75,24 @@ slider_items = [
     }
 ] * 3
 
+# Заглушка для списка баннеров на главной странице
+banners_list = [
+    {
+        'link': '#',
+        'title': 'Video Cards',
+        'price': '$199',
+        'image': '/static/assets/img/content/home/videoca.png',
+        'image_alt': 'videoca.png'
+    }
+] * 3
+
 
 class HomeView(TemplateView):
     """Главная страница"""
     template_name = 'index.html'
     extra_context = {'categories': categories,
-                     'slider_items': slider_items}
+                     'slider_items': slider_items,
+                     'banners_list': banners_list}
 
 
 class AboutView(TemplateView):
