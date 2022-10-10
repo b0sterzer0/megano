@@ -94,7 +94,8 @@ class HomeView(TemplateView):
         'categories': categories,
         'slider_items': slider_items,
         'banners_list': banners_list,
-        'popular_products': product_list
+        'popular_products': product_list,
+        'hot_offer_items': product_list
     }
 
 
