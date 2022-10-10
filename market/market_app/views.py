@@ -90,9 +90,12 @@ banners_list = [
 class HomeView(TemplateView):
     """Главная страница"""
     template_name = 'index.html'
-    extra_context = {'categories': categories,
-                     'slider_items': slider_items,
-                     'banners_list': banners_list}
+    extra_context = {
+        'categories': categories,
+        'slider_items': slider_items,
+        'banners_list': banners_list,
+        'popular_products': product_list
+    }
 
 
 class AboutView(TemplateView):
