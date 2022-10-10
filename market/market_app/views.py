@@ -63,35 +63,60 @@ history_view_list = [
         'image': '/static/assets/img/content/home/card.jpg',
         'image_alt': 'card.jpg',
         'title': 'Corsair Carbide Series Arctic White Steel',
-        'category': 'Games / XBox'
+        'category': 'Games / XBox',
+        'price': 100,
+        'price_old': 120,
+        'sale': '-60%'
     },
     {
         'link': '#',
         'image': '/static/assets/img/content/home/card.jpg',
         'image_alt': 'card.jpg',
         'title': 'Corsair Carbide Series Arctic White Steel',
-        'category': 'Games / XBox'
+        'category': 'Games / XBox',
+        'price': 100,
+        'price_old': 120,
+        'sale': '-60%'
     },
     {
         'link': '#',
         'image': '/static/assets/img/content/home/card.jpg',
         'image_alt': 'card.jpg',
         'title': 'Corsair Carbide Series Arctic White Steel',
-        'category': 'Games / XBox'
+        'category': 'Games / XBox',
+        'price': 100,
+        'price_old': 120,
+        'sale': '-60%'
     },
     {
         'link': '#',
         'image': '/static/assets/img/content/home/card.jpg',
         'image_alt': 'card.jpg',
         'title': 'Corsair Carbide Series Arctic White Steel',
-        'category': 'Games / XBox'
+        'category': 'Games / XBox',
+        'price': 100,
+        'price_old': 120,
+        'sale': '-60%'
     },
     {
         'link': '#',
         'image': '/static/assets/img/content/home/card.jpg',
         'image_alt': 'card.jpg',
         'title': 'Corsair Carbide Series Arctic White Steel',
-        'category': 'Games / XBox'
+        'category': 'Games / XBox',
+        'price': 100,
+        'price_old': 120,
+        'sale': '-60%'
+    },
+    {
+        'link': '#',
+        'image': '/static/assets/img/content/home/card.jpg',
+        'image_alt': 'card.jpg',
+        'title': 'Corsair Carbide Series Arctic White Steel',
+        'category': 'Games / XBox',
+        'price': 100,
+        'price_old': 120,
+        'sale': '-60%'
     },
 ]
 
@@ -199,10 +224,18 @@ class SaleView(TemplateView):
     extra_context = {'middle_title_left': 'Megano Blog', 'middle_title_right': 'Blog'}
 
 
+# Заглушка для просмотра популярных товаров
+popular_products = history_view_list
+
+
 class ShopView(TemplateView):
     """Shop"""
     template_name = 'shop.html'
-    extra_context = {'middle_title_left': 'About Megano', 'middle_title_right': 'About Us'}
+    extra_context = {'middle_title_left': 'About Megano',
+                     'middle_title_right': 'About Us',
+                     'categories': categories,
+                     'popular_products': popular_products,
+                     }
 
 
 class LoginOrRegisterView(View):
