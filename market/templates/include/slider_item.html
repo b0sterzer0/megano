@@ -1,0 +1,29 @@
+{# Общий для нескольких div карточки продукта #}
+
+    <div class="Slider-item">
+      <div class="Slider-content">
+        <div class="Card">
+          <a class="Card-picture" href="{{ item.link }}">
+            <img src="{{ item.image }}" alt="{{ item.image_alt }}"/>
+          </a>
+          <div class="Card-content">
+            <strong class="Card-title">
+              <a href="{{ item.link }}">{{ item.title }}</a>
+            </strong>
+            <div class="Card-description">
+              <div class="Card-cost">
+                <span class="Card-priceOld">{{ item.price_old }}</span>
+                <span class="Card-price">{{ item.price }}</span>
+              </div>
+              <div class="Card-category">{{ item.category }}
+              </div>
+
+              {% include 'include/card_hover.html' %}
+
+            </div>
+          </div>
+          <div class="Card-sale">{{ item.sale }}
+          </div>
+        </div>
+      </div>
+    </div>
