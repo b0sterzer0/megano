@@ -181,6 +181,7 @@ class HistoryViewView(TemplateView):
         'middle_title_left': 'История просмотра',
         'middle_title_right': 'История просмотра',
         'categories': categories,
+        'history_view_list': product_list,
         'active_menu': 'historyview',
     }
 
