@@ -1,0 +1,27 @@
+{# Карточка с информацией о товере #}
+
+{# Примечание: обрамляющий div у разных карточек может иметь разные css-классы, #}
+{# поэтому он здесь не содержится #}
+
+  <a class="Card-picture" href="{{ card.link }}">
+    <img src="{{ card.image }}" alt="{{ card.image_alt }}"/>
+  </a>
+  <div class="Card-content">
+    <strong class="Card-title">
+      <a href="{{ card.link }}">{{ card.title }}</a>
+    </strong>
+    <div class="Card-description">
+      <div class="Card-cost">
+        <span class="Card-priceOld">{{ card.price_old }}</span>
+        <span class="Card-price">{{ card.price }}</span>
+      </div>
+      <div class="Card-category">{{ card.category }}
+      </div>
+
+      {% include 'include/card_hover.html' %}
+
+    </div>
+  </div>
+  <div class="Card-sale">{{ card.sale }}
+  </div>
+
