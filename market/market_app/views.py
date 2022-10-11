@@ -159,8 +159,12 @@ class HistoryOrderView(TemplateView):
 class HistoryViewView(TemplateView):
     """History view"""
     template_name = 'historyview.html'
-    extra_context = {'middle_title_left': 'История просмотра',
-                     'middle_title_right': 'История просмотра'}
+    extra_context = {
+        'middle_title_left': 'История просмотра',
+        'middle_title_right': 'История просмотра',
+        'categories': categories,
+        'active_menu': 'historyview',
+    }
 
 
 class OneOrderView(TemplateView):
