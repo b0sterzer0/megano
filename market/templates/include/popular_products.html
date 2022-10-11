@@ -11,7 +11,7 @@
 
             {# Карточки 6 популярных продуктов #}
 
-            {% for card in popular_products|slice:":6" %}
+            {% for card in popular_list|slice:":6" %}
 
               <div class="Card">
                 <a class="Card-picture" href="{{ card.link }}">

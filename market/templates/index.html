@@ -154,7 +154,7 @@
             <div class="Slider-box Cards Cards_hz">
 
               {# Список карточек Hot Offers #}
-              {% for item in hot_offer_items|slice:":8" %}
+              {% for item in hot_offer_list|slice:":8" %}
                 {% include 'include/slider_item.html' %}
               {% endfor %}
 
