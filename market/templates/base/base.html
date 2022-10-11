@@ -1,3 +1,5 @@
+{# Базовый шалблон #}
+
 <!DOCTYPE html>
 {% load static %}
 
@@ -181,14 +183,14 @@
               </div>
             </div>
             <div class="Header-searchLink">
-                <img src="{% static "assets/img/icons/search.svg"  %}" alt="search.svg"/>
+              <img src="{% static "assets/img/icons/search.svg"  %}" alt="search.svg"/>
             </div>
             <div class="Header-search">
               <div class="search">
                 <form class="form form_search" action="#" method="post">
                   <input class="search-input" id="query" name="query" type="text" placeholder="What are you looking for ..."/>
                   <button class="search-button" type="submit" name="search" id="search">
-                      <img src="{% static "assets/img/icons/search.svg" %}" alt="search.svg"/>Search
+                    <img src="{% static "assets/img/icons/search.svg" %}" alt="search.svg"/>Search
                   </button>
                 </form>
               </div>
@@ -240,13 +242,14 @@
         </div>
 
         {% block content %}
+          {# Индивидуальное содержимое страницы #}
         {% endblock content %}
       </div>
 
     {% endblock middle %}
 
     {% block pagination %}
-        {# Пагинация присутствует только на странице sale.html  #}
+      {# Пагинация присутствует только на странице sale.html  #}
     {% endblock pagination %}
 
     {% block footer %}
@@ -299,7 +302,7 @@
               </strong>
               <ul class="menu menu_vt Footer-menu">
 
-                {# Список категорий (выводим не более 6 категорий) #}
+                {# Список категорий (здесь выводим не более 6 категорий) #}
                 {% for category in categories|slice:":6" %}
                   <li class="menu-item">
                       <a class="menu-link" href="{{ category.link }}">{{ category.name }}</a>
