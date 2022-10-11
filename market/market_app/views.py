@@ -101,63 +101,80 @@ class HomeView(TemplateView):
 
 
 class AboutView(TemplateView):
-    """About"""
+    """О нас"""
     template_name = 'about.html'
-    extra_context = {'middle_title_left': 'About Megano',
-                     'middle_title_right': 'About Us',
-                     'categories': categories
-                     }
+    extra_context = {
+        'middle_title_left': 'О нас',
+        'middle_title_right': 'О нас',
+        'categories': categories
+    }
 
 
 class AccountView(TemplateView):
-    """Account"""
+    """Личный кабинет"""
     template_name = 'account.html'
-    extra_context = {'middle_title_left': 'Личный кабинет',
-                     'middle_title_right': 'Личный кабинет',
-                     'categories': categories,
-                     'history_view_list': product_list
-                     }
+    extra_context = {
+        'middle_title_left': 'Личный кабинет',
+        'middle_title_right': 'Личный кабинет',
+        'categories': categories,
+        'history_view_list': product_list,
+        'active_menu': 'account'
+    }
 
 
 class CartView(TemplateView):
-    """Cart"""
+    """Корзина"""
     template_name = 'cart.html'
-    extra_context = {'middle_title_left': 'Корзина',
-                     'middle_title_right': 'Корзина',
-                     'categories': categories
-                     }
+    extra_context = {
+        'middle_title_left': 'Корзина',
+        'middle_title_right': 'Корзина',
+        'categories': categories
+    }
 
 
 class CatalogView(TemplateView):
-    """Catalog"""
+    """Каталог товаров"""
     template_name = 'catalog.html'
-    extra_context = {'middle_title_left': 'Catalog Megano',
-                     'middle_title_right': 'Catalog'}
+    extra_context = {
+        'middle_title_left': 'Catalog Megano',
+        'middle_title_right': 'Catalog',
+        'categories': categories
+    }
 
 
 class CompareView(TemplateView):
-    """Compare"""
+    """Сравнение товаров"""
     template_name = 'compare.html'
-    extra_context = {'middle_title_left': 'Сравнение товаров',
-                     'middle_title_right': 'Сравнение товаров'}
+    extra_context = {
+        'middle_title_left': 'Сравнение товаров',
+        'middle_title_right': 'Сравнение товаров',
+        'categories': categories
+    }
 
 
 class ContactsView(TemplateView):
-    """Contacts"""
+    """Контакты"""
     template_name = 'contacts.html'
-    extra_context = {'middle_title_left': 'Contact Megano',
-                     'middle_title_right': 'Contact'}
+    extra_context = {
+        'middle_title_left': 'Контакты',
+        'middle_title_right': 'Контакты',
+        'categories': categories
+    }
 
 
 class HistoryOrderView(TemplateView):
-    """History order"""
+    """История заказов пользователя"""
     template_name = 'historyorder.html'
-    extra_context = {'middle_title_left': 'История заказов',
-                     'middle_title_right': 'История заказов'}
+    extra_context = {
+        'middle_title_left': 'История заказов',
+        'middle_title_right': 'История заказов',
+        'categories': categories,
+        'active_menu': 'historyorder'
+    }
 
 
 class HistoryViewView(TemplateView):
-    """History view"""
+    """История просмотров пользователя"""
     template_name = 'historyview.html'
     extra_context = {
         'middle_title_left': 'История просмотра',
@@ -168,81 +185,107 @@ class HistoryViewView(TemplateView):
 
 
 class OneOrderView(TemplateView):
-    """One order"""
+    """Информация о конкретном заказе"""
     template_name = 'oneorder.html'
-    extra_context = {'middle_title_left': 'Заказ №200',
-                     'middle_title_right': 'Заказ №200'}
+    extra_context = {
+        'middle_title_left': 'Заказ №200',
+        'middle_title_right': 'Заказ №200',
+    }
 
 
 class OrderView(TemplateView):
-    """Order"""
+    """Оформление заказа"""
     template_name = 'order.html'
-    extra_context = {'middle_title_left': 'Оформление заказа',
-                     'middle_title_right': 'Оформление заказа'}
+    extra_context = {
+        'middle_title_left': 'Оформление заказа',
+        'middle_title_right': 'Оформление заказа',
+        'categories': categories,
+    }
 
 
 class PaymentView(TemplateView):
-    """Payment"""
+    """Оплата по номеру карты"""
     template_name = 'payment.html'
-    extra_context = {'middle_title_left': 'Оплата',
-                     'middle_title_right': 'Оплата'}
+    extra_context = {
+        'middle_title_left': 'Оплата',
+        'middle_title_right': 'Оплата',
+        'categories': categories,
+    }
 
 
 class PaymentSomeOneView(TemplateView):
-    """Payment someone"""
+    """Оплата по номеру счета"""
     template_name = 'paymentsomeone.html'
-    extra_context = {'middle_title_left': 'Оплата',
-                     'middle_title_right': 'Оплата'}
+    extra_context = {
+        'middle_title_left': 'Оплата',
+        'middle_title_right': 'Оплата',
+        'categories': categories,
+    }
 
 
 class ProductView(TemplateView):
-    """Product"""
+    """Просмотр информации о конкретном товаре"""
     template_name = 'product.html'
-    extra_context = {'middle_title_left': 'Megano Product',
-                     'middle_title_right': 'Product'}
+    extra_context = {
+        'middle_title_left': 'Информация о товаре',
+        'middle_title_right': 'Информация о товаре',
+        'categories': categories,
+    }
 
 
 class ProfileView(TemplateView):
-    """Profile"""
+    """Профиль пользователя"""
     template_name = 'profile.html'
-    extra_context = {'middle_title_left': 'Профиль',
-                     'middle_title_right': 'Профиль'}
+    extra_context = {
+        'middle_title_left': 'Профиль',
+        'middle_title_right': 'Профиль',
+        'categories': categories,
+        'active_menu': 'profile',
+    }
 
 
 class ProfileAvatarView(TemplateView):
-    """Profile avatar"""
+    """Профиль пользователя с аватаром"""
     template_name = 'profileAvatar.html'
-    extra_context = {'middle_title_left': 'Профиль',
-                     'middle_title_right': 'Профиль'}
+    extra_context = {
+        'middle_title_left': 'Профиль',
+        'middle_title_right': 'Профиль',
+        'categories': categories,
+        'active_menu': 'profile',
+    }
 
 
 class ProgressPaymentView(TemplateView):
-    """Progress payment"""
+    """Ожидание оплаты"""
     template_name = 'progressPayment.html'
-    extra_context = {'middle_title_left': 'Ожидание оплаты',
-                     'middle_title_right': 'Ожидание оплаты'}
+    extra_context = {
+        'middle_title_left': 'Ожидание оплаты',
+        'middle_title_right': 'Ожидание оплаты'
+    }
 
 
 class SaleView(TemplateView):
-    """Sale"""
+    """Распродажа"""
     template_name = 'sale.html'
-    extra_context = {'middle_title_left': 'Megano Blog',
-                     'middle_title_right': 'Blog',
-                     'categories': categories,
-                     'cards_blog': product_list,
-                     }
+    extra_context = {
+        'middle_title_left': 'Распродажа',
+        'middle_title_right': 'Распродажа',
+        'cards_blog': product_list,
+        'categories': categories,
+    }
 
 
 class ShopView(TemplateView):
-    """Shop"""
+    """Информация о магазине"""
     template_name = 'shop.html'
-    extra_context = {'middle_title_left': 'About Megano',
-                     'middle_title_right': 'About Us',
-                     'categories': categories,
-                     'popular_products': product_list,
-                     }
+    extra_context = {
+        'middle_title_left': 'О нас',
+        'middle_title_right': 'О нас',
+        'popular_products': product_list,
+        'categories': categories,
+    }
 
 
 class LoginOrRegisterView(View):
-    """Login or register"""
+    """Вход или регистрация"""
     pass
