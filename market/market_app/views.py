@@ -94,8 +94,8 @@ class HomeView(TemplateView):
         'categories': categories,
         'slider_items': slider_items,
         'banners_list': banners_list,
-        'popular_products': product_list,
-        'hot_offer_items': product_list,
+        'popular_list': product_list,
+        'hot_offer_list': product_list,
         'limited_edition_list': product_list
     }
 
@@ -128,7 +128,7 @@ class CartView(TemplateView):
     extra_context = {
         'middle_title_left': 'Корзина',
         'middle_title_right': 'Корзина',
-        'categories': categories
+        'categories': categories,
     }
 
 
@@ -136,9 +136,10 @@ class CatalogView(TemplateView):
     """Каталог товаров"""
     template_name = 'catalog.html'
     extra_context = {
-        'middle_title_left': 'Catalog Megano',
-        'middle_title_right': 'Catalog',
-        'categories': categories
+        'middle_title_left': 'Каталог товаров',
+        'middle_title_right': 'Каталог товаров',
+        'categories': categories,
+        'catalog_list': product_list,
     }
 
 
@@ -148,7 +149,7 @@ class CompareView(TemplateView):
     extra_context = {
         'middle_title_left': 'Сравнение товаров',
         'middle_title_right': 'Сравнение товаров',
-        'categories': categories
+        'categories': categories,
     }
 
 
@@ -158,7 +159,7 @@ class ContactsView(TemplateView):
     extra_context = {
         'middle_title_left': 'Контакты',
         'middle_title_right': 'Контакты',
-        'categories': categories
+        'categories': categories,
     }
 
 
@@ -169,7 +170,7 @@ class HistoryOrderView(TemplateView):
         'middle_title_left': 'История заказов',
         'middle_title_right': 'История заказов',
         'categories': categories,
-        'active_menu': 'historyorder'
+        'active_menu': 'historyorder',
     }
 
 
@@ -260,7 +261,8 @@ class ProgressPaymentView(TemplateView):
     template_name = 'progressPayment.html'
     extra_context = {
         'middle_title_left': 'Ожидание оплаты',
-        'middle_title_right': 'Ожидание оплаты'
+        'middle_title_right': 'Ожидание оплаты',
+        'categories': categories,
     }
 
 
@@ -270,7 +272,7 @@ class SaleView(TemplateView):
     extra_context = {
         'middle_title_left': 'Распродажа',
         'middle_title_right': 'Распродажа',
-        'cards_blog': product_list,
+        'sale_list': product_list,
         'categories': categories,
     }
 
@@ -281,7 +283,7 @@ class ShopView(TemplateView):
     extra_context = {
         'middle_title_left': 'О нас',
         'middle_title_right': 'О нас',
-        'popular_products': product_list,
+        'popular_list': product_list,
         'categories': categories,
     }
 
