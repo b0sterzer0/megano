@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+# Тестовые модели для создания разрешений
+
+
 class TestSaleModel(models.Model):
     sale_info = models.CharField(max_length=10)
 
