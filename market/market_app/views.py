@@ -1,7 +1,11 @@
 import datetime
+import random
 
 from django.views import View
 from django.views.generic import TemplateView
+from django.core.cache import cache
+
+from .models import Banner
 
 # Поскольку меню категорий присутствует на всех страницах сайта, то
 # вероятно, его лучше реализовать через контекст-процессор
@@ -58,7 +62,7 @@ product_list = [
         'sale': '-60%',
         'date': date1,
         'date_to': date2,
-        'description': 'Lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh euismod tincid unt ut laoreet dolore'
+        'description': 'Lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh euismod tincid'
     }
 ] * 20
 
@@ -98,6 +102,17 @@ class HomeView(TemplateView):
         'hot_offer_list': product_list,
         'limited_edition_list': product_list
     }
+
+    @staticmethod
+    def get_banners_list():
+        """ Возвращает список из 3 случайных баннеров из базы """
+        # result = cache.get_or_set('banners', )
+        return random.sample(list(Banner.objects.all()), 3)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['banners_list'] = self.get_banners_list()
+        return context
 
 
 class AboutView(TemplateView):
