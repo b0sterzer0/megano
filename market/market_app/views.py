@@ -1,6 +1,8 @@
 import datetime
 import random
 
+from typing import List
+
 from django.views import View
 from django.views.generic import TemplateView
 from django.core.cache import cache
@@ -79,17 +81,6 @@ slider_items = [
     }
 ] * 3
 
-# Заглушка для списка баннеров на главной странице
-banners_list = [
-    {
-        'link': '#',
-        'title': 'Video Cards',
-        'price': '$199',
-        'image': '/static/assets/img/content/home/videoca.png',
-        'image_alt': 'videoca.png'
-    }
-] * 3
-
 
 class HomeView(TemplateView):
     """Главная страница"""
@@ -97,37 +88,39 @@ class HomeView(TemplateView):
     extra_context = {
         'categories': categories,
         'slider_items': slider_items,
-        'banners_list': banners_list,
         'popular_list': product_list,
         'hot_offer_list': product_list,
         'limited_edition_list': product_list
     }
 
     @staticmethod
-    def get_banners_cache_time():
+    def get_banners_cache_time() -> int:
         """
         Возвращает время кэширования баннеров на главной странице из настроек сайта
         """
         # Заглушка. Пока настройки не реализованы, время равно 10 минутам
         return 10 * 60
 
-    @staticmethod
-    def get_banners_list(self):
-        """ Возвращает список из 3 случайных баннеров из базы """
+    def get_banners_list(self) -> List:
+        """
+        Возвращает список из 3 случайных баннеров.
+        Баннеры берутся из кэша. В случае отсутствия в кэше, берутся из базы.
+        """
 
-        def _get_banners_from_db():
+        def _get_banners_from_db() -> List:
             try:
                 return random.sample(list(Banner.objects.all()), 3)
             except ValueError:
                 # На случай, если баннеров в базе меньше 3
                 return []
 
-        result = cache.get_or_set('banners', _get_banners_from_db, self.get_banners_cache_time())
-        return result
+        return cache.get_or_set('banners', _get_banners_from_db, self.get_banners_cache_time())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['banners_list'] = self.get_banners_list(self)
+        # Список баннеров
+        context['banners_list'] = self.get_banners_list()
+        # Далее будет получение других элементов контекста
         return context
 
 
