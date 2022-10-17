@@ -104,14 +104,30 @@ class HomeView(TemplateView):
     }
 
     @staticmethod
-    def get_banners_list():
+    def get_banners_cache_time():
+        """
+        Возвращает время кэширования баннеров на главной странице из настроек сайта
+        """
+        # Заглушка. Пока настройки не реализованы, время равно 10 минутам
+        return 10 * 60
+
+    @staticmethod
+    def get_banners_list(self):
         """ Возвращает список из 3 случайных баннеров из базы """
-        # result = cache.get_or_set('banners', )
-        return random.sample(list(Banner.objects.all()), 3)
+
+        def _get_banners_from_db():
+            try:
+                return random.sample(list(Banner.objects.all()), 3)
+            except ValueError:
+                # На случай, если баннеров в базе меньше 3
+                return []
+
+        result = cache.get_or_set('banners', _get_banners_from_db, self.get_banners_cache_time())
+        return result
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['banners_list'] = self.get_banners_list()
+        context['banners_list'] = self.get_banners_list(self)
         return context
 
 
