@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Banner(models.Model):
-    """ Баннер """
+    """ Модель рекламного баннера на главной странице сайта """
     title = models.CharField(max_length=50, verbose_name='заголовок')
     # Цены в рублях (без копеек)
     price = models.IntegerField(verbose_name='цена')
