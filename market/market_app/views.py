@@ -1,13 +1,9 @@
 import datetime
-import random
-
-from typing import List
 
 from django.views import View
 from django.views.generic import TemplateView
-from django.core.cache import cache
 
-from .models import Banner
+from market_app.banners import get_banners_list
 
 # Поскольку меню категорий присутствует на всех страницах сайта, то
 # вероятно, его лучше реализовать через контекст-процессор
@@ -93,33 +89,10 @@ class HomeView(TemplateView):
         'limited_edition_list': product_list
     }
 
-    @staticmethod
-    def get_banners_cache_time() -> int:
-        """
-        Возвращает время кэширования баннеров на главной странице из настроек сайта
-        """
-        # Заглушка. Пока настройки не реализованы, время равно 10 минутам
-        return 10 * 60
-
-    def get_banners_list(self) -> List:
-        """
-        Возвращает список из 3 случайных баннеров.
-        Баннеры берутся из кэша. В случае отсутствия в кэше, берутся из базы.
-        """
-
-        def _get_banners_from_db() -> List:
-            try:
-                return random.sample(list(Banner.objects.all()), 3)
-            except ValueError:
-                # На случай, если баннеров в базе меньше 3
-                return []
-
-        return cache.get_or_set('banners', _get_banners_from_db, self.get_banners_cache_time())
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Список баннеров
-        context['banners_list'] = self.get_banners_list()
+        context['banners_list'] = get_banners_list()
         # Далее будет получение других элементов контекста
         return context
 
