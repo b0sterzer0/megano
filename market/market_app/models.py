@@ -6,7 +6,8 @@ class Banner(models.Model):
     title = models.CharField(max_length=50, verbose_name='заголовок')
     # Цены в рублях (без копеек)
     price = models.IntegerField(verbose_name='цена')
-    image = models.CharField(max_length=300, verbose_name='изображение')
+    # image = models.CharField(max_length=300, verbose_name='изображение')
+    image = models.ImageField(upload_to='images/banners', verbose_name='изображение')
     image_alt = models.CharField(max_length=100, verbose_name='подсказка')
     link = models.CharField(max_length=300, verbose_name='url')
 
