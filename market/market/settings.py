@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'perms_app',
     'market_app',
+    'app_settings',
 ]
 
 MIDDLEWARE = [

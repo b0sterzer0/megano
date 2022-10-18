@@ -1,0 +1,23 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block body_header %}
+{% endblock body_header %}
+
+{% block content %}
+    <h2>Настройки сайта</h2>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ settings_forms.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+    <h3>Сброс кэша</h3>
+    <form method="post" action="">
+        {% csrf_token %}
+        {% for section in sections %}
+            <p><button type="submit" name={{section}} value={{section}}>Сбросить кэш раздела {{ section }}</button></p>
+        {% endfor %}
+    </form>
+
+
+{% endblock content %}
