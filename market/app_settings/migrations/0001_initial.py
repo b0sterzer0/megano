@@ -2,19 +2,6 @@
 
 from django.db import migrations, models
 
-from .. import settings_config
-
-
-def create_settings_data(apps, schema_editor):
-    SiteSettings = apps.get_model('app_settings', 'SiteSettings')
-    SiteSettings.objects.get_or_create(site_name=settings_config.SITE_NAME,
-                                       phone_number1=settings_config.PHONE_NUMBER1,
-                                       phone_number2=settings_config.PHONE_NUMBER2,
-                                       address=settings_config.ADDRESS,
-                                       banner_number=settings_config.BANNER_NUMBER,
-                                       stopping_sales=settings_config.STOPPING_SALES,
-                                       )
-
 
 class Migration(migrations.Migration):
 
@@ -40,5 +27,4 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Настройки сайта',
             },
         ),
-        migrations.RunPython(create_settings_data),
     ]

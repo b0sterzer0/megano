@@ -33,7 +33,7 @@ class TestSettingsView(TestCase):
         """Проверка использования корректного шаблона"""
         response = self.authorized_client.get(reverse('settings'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'settings.html')
+        self.assertTemplateUsed(response, 'app_settings/settings.html')
 
     def test_setting_edit(self):
         """Проверка работоспособности изменения настроек из формы на странице"""

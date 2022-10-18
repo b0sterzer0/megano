@@ -14,10 +14,9 @@
     <h3>Сброс кэша</h3>
     <form method="post" action="">
         {% csrf_token %}
-        <p><button type="submit" name="section1">Сбросить кэш раздела 1</button></p>
-        <p><button type="submit" name="section2">Сбросить кэш раздела 2</button></p>
-        <p><button type="submit" name="section3">Сбросить кэш раздела 3</button></p>
-        <p><button type="submit" name="all">Сбросить весь кэш</button></p>
+        {% for section in sections %}
+            <p><button type="submit" name={{section}} value={{section}}>Сбросить кэш раздела {{ section }}</button></p>
+        {% endfor %}
     </form>
 
 
