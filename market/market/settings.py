@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'market_app.apps.MarketAppConfig',
+    'perms_app',
+    'app_settings',
 ]
 
 MIDDLEWARE = [
