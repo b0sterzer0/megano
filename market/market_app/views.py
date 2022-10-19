@@ -3,6 +3,8 @@ import datetime
 from django.views import View
 from django.views.generic import TemplateView
 
+from market_app.banners import get_banners_list
+
 # Поскольку меню категорий присутствует на всех страницах сайта, то
 # вероятно, его лучше реализовать через контекст-процессор
 
@@ -58,7 +60,7 @@ product_list = [
         'sale': '-60%',
         'date': date1,
         'date_to': date2,
-        'description': 'Lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh euismod tincid unt ut laoreet dolore'
+        'description': 'Lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh euismod tincid'
     }
 ] * 20
 
@@ -75,17 +77,6 @@ slider_items = [
     }
 ] * 3
 
-# Заглушка для списка баннеров на главной странице
-banners_list = [
-    {
-        'link': '#',
-        'title': 'Video Cards',
-        'price': '$199',
-        'image': '/static/assets/img/content/home/videoca.png',
-        'image_alt': 'videoca.png'
-    }
-] * 3
-
 
 class HomeView(TemplateView):
     """Главная страница"""
@@ -93,11 +84,17 @@ class HomeView(TemplateView):
     extra_context = {
         'categories': categories,
         'slider_items': slider_items,
-        'banners_list': banners_list,
         'popular_list': product_list,
         'hot_offer_list': product_list,
         'limited_edition_list': product_list
     }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Список баннеров
+        context['banners_list'] = get_banners_list()
+        # Далее будет получение других элементов контекста
+        return context
 
 
 class AboutView(TemplateView):
