@@ -1,6 +1,5 @@
 .python-version
 myvenv
-/docs/
 /market/db.sqlite3
 /.idea/
 /postgres_data/
