@@ -16,3 +16,44 @@ class Banner(models.Model):
     class Meta:
         verbose_name = 'баннер'
         verbose_name_plural = 'баннеры'
+
+
+class Seller(models.Model):
+    """Заглушка модели продавца"""
+    pass
+
+
+class Category(models.Model):
+    """Заглушка модели категорий"""
+    pass
+
+
+class Product(models.Model):
+    """Модель товара"""
+    name = models.CharField(max_length=255, db_index=True, verbose_name='Название')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products',
+                                 verbose_name='Категория')
+    seller = models.ManyToManyField(Seller, through='SellerProduct', related_name='products',
+                                    verbose_name='Продавец')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
+
+
+class SellerProduct(models.Model):
+    """Промежуточная модель между моделями товара и продавца"""
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name='Продавец')
+    qty = models.PositiveIntegerField(verbose_name='Количество')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+
+    def __str__(self):
+        return f'{self.product.name} - {self.seller.id}'
+
+    class Meta:
+        verbose_name = 'Товар-продавец'
+        verbose_name_plural = 'Товар-продавец'

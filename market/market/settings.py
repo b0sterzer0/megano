@@ -14,11 +14,13 @@ from pathlib import Path
 
 import os
 
+from dotenv import dotenv_values
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# test
-
+path_to_env = os.path.join(BASE_DIR, '../', '.env')
+CONFIG = dotenv_values(path_to_env)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -43,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_mptt_admin',
     'mptt',
-
     'catalog_categories',
     'market_app.apps.MarketAppConfig',
     'perms_app',
@@ -93,11 +94,11 @@ WSGI_APPLICATION = 'market.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'megano',
-        'USER': 'postgres',
-        'PASSWORD': 'mysecretpassword',
-        'HOST': '192.168.56.101',
-        'PORT': '',
+        'NAME': CONFIG['NAME'],
+        'USER': CONFIG['USER'],
+        'PASSWORD': CONFIG['PASSWORD'],
+        'HOST': CONFIG['HOST'],
+        'PORT': CONFIG['PORT'],
     }
 }
 
