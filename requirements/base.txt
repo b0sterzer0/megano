@@ -9,3 +9,6 @@ psycopg2-binary==2.9.3
 
 # # Image processing requirements
 Pillow==8.4.0
+
+# # Environments
+python-dotenv==0.21.0
