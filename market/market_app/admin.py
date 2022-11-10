@@ -1,6 +1,5 @@
 from django.contrib import admin
-
-from .models import Banner, Product, SellerProduct, Category, Seller
+from .models import Banner, Product, SellerProduct, Category, Seller, Discount
 
 
 @admin.register(Banner)
@@ -30,3 +29,8 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Seller)
 class SellerAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Discount)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ['discount', ]

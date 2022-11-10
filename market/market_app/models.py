@@ -28,6 +28,14 @@ class Category(models.Model):
     pass
 
 
+class Discount(models.Model):
+    discount = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'скидка'
+        verbose_name_plural = 'скидки'
+
+
 class Product(models.Model):
     """Модель товара"""
     name = models.CharField(max_length=255, db_index=True, verbose_name='Название')
@@ -35,6 +43,8 @@ class Product(models.Model):
                                  verbose_name='Категория')
     seller = models.ManyToManyField(Seller, through='SellerProduct', related_name='products',
                                     verbose_name='Продавец')
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, related_name='products',
+                                 verbose_name='Скидка')
 
     def __str__(self):
         return self.name
