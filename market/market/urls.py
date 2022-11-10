@@ -26,4 +26,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('catalog_categories/', CategoryListView.as_view(), name='catalog_categories'),
     path('settings/', include('app_settings.urls')),
+    path('comparison/', include('compare_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

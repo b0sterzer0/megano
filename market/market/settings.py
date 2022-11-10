@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
 import os
 
 from dotenv import dotenv_values
@@ -49,6 +48,7 @@ INSTALLED_APPS = [
     'market_app.apps.MarketAppConfig',
     'perms_app',
     'app_settings',
+    'compare_app',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +90,10 @@ WSGI_APPLICATION = 'market.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+path_to_env = os.path.join(BASE_DIR, '../', '.env')
+CONFIG = dotenv_values(path_to_env)
+
 
 DATABASES = {
     'default': {
@@ -140,6 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static/'),
 ]
