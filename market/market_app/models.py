@@ -29,7 +29,8 @@ class Category(models.Model):
 
 
 class Discount(models.Model):
-    discount = models.IntegerField(blank=True, null=True)
+    """Модель скидки для товаров"""
+    discount = models.IntegerField()
 
     class Meta:
         verbose_name = 'скидка'
@@ -43,8 +44,7 @@ class Product(models.Model):
                                  verbose_name='Категория')
     seller = models.ManyToManyField(Seller, through='SellerProduct', related_name='products',
                                     verbose_name='Продавец')
-    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, related_name='products',
-                                 verbose_name='Скидка')
+    discount = models.ManyToManyField(Discount, verbose_name='Скидка', through="ProductDiscount")
 
     def __str__(self):
         return self.name
@@ -52,6 +52,16 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+class ProductDiscount(models.Model):
+    """Промежуточная модель между моделями товара и скидки"""
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, verbose_name='Скидка')
+
+    class Meta:
+        verbose_name = 'Товар-скидка'
+        verbose_name_plural = 'Товар-скидка'
 
 
 class SellerProduct(models.Model):

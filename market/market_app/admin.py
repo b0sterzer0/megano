@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Banner, Product, SellerProduct, Category, Seller, Discount
+from .models import Banner, Product, SellerProduct, Category, Seller, Discount, ProductDiscount
 
 
 @admin.register(Banner)
@@ -33,4 +33,9 @@ class SellerAdmin(admin.ModelAdmin):
 
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
-    list_display = ['discount', ]
+    list_display = ['discount']
+
+
+@admin.register(ProductDiscount)
+class EnrollmentAdmin(admin.ModelAdmin):
+    list_display = ['product', 'discount']
