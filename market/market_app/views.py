@@ -1,9 +1,11 @@
 import datetime
 
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 
 from market_app.banners import get_banners_list
+from market_app.models import SellerProduct
+
 
 # Поскольку меню категорий присутствует на всех страницах сайта, то
 # вероятно, его лучше реализовать через контекст-процессор
@@ -222,14 +224,40 @@ class PaymentSomeOneView(TemplateView):
     }
 
 
-class ProductView(TemplateView):
+class ProductView(DetailView):
     """Просмотр информации о конкретном товаре"""
+    model = SellerProduct
     template_name = 'product.html'
-    extra_context = {
-        'middle_title_left': 'Информация о товаре',
-        'middle_title_right': 'Информация о товаре',
-        'categories': categories,
-    }
+    context_object_name = 'product'
+
+    # На будущее! (Поздно заметил, что для создания страниц будет отдельная задача)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     product = self.get_object()
+    #     context['reviews'] = get_product_review_list(product)
+    #     context['num_review'] = get_count_product_reviews(product)
+    #     context['categories'] = categories
+    #     context['middle_title_left'] = 'Информация о товаре'
+    #     context['middle_title_right'] = 'Информация о товаре'
+    #     return context
+    #
+    # def post(self, request, *args, **kwargs):
+    #     review_form = ProductReviewForm(request.POST, request.FILES)
+    #     product = self.get_object()
+    #
+    #     if review_form.is_valid():
+    #         description = review_form.cleaned_data['description']
+    #         images = request.FILES.getlist('images')
+    #         create_product_review(product=product,
+    #                               user=request.user,
+    #                               description=description,
+    #                               images=images
+    #                               )
+    #
+    #         return HttpResponseRedirect(f'/product/{product.id}/')
+    #
+    #     return render(request, 'app_shops/goods_detail.html', context=self.get_context_data(**kwargs))
 
 
 class ProfileView(TemplateView):
