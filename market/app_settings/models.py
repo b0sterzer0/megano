@@ -10,6 +10,8 @@ class SiteSettings(models.Model):
     address = models.CharField(max_length=255, verbose_name=_('Адрес'))
     banner_number = models.PositiveSmallIntegerField(verbose_name=_('Количество баннеров'))
     stopping_sales = models.BooleanField(default=False, verbose_name=_('Остановка продаж'))
+    banner_cache_time = models.PositiveIntegerField(verbose_name=_('Кэш баннеров'))
+    total_cache_time = models.PositiveIntegerField(verbose_name=_('Общий кэш'))
 
     def __str__(self):
         return 'Настройки сайта'

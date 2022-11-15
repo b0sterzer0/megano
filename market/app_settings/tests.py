@@ -43,6 +43,8 @@ class TestSettingsView(TestCase):
                      "address": "new_address",
                      "banner_number": 2,
                      "stopping_sales": True,
+                     "banner_cache_time": 100,
+                     "total_cache_time": 200
                      }
         response = self.authorized_client.post(reverse('settings'), form_data)
         self.assertRedirects(response, reverse('settings'))
@@ -54,3 +56,6 @@ class TestSettingsView(TestCase):
         self.assertEqual(settings.address, "new_address")
         self.assertEqual(settings.banner_number, 2)
         self.assertEqual(settings.stopping_sales, True)
+        self.assertEqual(settings.banner_cache_time, 100)
+        self.assertEqual(settings.total_cache_time, 200)
+

@@ -91,10 +91,6 @@ WSGI_APPLICATION = 'market.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-path_to_env = os.path.join(BASE_DIR, '../', '.env')
-CONFIG = dotenv_values(path_to_env)
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

@@ -12,7 +12,7 @@ from .models import SiteSettings
 
 class SettingsView(View):
     """Класс-представление страницы настроек"""
-    sections = ('section1', 'section2', 'section3', 'all')
+    sections = ('banners', 'section2', 'section3', 'all')
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def get(self, request):
