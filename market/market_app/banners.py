@@ -11,31 +11,36 @@ from django.core.cache import cache
 from django.db.models.signals import post_save, post_delete
 
 from .models import Banner
+from app_settings.utils import get_settings
 
 
-def get_banners_cache_time() -> int:
+def get_banner_cache_time() -> int:
     """
     Возвращает время кэширования баннеров на главной странице из настроек сайта
     """
-    # Заглушка. Пока настройки не реализованы, время равно 10 минутам
-    return 10 * 60
+    settings_config = get_settings()
+    banner_cache_time = settings_config['banner_cache_time']
+
+    return banner_cache_time
 
 
 def get_banners_list() -> List:
     """
-    Возвращает список из 3 случайных баннеров.
+    Возвращает список из случайных баннеров. Количество берется из конфига.
     Баннеры берутся из кэша. В случае отсутствия в кэше, берутся из базы.
     """
 
     def _get_banners_from_db() -> List:
-        """ Возвращает список из 3 случайных баннеров из БД """
+        """ Возвращает список из случайных баннеров из БД """
+        settings_config = get_settings()
+        banner_number = settings_config['banner_number']
         try:
-            return random.sample(list(Banner.objects.all()), 3)
+            return random.sample(list(Banner.objects.all()), banner_number)
         except ValueError:
-            # На случай, если баннеров в базе меньше 3
+            # На случай, если баннеров в базе меньше запрашиваемого количества
             return []
 
-    return cache.get_or_set('banners', _get_banners_from_db, get_banners_cache_time())
+    return cache.get_or_set('banners', _get_banners_from_db, get_banner_cache_time())
 
 
 def reset_banners_cache(**kwargs):
