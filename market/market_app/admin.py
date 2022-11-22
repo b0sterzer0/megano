@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from market_app.models import Banner, Product, ProductImage, ProductReview, ProductReviewImage, Seller, \
-    SellerProduct
+from market_app.models import ProductImage, ProductReview, ProductReviewImage, Banner, Product, SellerProduct, \
+    Seller, Discount, ProductDiscount
 
 
 @admin.register(Banner)
@@ -53,3 +53,13 @@ class ProductReviewAdmin(admin.ModelAdmin):
     list_display = ['product', 'customer', 'description_short']
     search_fields = ['product', 'customer']
     inlines = [ProductReviewImageInline]
+
+
+@admin.register(Discount)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ['discount']
+
+
+@admin.register(ProductDiscount)
+class EnrollmentAdmin(admin.ModelAdmin):
+    list_display = ['product', 'discount']
