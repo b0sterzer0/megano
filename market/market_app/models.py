@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-
 from catalog_categories.models import Category
 
 
@@ -29,6 +28,15 @@ class Seller(models.Model):
         return self.name
 
 
+class Discount(models.Model):
+    """Модель скидки для товаров"""
+    discount = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'скидка'
+        verbose_name_plural = 'скидки'
+
+
 class Product(models.Model):
     """Модель товара"""
     name = models.CharField(max_length=255, db_index=True, verbose_name='Название')
@@ -51,6 +59,16 @@ class ProductImage(models.Model):
     product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='images/products/%Y/%m/%d', verbose_name='Картинка')
     image_alt = models.CharField(max_length=100, default='Фото к отзыву', verbose_name='подсказка')
+
+
+class ProductDiscount(models.Model):
+    """Промежуточная модель между моделями товара и скидки"""
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, verbose_name='Скидка')
+
+    class Meta:
+        verbose_name = 'Товар-скидка'
+        verbose_name_plural = 'Товар-скидка'
 
 
 class SellerProduct(models.Model):

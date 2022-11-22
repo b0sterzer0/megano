@@ -29,6 +29,23 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='Category',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Discount',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('discount', models.IntegerField()),
+            ],
+            options={
+                'verbose_name': 'скидка',
+                'verbose_name_plural': 'скидки',
+            },
+        ),
+        migrations.CreateModel(
             name='Product',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -92,6 +109,23 @@ class Migration(migrations.Migration):
                 ('image_alt', models.CharField(default='Фото к отзыву', max_length=100, verbose_name='подсказка')),
                 ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='market_app.product')),
             ],
+        ),
+        migrations.CreateModel(
+            name='ProductDiscount',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('discount', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='market_app.discount', verbose_name='Скидка')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='market_app.product', verbose_name='Товар')),
+            ],
+            options={
+                'verbose_name': 'Товар-скидка',
+                'verbose_name_plural': 'Товар-скидка',
+            },
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='discount',
+            field=models.ManyToManyField(related_name='products', through='market_app.ProductDiscount', to='market_app.Discount', verbose_name='Скидка'),
         ),
         migrations.AddField(
             model_name='product',

@@ -93,14 +93,21 @@ WSGI_APPLICATION = 'market.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': CONFIG['NAME'],
-        'USER': CONFIG['USER'],
-        'PASSWORD': CONFIG['PASSWORD'],
-        'HOST': CONFIG['HOST'],
-        'PORT': CONFIG['PORT'],
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': CONFIG['NAME'],
+#         'USER': CONFIG['USER'],
+#         'PASSWORD': CONFIG['PASSWORD'],
+#         'HOST': CONFIG['HOST'],
+#         'PORT': CONFIG['PORT'],
+#     }
+# }
 
 
 # Password validation
