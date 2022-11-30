@@ -18,10 +18,10 @@ class AddGoodForCompareTestClass(TestCase):
         category = TestCategory.objects.create(name=cls.category_name_1)
         another_category = TestCategory.objects.create(name=cls.category_name_2)
         product = TestProduct(name=cls.product_name, paths_to_good_images=cls.paths_to_good_images,
-                                   category=category)
+                              category=category)
         product.save()
         product = TestProduct(name=cls.product_name_2, paths_to_good_images=cls.paths_to_good_images,
-                                   category=another_category)
+                              category=another_category)
         product.save()
 
     def test_ordinary_situation(self):
@@ -61,7 +61,7 @@ class RemoveGoodForCompareTestClass(TestCase):
         super(RemoveGoodForCompareTestClass, cls).setUpClass()
         category = TestCategory.objects.create(name=cls.category_name)
         product_1 = TestProduct(name=cls.product_name, paths_to_good_images=cls.paths_to_good_images,
-                              category=category)
+                                category=category)
         product_1.save()
         product_2 = TestProduct(name=cls.product_name_2, paths_to_good_images=cls.paths_to_good_images,
                                 category=category)

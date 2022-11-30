@@ -19,12 +19,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
-from catalog_categories.views import CategoryListView
-
 urlpatterns = [
     path('', include('market_app.urls')),
     path('admin/', admin.site.urls),
-    path('catalog_categories/', CategoryListView.as_view(), name='catalog_categories'),
     path('settings/', include('app_settings.urls')),
     path('comparison/', include('compare_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
