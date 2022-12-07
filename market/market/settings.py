@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_mptt_admin',
     'mptt',
-    'catalog_categories',
+
     'market_app.apps.MarketAppConfig',
     'perms_app',
     'app_settings',
@@ -93,21 +93,14 @@ WSGI_APPLICATION = 'market.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': CONFIG['NAME'],
+        'USER': CONFIG['USER'],
+        'PASSWORD': CONFIG['PASSWORD'],
+        'HOST': CONFIG['HOST'],
+        'PORT': CONFIG['PORT'],
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': CONFIG['NAME'],
-#         'USER': CONFIG['USER'],
-#         'PASSWORD': CONFIG['PASSWORD'],
-#         'HOST': CONFIG['HOST'],
-#         'PORT': CONFIG['PORT'],
-#     }
-# }
 
 
 # Password validation
@@ -147,7 +140,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static/'),
 ]

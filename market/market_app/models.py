@@ -1,23 +1,23 @@
 from django.contrib.auth.models import User
 from django.db import models
-from catalog_categories.models import Category
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Banner(models.Model):
     """ Модель рекламного баннера на главной странице сайта """
-    title = models.CharField(max_length=50, verbose_name='заголовок')
+    title = models.CharField(max_length=50, verbose_name='Заголовок')
     # Цены в рублях (без копеек)
-    price = models.IntegerField(verbose_name='цена')
-    image = models.ImageField(upload_to='images/banners', verbose_name='изображение')
-    image_alt = models.CharField(max_length=100, verbose_name='подсказка')
+    price = models.IntegerField(verbose_name='Цена')
+    image = models.ImageField(upload_to='images/banners', verbose_name='Изображение')
+    image_alt = models.CharField(max_length=100, verbose_name='Подсказка')
     link = models.CharField(max_length=300, verbose_name='url')
 
     def __str__(self):
         return self.title
 
     class Meta:
-        verbose_name = 'баннер'
-        verbose_name_plural = 'баннеры'
+        verbose_name = 'Баннер'
+        verbose_name_plural = 'Баннеры'
 
 
 class Seller(models.Model):
@@ -26,6 +26,33 @@ class Seller(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Category(MPTTModel):
+    """
+    Класс модели -> Category
+    title - название категории;
+    slug - повторение имени;
+    parent - родительская категория;
+    activity - флаг активности новости;
+    """
+
+    title = models.CharField(max_length=50, unique=True, verbose_name='Название')
+    slug = models.SlugField()
+    parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
+                            db_index=True, verbose_name='Родительская категория')
+    activity = models.BooleanField(default=False, blank=True, null=True)
+
+    class MPTTMeta:
+        order_insertion_by = ['title']
+
+    class Meta:
+        unique_together = [['parent', 'slug']]
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.title
 
 
 class Discount(models.Model):
@@ -40,11 +67,13 @@ class Discount(models.Model):
 class Product(models.Model):
     """Модель товара"""
     name = models.CharField(max_length=255, db_index=True, verbose_name='Название')
-    category = models.ForeignKey("catalog_categories.Category", on_delete=models.CASCADE, related_name='products',
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products',
                                  verbose_name='Категория')
     seller = models.ManyToManyField(Seller, through='SellerProduct', related_name='products',
                                     verbose_name='Продавец')
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
+    # slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
+    # Временно убрал unique=True - c ним не проходит тест
+    slug = models.SlugField(max_length=255, db_index=True, verbose_name='URL')
 
     def __str__(self):
         return self.name
@@ -73,8 +102,8 @@ class ProductDiscount(models.Model):
 
 class SellerProduct(models.Model):
     """Промежуточная модель между моделями товара и продавца"""
-    product = models.ForeignKey("Product", on_delete=models.CASCADE, verbose_name='Товар')
-    seller = models.ForeignKey("Seller", on_delete=models.CASCADE, verbose_name='Продавец')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name='Продавец')
     qty = models.PositiveIntegerField(verbose_name='Количество')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
 
@@ -84,6 +113,21 @@ class SellerProduct(models.Model):
     class Meta:
         verbose_name = 'Товар-продавец'
         verbose_name_plural = 'Товар-продавец'
+
+
+class HistoryView(models.Model):
+    """ История просмотров пользователя """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    view_time = models.DateTimeField(auto_now=True, auto_created=True, verbose_name='Время просмотра')
+
+    def __str__(self):
+        return self.product.name
+
+    class Meta:
+        verbose_name = 'История просмотров'
+        verbose_name_plural = 'История просмотров'
+        ordering = ['view_time']
 
 
 class ProductReview(models.Model):

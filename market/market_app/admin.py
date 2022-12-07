@@ -1,7 +1,13 @@
 from django.contrib import admin
+from django_mptt_admin.admin import DjangoMpttAdmin
+from .models import Banner, Category
 
-from market_app.models import ProductImage, ProductReview, ProductReviewImage, Banner, Product, SellerProduct, \
+from market_app.models import ProductImage, ProductReview, ProductReviewImage, Product, SellerProduct, \
     Seller, Discount, ProductDiscount
+
+@admin.register(Category)
+class CategoryAdmin(DjangoMpttAdmin):
+    prepopulated_fields = {"slug": ("title",)}
 
 
 @admin.register(Banner)
