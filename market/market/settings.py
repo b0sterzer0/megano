@@ -44,11 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_mptt_admin',
     'mptt',
-
     'market_app.apps.MarketAppConfig',
     'perms_app',
     'app_settings',
     'compare_app',
+    'app_login',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +153,6 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

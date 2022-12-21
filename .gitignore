@@ -159,3 +159,5 @@ cython_debug/
 /market/market.db
 /market/media/
 
+/market/data/
+/data/
