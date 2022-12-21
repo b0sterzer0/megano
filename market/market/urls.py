@@ -18,10 +18,16 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from app_login.views import UserResetPasswordView, UserPasswordResetDoneView, UserPasswordResetConfirmView, UserPasswordResetCompleteView
 
 urlpatterns = [
     path('', include('market_app.urls')),
     path('admin/', admin.site.urls),
     path('settings/', include('app_settings.urls')),
     path('comparison/', include('compare_app.urls')),
+    path('login/', include('app_login.urls')),
+    path('password-reset/', UserResetPasswordView.as_view(),name='password_reset'),
+    path('password-reset/done/', UserPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', UserPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', UserPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
