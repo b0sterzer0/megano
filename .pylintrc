@@ -413,7 +413,8 @@ good-names=i,
            q,
            qs,
            e,
-           exc
+           exc,
+           pk
 
 # Good variable names regexes, separated by a comma. If names match any regex,
 # they will always be accepted

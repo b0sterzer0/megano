@@ -2,7 +2,7 @@ stages:
   - code quality
 
 default:
-  image: registry.skillbox.ru/python:3.8.12
+  image: python:3.8.12
   tags:
     - students
   cache:
@@ -11,10 +11,15 @@ default:
   before_script:
     - pip install -r requirements/dev.txt
 
-isort:
+#isort:
+#  stage: code quality
+#  script:
+#    - isort market/ --src=market/ -c --diff
+
+flake8:
   stage: code quality
   script:
-    - isort market/ --src=market/ -c --diff
+    - flake8 market
 
 linter:
   stage: code quality

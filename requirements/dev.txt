@@ -32,3 +32,6 @@ pynacl==1.4.0
 
 # Debugging requirements
 django-debug-toolbar==3.2.4
+
+# flake8 requirements
+flake8==4.0.1
