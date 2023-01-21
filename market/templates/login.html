@@ -8,13 +8,23 @@
 </head>
 <body>
 {% block content %}
-    <div align="center">
+    <div class="wrapper">
+        <div class="header">
+            <h3 class="sign-in">Вход</h3>
+        </div>
+        <div class="clear"></div>
         <form method="post">
-            <h3 align="center">Login</h3>
-            {% csrf_token %}
-            {{ form.as_p }}
-            <a href="{% url 'password_reset' %}"><h4>Забыли пароль?</h4></a>
-            <button type="submit">Log in</button><button onclick="document.location='{% url 'registration' %}'">Sing up</button>
+            <div>
+                {% csrf_token %}
+                {{ form.as_p }}
+            </div>
+            <div>
+                <input type="submit" value="Войти" />
+            </div>
+            <a class="forgot-label" href="{% url 'password_reset' %}">Забыли пароль?</a>
+            <a class="registr" href="{% url 'registration' %}">
+                Регистрация
+            </a>
         </form>
     </div>
 {% endblock %}

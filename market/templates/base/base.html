@@ -76,9 +76,7 @@
                 <div class="row ControlPanel-rowSplit">
                   <div class="row-block">
                       {% if request.user.is_authenticated %}
-                          <div>
-                              <a class="ControlPanel-title" href="{% url 'account' %}">Профиль</a>[<a href="{% url 'logout' %}">Выйти</a>]
-                          </div>
+
                       {% else  %}
                           <a class="ControlPanel-title" href="{% url 'login' %}">Login / Register</a>
                       {% endif %}
@@ -118,8 +116,20 @@
                 </ul>
               </div>
             </nav>
-            <div class="row-block">
-              <div class="CartBlock">
+              <div class="row-block">
+                  <div class="CartBlock">
+                      {% if request.user.is_authenticated %}
+                          <div class="dropdown">
+                              <button class="dropbtn"><img class="CartBlock-img" src="{% static "assets/img/icons/loon-icon.svg" %}" alt="loon-icon.svg" /></button>
+                              <div class="dropdown-content">
+                                  <a class="dropdown-content-a" href="{% url 'account' %}">Личный кабинет</a>
+                                  {% if perms.contenttypes.view_contenttype %}
+                                      <a class="dropdown-content-a" href="http://127.0.0.1:8000/admin">Административный раздел</a>
+                                  {% endif %}
+                                  <a class="dropdown-content-a" href="{% url 'logout' %}">Выход</a>
+                              </div>
+                          </div>
+                      {% endif %}
                   <a class="CartBlock-block" href="{% url 'compare goods' %}">
                   <img class="CartBlock-img" src="{% static "assets/img/icons/exchange.svg" %}" alt="exchange.svg"/>
 
@@ -131,8 +141,8 @@
                   <span class="CartBlock-amount">0</span></a>
                 <div class="CartBlock-block"><span class="CartBlock-price">0.00$</span>
                 </div>
+                  </div>
               </div>
-            </div>
             <div class="row-block Header-trigger"><a class="menuTrigger" href="#navigate">
                 <div class="menuTrigger-content">Показать навигацию
                 </div><span></span><span></span><span></span></a>

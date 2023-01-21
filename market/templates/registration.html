@@ -8,12 +8,20 @@
 </head>
 <body>
 {% block content %}
-    <h2>Registration</h2>
+    <div class="wrapper">
+        <div class="header">
+            <h3 class="sign-in">Регистрация</h3>
+
+        </div>
+        <div class="clear"></div>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Registration</button>
+            <input type="submit" value="Зарегистрироваться" />
+
+            <div class="clear"></div>
         </form>
+    </div>
 {% endblock %}
 </body>
 </html>
