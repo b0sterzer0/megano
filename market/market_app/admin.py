@@ -1,9 +1,18 @@
 from django.contrib import admin
 from django_mptt_admin.admin import DjangoMpttAdmin
+
+from market_app.models import (
+    ProductImage,
+    ProductReview,
+    ProductReviewImage,
+    Product,
+    SellerProduct,
+    Seller,
+    Discount,
+    ProductDiscount
+)
 from .models import Banner, Category
 
-from market_app.models import ProductImage, ProductReview, ProductReviewImage, Product, SellerProduct, \
-    Seller, Discount, ProductDiscount
 
 @admin.register(Category)
 class CategoryAdmin(DjangoMpttAdmin):
@@ -32,7 +41,7 @@ class ProductReviewImageInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     """Класс для работы с моделью товаров в админке"""
-    list_display = ['name', 'category']
+    list_display = ['id', 'name', 'category']
     list_filter = ['category']
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
@@ -42,7 +51,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(SellerProduct)
 class SellerProductAdmin(admin.ModelAdmin):
     """Класс для работы с моделью товаров у продавцов в админке"""
-    list_display = ['product', 'seller', 'qty', 'price']
+    list_display = ['id', 'product', 'seller', 'qty', 'price']
     list_filter = ['product', 'seller']
     search_fields = ['product', 'seller']
 
@@ -50,7 +59,7 @@ class SellerProductAdmin(admin.ModelAdmin):
 @admin.register(Seller)
 class SellerAdmin(admin.ModelAdmin):
     """Класс для работы с моделью продавцов в админке"""
-    list_display = ['name']
+    list_display = ['id', 'profile']
 
 
 @admin.register(ProductReview)

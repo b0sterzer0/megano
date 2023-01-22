@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
+from django.utils.translation import gettext_lazy as _
 
 
 class Banner(models.Model):
@@ -21,11 +22,21 @@ class Banner(models.Model):
 
 
 class Seller(models.Model):
-    """Заглушка модели продавца"""
-    name = models.CharField(max_length=100)
+    """Модель продавца"""
+
+    profile = models.ForeignKey("app_login.Profile", on_delete=models.CASCADE,
+                                related_name='sellers', verbose_name=_('профиль')
+                                )
+    description = models.TextField(max_length=2000, blank=True, verbose_name=_('описание'))
+    name = models.CharField(max_length=200, verbose_name=_('название магазина'))
+    logo = models.ImageField(upload_to='seller_files/')
+
+    class Meta:
+        verbose_name = _('продавец')
+        verbose_name_plural = _('продавцы')
 
     def __str__(self):
-        return self.name
+        return self.profile.user.username
 
 
 class Category(MPTTModel):
@@ -66,11 +77,11 @@ class Discount(models.Model):
 
 class Product(models.Model):
     """Модель товара"""
-    name = models.CharField(max_length=255, db_index=True, verbose_name='Название')
+    name = models.CharField(max_length=255, db_index=True, verbose_name=_('название'))
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products',
-                                 verbose_name='Категория')
+                                 verbose_name=_('категория'))
     seller = models.ManyToManyField(Seller, through='SellerProduct', related_name='products',
-                                    verbose_name='Продавец')
+                                    verbose_name=_('продавец'))
     # slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     # Временно убрал unique=True - c ним не проходит тест
     slug = models.SlugField(max_length=255, db_index=True, verbose_name='URL')
@@ -79,15 +90,15 @@ class Product(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Товар'
-        verbose_name_plural = 'Товары'
+        verbose_name = _('товар')
+        verbose_name_plural = _('товары')
 
 
 class ProductImage(models.Model):
     """Модель фотографий к товарам"""
     product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='images/products/%Y/%m/%d', verbose_name='Картинка')
-    image_alt = models.CharField(max_length=100, default='Фото к отзыву', verbose_name='подсказка')
+    image = models.ImageField(upload_to='images/products/%Y/%m/%d', verbose_name=_('картинка'))
+    image_alt = models.CharField(max_length=100, default='Фото к отзыву', verbose_name=_('подсказка'))
 
 
 class ProductDiscount(models.Model):
@@ -102,17 +113,17 @@ class ProductDiscount(models.Model):
 
 class SellerProduct(models.Model):
     """Промежуточная модель между моделями товара и продавца"""
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name='Продавец')
-    qty = models.PositiveIntegerField(verbose_name='Количество')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'))
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name=_('продавец'))
+    qty = models.PositiveIntegerField(verbose_name=_('количество'))
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('цена'))
 
     def __str__(self):
         return f'{self.product.name} - {self.seller.id}'
 
     class Meta:
-        verbose_name = 'Товар-продавец'
-        verbose_name_plural = 'Товар-продавец'
+        verbose_name = _('товар-продавец')
+        verbose_name_plural = _('товар-продавец')
 
 
 class HistoryView(models.Model):
@@ -132,12 +143,12 @@ class HistoryView(models.Model):
 
 class ProductReview(models.Model):
     """Модель отзывов к товарам определенных продавцов"""
-    product = models.ForeignKey("Product", on_delete=models.CASCADE, verbose_name='Отзывы товаров',
+    product = models.ForeignKey("Product", on_delete=models.CASCADE, verbose_name=_('отзывы товаров'),
                                 related_name='reviews'
                                 )
     # Изменить пользователя после создания app_user
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Покупатель', related_name='customer')
-    description = models.TextField(max_length=2000, verbose_name='Описание')
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('покупатель'), related_name='customer')
+    description = models.TextField(max_length=2000, verbose_name=_('описание'))
 
     def description_short(self):
         """
@@ -153,12 +164,12 @@ class ProductReview(models.Model):
         return f'Запись: {self.description_short()}, Пользователь: {self.customer}'
 
     class Meta:
-        verbose_name = 'Комментарии'
-        verbose_name_plural = 'Комментарий'
+        verbose_name = _('комментарии')
+        verbose_name_plural = _('комментарий')
 
 
 class ProductReviewImage(models.Model):
     """Модель фотографий к отзывам"""
     review = models.ForeignKey("ProductReview", on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='images/product_reviews/%Y/%m/%d', verbose_name='Картинка')
-    image_alt = models.CharField(max_length=100, default='Фото к отзыву', verbose_name='подсказка')
+    image = models.ImageField(upload_to='images/product_reviews/%Y/%m/%d', verbose_name=_('картинка'))
+    image_alt = models.CharField(max_length=100, default='Фото к отзыву', verbose_name=_('подсказка'))

@@ -4,14 +4,22 @@ from django.utils.translation import gettext_lazy as _
 
 class SiteSettings(models.Model):
     """Модель настроек сайта"""
-    site_name = models.CharField(max_length=255, verbose_name=_('Название сайта'))
-    phone_number1 = models.CharField(max_length=255, verbose_name=_('Номер телефона 1'))
-    phone_number2 = models.CharField(max_length=255, verbose_name=_('Номер телефона 2'))
-    address = models.CharField(max_length=255, verbose_name=_('Адрес'))
-    banner_number = models.PositiveSmallIntegerField(verbose_name=_('Количество баннеров'))
-    stopping_sales = models.BooleanField(default=False, verbose_name=_('Остановка продаж'))
-    banner_cache_time = models.PositiveIntegerField(verbose_name=_('Кэш баннеров'))
-    total_cache_time = models.PositiveIntegerField(verbose_name=_('Общий кэш'))
+    site_name = models.CharField(max_length=255, verbose_name=_('название сайта'))
+    phone_number1 = models.CharField(max_length=255, verbose_name=_('номер телефона 1'))
+    phone_number2 = models.CharField(max_length=255, verbose_name=_('номер телефона 2'))
+    address = models.CharField(max_length=255, verbose_name=_('адрес'))
+    banner_number = models.PositiveSmallIntegerField(verbose_name=_('количество баннеров'))
+    stopping_sales = models.BooleanField(default=False, verbose_name=_('остановка продаж'))
+    banner_cache_time = models.PositiveIntegerField(verbose_name=_('кэш баннеров'))
+    total_cache_time = models.PositiveIntegerField(verbose_name=_('общий кэш'))
+    seller_cache_time = models.PositiveIntegerField(verbose_name=_('время кэша продавцов'))
+    sellers_products_top_cache_time = models.PositiveIntegerField(verbose_name=_('время кэша продавцов'))
+    sellers_products_top_number = models.PositiveSmallIntegerField(default=8,
+                                                                   verbose_name=_(
+                                                                       'количество популярных товаров продавца'))
+    common_products_top_number = models.PositiveSmallIntegerField(default=8,
+                                                                  verbose_name=_(
+                                                                      'количество популярных товаров главной страницы'))
 
     def __str__(self):
         return 'Настройки сайта'

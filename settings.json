@@ -6,5 +6,9 @@
   "banner_number": 3,
   "stopping_sales": false,
   "banner_cache_time": 900,
-  "total_cache_time": 900
+  "total_cache_time": 900,
+  "seller_cache_time": 86400,
+  "sellers_products_top_cache_time": 3600,
+  "sellers_products_top_number": 10,
+  "common_products_top_number": 8
 }
