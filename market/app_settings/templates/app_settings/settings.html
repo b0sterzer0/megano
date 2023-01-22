@@ -5,19 +5,29 @@
 {% endblock body_header %}
 
 {% block content %}
-    <h2>Настройки сайта</h2>
-    <form method="post" action="">
+<div class="wrap">
+  <article class="Article">
+    <div class="Article-section">
+      <h2>Настройки сайта</h2>
+      <form method="post" action="">
         {% csrf_token %}
         {{ settings_forms.as_p }}
         <button type="submit">Сохранить</button>
-    </form>
-    <h3>Сброс кэша</h3>
-    <form method="post" action="">
+      </form>
+    </div>
+    <div class="Article-section">
+      <h2>Сброс кэша</h2>
+      <form method="post" action="">
         {% csrf_token %}
         {% for section in sections %}
-            <p><button type="submit" name={{section}} value={{section}}>Сбросить кэш раздела {{ section }}</button></p>
+        <p>
+          <button type="submit" name={{ section.0 }} value={{ section.0 }}>Сбросить кэш раздела {{ section.1 }}
+          </button>
+        </p>
         {% endfor %}
-    </form>
-
+      </form>
+    </div>
+  </article>
+</div>
 
 {% endblock content %}

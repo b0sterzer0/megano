@@ -12,7 +12,11 @@ from .models import SiteSettings
 
 class SettingsView(View):
     """Класс-представление страницы настроек"""
-    sections = ('banners', 'section2', 'section3', 'all')
+    sections = (('banners', 'Баннеры'),
+                ('seller_cache_time', 'Кэш страницы продавца'),
+                ('sellers_products_top_cache_time', 'Кэш топ товаров продавца'),
+                ('all', 'Общий кэш')
+                )
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def get(self, request):
@@ -22,8 +26,13 @@ class SettingsView(View):
         """
         settings = SiteSettings.objects.first()
         settings_form = SettingsForm(instance=settings)
+        middle_title_left = 'настройки'
+        middle_title_right = 'settings'
         return render(request, 'app_settings/settings.html', context={'settings_forms': settings_form,
-                                                                      'sections': self.sections})
+                                                                      'sections': self.sections,
+                                                                      'middle_title_left': middle_title_left,
+                                                                      'middle_title_right': middle_title_right,
+                                                                      })
 
     def post(self, request):
         """
@@ -40,10 +49,10 @@ class SettingsView(View):
                     # Сброс всего кэша
                     cache.clear()
                     break
-                else:
-                    # Сброс кэша определенного раздела
-                    cache.delete(value)
-                    break
+
+                # Сброс кэша определенного раздела
+                cache.delete(value)
+                break
 
         if settings_form.is_valid():
             settings.save()

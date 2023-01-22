@@ -44,7 +44,11 @@ class TestSettingsView(TestCase):
                      "banner_number": 2,
                      "stopping_sales": True,
                      "banner_cache_time": 100,
-                     "total_cache_time": 200
+                     "total_cache_time": 200,
+                     "seller_cache_time": 300,
+                     "sellers_products_top_cache_time": 400,
+                     "sellers_products_top_number": 10,
+                     "common_products_top_number": 10
                      }
         response = self.authorized_client.post(reverse('settings'), form_data)
         self.assertRedirects(response, reverse('settings'))
@@ -58,4 +62,7 @@ class TestSettingsView(TestCase):
         self.assertEqual(settings.stopping_sales, True)
         self.assertEqual(settings.banner_cache_time, 100)
         self.assertEqual(settings.total_cache_time, 200)
-
+        self.assertEqual(settings.seller_cache_time, 300)
+        self.assertEqual(settings.sellers_products_top_cache_time, 400)
+        self.assertEqual(settings.sellers_products_top_number, 10)
+        self.assertEqual(settings.common_products_top_number, 10)

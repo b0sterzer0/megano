@@ -4,7 +4,8 @@ from django.views import View
 from django.views.generic import TemplateView, DetailView
 
 from market_app.banners import get_banners_list
-from market_app.models import SellerProduct
+from market_app.models import Seller, Product
+from market_app.utils import get_seller, get_popular_list_for_seller
 
 
 # Поскольку меню категорий присутствует на всех страницах сайта, то
@@ -86,7 +87,8 @@ class HomeView(TemplateView):
     extra_context = {
         'categories': categories,
         'slider_items': slider_items,
-        'popular_list': product_list,
+        #необходимое количество можно взять из конфига
+        'popular_list': product_list[:8],
         'hot_offer_list': product_list,
         'limited_edition_list': product_list
     }
@@ -226,7 +228,7 @@ class PaymentSomeOneView(TemplateView):
 
 class ProductView(DetailView):
     """Просмотр информации о конкретном товаре"""
-    model = SellerProduct
+    model = Product
     template_name = 'product.html'
     context_object_name = 'product'
 
@@ -317,3 +319,24 @@ class ShopView(TemplateView):
 class LoginOrRegisterView(View):
     """Вход или регистрация"""
     pass
+
+
+class SellerDetailView(DetailView):
+    """Страница продавца"""
+    model = Seller
+    template_name = 'seller.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        seller = get_seller(pk)
+
+        context['middle_title_left'] = seller.name
+        context['middle_title_right'] = seller.name
+        context['seller'] = seller
+
+        #   TODO Заглушка для популярных товаров. Доделать, когда появится история покупок. Добавить все товары
+        context['popular_list'] = product_list[:4]     #get_popular_list_for_seller(pk)
+
+
+        return context

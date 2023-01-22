@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="Section Section_column Section_columnLeft Section_columnWide">
+      <div class="wrap">
+
+
+          <article class="Article">
+            <div class="Article-section">
+              <div class="row row_verticalCenter row_maxHalf">
+                <div class="row-block">
+                  <h2>О магазине
+                  </h2>
+                  <p>{{ seller.description }}
+                  </p>
+                </div>
+                <div class="row-block">
+                  <div class="pict"><img src="{{ MEDIA_ROOT }}{{ seller.logo.url }}" alt="logo.png"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% include 'include/popular_products.html' %}
+
+{# TODO: Заменить следующий раздел на все товары продавца #}
+                    <header class="Section-header">
+                        <h2 class="Section-title">Popular Products</h2>
+                      </header>
+                      <div class="Cards">
+                        {# Карточки популярных продуктов #}
+                        {% for card in popular_list %}
+                          <div class="Card{% cycle ' ' ' ' ' ' ' ' ' hide_md' ' hide_md' ' hide_md hide_1450' ' hide_md hide_1450' %}">
+                            {% include 'include/card.html' %}
+                          </div>
+                        {% endfor %}
+                      </div>
+
+        </article>
+      </div>
+    </div>
+{% endblock content %}

@@ -18,7 +18,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from app_login.views import UserResetPasswordView, UserPasswordResetDoneView, UserPasswordResetConfirmView, UserPasswordResetCompleteView
+from app_login.views import (
+    UserResetPasswordView,
+    UserPasswordResetDoneView,
+    UserPasswordResetConfirmView,
+    UserPasswordResetCompleteView
+)
 
 urlpatterns = [
     path('', include('market_app.urls')),

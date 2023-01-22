@@ -8,7 +8,7 @@
 <div class="Cards">
 
   {# Карточки популярных продуктов #}
-  {% for card in popular_list|slice:":8" %}
+  {% for card in popular_list %}
     <div class="Card{% cycle ' ' ' ' ' ' ' ' ' hide_md' ' hide_md' ' hide_md hide_1450' ' hide_md hide_1450' %}">
       {% include 'include/card.html' %}
     </div>
