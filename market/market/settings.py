@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'app_settings',
     'compare_app',
     'app_login',
+    'api_for_payment_app',
+    'payment_app',
 ]
 
 MIDDLEWARE = [

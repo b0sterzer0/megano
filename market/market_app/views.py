@@ -204,26 +204,6 @@ class OrderView(TemplateView):
     }
 
 
-class PaymentView(TemplateView):
-    """Оплата по номеру карты"""
-    template_name = 'payment.html'
-    extra_context = {
-        'middle_title_left': 'Оплата',
-        'middle_title_right': 'Оплата',
-        'categories': categories,
-    }
-
-
-class PaymentSomeOneView(TemplateView):
-    """Оплата по номеру счета"""
-    template_name = 'paymentsomeone.html'
-    extra_context = {
-        'middle_title_left': 'Оплата',
-        'middle_title_right': 'Оплата',
-        'categories': categories,
-    }
-
-
 class ProductView(DetailView):
     """Просмотр информации о конкретном товаре"""
     model = Product
@@ -279,16 +259,6 @@ class ProfileAvatarView(TemplateView):
         'middle_title_right': 'Профиль',
         'categories': categories,
         'active_menu': 'profile',
-    }
-
-
-class ProgressPaymentView(TemplateView):
-    """Ожидание оплаты"""
-    template_name = 'progressPayment.html'
-    extra_context = {
-        'middle_title_left': 'Ожидание оплаты',
-        'middle_title_right': 'Ожидание оплаты',
-        'categories': categories,
     }
 
 

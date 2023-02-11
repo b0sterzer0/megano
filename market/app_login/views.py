@@ -5,6 +5,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import RegisterForm
 from .models import Profile
+from market_app.models import Category
+
+
+categories = Category.objects.all()
 
 
 class LoginUserView(LoginView):
@@ -31,7 +35,7 @@ def register_view(request):
             return HttpResponseRedirect('/')
     else:
         form = RegisterForm()
-    return render(request, 'registration.html', {'form': form})
+    return render(request, 'registration.html', {'form': form, 'categories': categories})
 
 
 class UserResetPasswordView(PasswordResetView):

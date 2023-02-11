@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -14,12 +14,11 @@ urlpatterns = [
     path('history_view/', views.HistoryViewView.as_view(), name='historyview'),
     path('oneorder/', views.OneOrderView.as_view(), name='oneorder'),
     path('order/', views.OrderView.as_view(), name='order'),
-    path('payment/', views.PaymentView.as_view(), name='payment'),
-    path('payment_someone/', views.PaymentSomeOneView.as_view(), name='payment_someone'),
     path('product/<int:pk>/', views.ProductView.as_view(), name='product'),
+    path('payment/', include('payment_app.urls')),
+    path('APIPayment/', include('api_for_payment_app.urls')),
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('profile_avatar/', views.ProfileAvatarView.as_view(), name='profile_avatar'),
-    path('progress_payment/', views.ProgressPaymentView.as_view(), name='progress_payment'),
     path('sale/', views.SaleView.as_view(), name='sale'),
     path('shop/', views.ShopView.as_view(), name='shop'),
     path('login_or_register/', views.LoginOrRegisterView.as_view(), name='login_or_register'),
