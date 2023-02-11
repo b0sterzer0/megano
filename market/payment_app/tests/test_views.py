@@ -2,11 +2,10 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.test.client import RequestFactory
 
-from catalog_categories.models import Category
-from market_app.models import Seller, Product, SellerProduct
+from market_app.models import Seller, Product, SellerProduct, Category
+from app_login.models import Profile
 from payment_app.models import TestBasketModel
 from payment_app.views import post_method_for_payment_views
-from api_for_payment_app.models import PaymentStatusModel
 
 
 USERNAME = 'test'
@@ -28,7 +27,8 @@ class PostMethodForPaymentViewTestClass(TestCase):
         cls.basket_1 = TestBasketModel.objects.create(user=cls.user, product=cls.product_1)
         cls.basket_2 = TestBasketModel.objects.create(user=cls.user, product=cls.product_1)
         cls.basket_3 = TestBasketModel.objects.create(user=cls.user, product=cls.product_1)
-        cls.seller = Seller.objects.create(name=cls.user.username)
+        cls.profile = Profile.objects.create(user=cls.user, full_name='test test test', phone='888888')
+        cls.seller = Seller.objects.create(name=cls.user.username, profile=cls.profile, description='test')
         cls.seller_product_1 = SellerProduct.objects.create(product=cls.product_1, seller=cls.seller, qty=1, price=10)
         cls.seller_product_2 = SellerProduct.objects.create(product=cls.product_2, seller=cls.seller, qty=1, price=10)
         cls.seller_product_3 = SellerProduct.objects.create(product=cls.product_3, seller=cls.seller, qty=1, price=10)
@@ -47,6 +47,7 @@ class PostMethodForPaymentViewTestClass(TestCase):
         self.assertTrue(self.basket_1)
         self.assertTrue(self.basket_2)
         self.assertTrue(self.basket_3)
+        self.assertTrue(self.profile)
         self.assertTrue(self.seller)
         self.assertTrue(self.seller_product_1)
         self.assertTrue(self.seller_product_2)
@@ -56,13 +57,13 @@ class PostMethodForPaymentViewTestClass(TestCase):
         response = self.factory.post('/payment/pay_my_card/', {'card_number': '1111 1112'})
         response.user = self.user
         status = post_method_for_payment_views(response)
-        self.assertEqual(status, 'S400')
+        self.assertEqual(status['status']['status_code'], 'S200')
 
     def test_wrong_card_number(self):
         response = self.factory.post('/payment/pay_my_card/', {'card_number': '1111 1114'})
         response.user = self.user
         status = post_method_for_payment_views(response)
-        self.assertEqual(status, 'S404')
+        self.assertEqual(status['status']['status_code'], 'S404')
 
     def test_wrong_card_balance(self):
         response = self.factory.post('/payment/pay_my_card/', {'card_number': '1111 1112'})
@@ -70,9 +71,11 @@ class PostMethodForPaymentViewTestClass(TestCase):
         self.seller_product_1.price = 1000
         self.seller_product_1.save()
         status = post_method_for_payment_views(response)
-        self.assertEqual(status, 'S403')
+        self.assertEqual(status['status']['status_code'], 'S403')
 
     def test_no_products_in_basket(self):
         TestBasketModel.objects.all().delete()
-        response = self.client.post('/payment/pay_my_card/', {'card_number': '1111 1112'})
-        self.assertEqual(response.status_code, 404)
+        response = self.factory.post('/payment/pay_my_card/', {'card_number': '1111 1112'})
+        response.user = self.user
+        status = post_method_for_payment_views(response)
+        self.assertEqual(status['status']['status_code'], 'S000')
