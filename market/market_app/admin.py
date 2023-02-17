@@ -28,7 +28,7 @@ class ProductImageInline(admin.TabularInline):
     """Класс для создания inline в модели товара в админке"""
     model = ProductImage
     extra = 1
-    max_num = 10
+    max_num = 7  # максимум 7 для корректного отображения на странице товара
 
 
 class ProductReviewImageInline(admin.TabularInline):

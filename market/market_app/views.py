@@ -1,12 +1,23 @@
 import datetime
 
+from django.db.models import Min
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import TemplateView, DetailView
+from django.urls import reverse
 
 from market_app.banners import get_banners_list
-from market_app.models import Seller, Product
-from market_app.utils import get_seller, get_popular_list_for_seller
-
+from market_app.forms import ProductReviewForm
+from market_app.models import Seller, Product, ProductReviewImage, SellerProduct
+from market_app.utils import (
+    create_product_review,
+    can_create_reviews,
+    get_product_review_list,
+    get_seller,
+    get_count_product_reviews,
+    get_popular_list_for_seller
+)
 
 # Поскольку меню категорий присутствует на всех страницах сайта, то
 # вероятно, его лучше реализовать через контекст-процессор
@@ -232,34 +243,34 @@ class ProductView(DetailView):
     template_name = 'product.html'
     context_object_name = 'product'
 
-    # На будущее! (Поздно заметил, что для создания страниц будет отдельная задача)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.object
+        page = self.request.GET.get('page')
+        context['reviews'] = get_product_review_list(product, page)
+        context['can_create_reviews'] = can_create_reviews(product, self.request.user)
+        context['num_review'] = get_count_product_reviews(product)
+        context['images'] = product.images.all()
+        seller_products_list = SellerProduct.objects.filter(product=product).all()
+        context['sellers_price'] = seller_products_list
+        context['min_price'] = seller_products_list.aggregate(Min('price'))
+        context['middle_title_left'] = product.name
+        context['middle_title_right'] = product.name
+        context['review_form'] = ProductReviewForm()
+        return context
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     product = self.get_object()
-    #     context['reviews'] = get_product_review_list(product)
-    #     context['num_review'] = get_count_product_reviews(product)
-    #     context['categories'] = categories
-    #     context['middle_title_left'] = 'Информация о товаре'
-    #     context['middle_title_right'] = 'Информация о товаре'
-    #     return context
-    #
-    # def post(self, request, *args, **kwargs):
-    #     review_form = ProductReviewForm(request.POST, request.FILES)
-    #     product = self.get_object()
-    #
-    #     if review_form.is_valid():
-    #         description = review_form.cleaned_data['description']
-    #         images = request.FILES.getlist('images')
-    #         create_product_review(product=product,
-    #                               user=request.user,
-    #                               description=description,
-    #                               images=images
-    #                               )
-    #
-    #         return HttpResponseRedirect(f'/product/{product.id}/')
-    #
-    #     return render(request, 'app_shops/goods_detail.html', context=self.get_context_data(**kwargs))
+    def post(self, request, *args, **kwargs):
+        review_form = ProductReviewForm(request.POST)
+        product = self.get_object()
+
+        if review_form.is_valid():
+            description = review_form.cleaned_data['description']
+            # Эту часть ввести после добавления загрузки фото с отзывами
+            # images = request.FILES.getlist('images')
+            create_product_review(product, request.user, description)
+
+            return redirect('product', pk=product.id)
+        return render(request, 'product.html', context=self.get_context_data(**kwargs))
 
 
 class ProfileView(TemplateView):

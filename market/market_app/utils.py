@@ -1,20 +1,45 @@
 from django.core.cache import cache
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from market_app.models import ProductReview, ProductReviewImage, Seller
+from market_app.models import ProductReview, Seller
 from app_settings.utils import get_settings
 
 
-def get_product_review_list(product):
+def get_product_review_list(product, page):
     """
     Функция получает и возвращает список отзывов определенного товара.
     :param product: товар.
     :return: список отзывов определенного товара.
     """
-    reviews = ProductReview.objects.filter(product=product).select_related('user').prefetch_related('images')
+
+    reviews_list = ProductReview.objects.filter(product=product).select_related('customer').order_by('-date')
+
+    paginator = Paginator(reviews_list, 2)  # По 2 отзыва на каждой странице.
+    page = page
+    try:
+        reviews = paginator.page(page)
+    except PageNotAnInteger:
+        # Если страница не является целым числом, возвращаем первую страницу.
+        reviews = paginator.page(1)
+    except EmptyPage:
+        # Если номер страницы больше, чем общее количество страниц, возвращаем последнюю.
+        reviews = paginator.page(paginator.num_pages)
     return reviews
 
 
-def create_product_review(product, user, description, images):
+def can_create_reviews(product, user):
+    """
+    Функция проверяет, есть ли у товара отзыв от определенного пользователя,
+    если есть - возвращает False, иначе - True
+    """
+    if user.is_authenticated:
+        reviews = ProductReview.objects.filter(product=product).filter(customer=user).all()
+        if reviews:
+            return False
+        return True
+
+
+def create_product_review(product, user, description):
     """
     Функция создаёт отзыв к определенному товару.
     """
@@ -22,9 +47,9 @@ def create_product_review(product, user, description, images):
                                           customer=user,
                                           description=description
                                           )
-    for img in images:
-        inst = ProductReviewImage(review=review, image=img)
-        inst.save()
+    # Эту часть ввести после добавления загрузки фото с отзывами
+    # for img in images:
+    #     ProductReviewImage.objects.create(review=review, image=img)
 
 
 def get_count_product_reviews(product):

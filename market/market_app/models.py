@@ -85,6 +85,7 @@ class Product(models.Model):
     # slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     # Временно убрал unique=True - c ним не проходит тест
     slug = models.SlugField(max_length=255, db_index=True, verbose_name='URL')
+    description = models.TextField(max_length=2000, default='description', verbose_name=_('описание'))
 
     def __str__(self):
         return self.name
@@ -98,7 +99,7 @@ class ProductImage(models.Model):
     """Модель фотографий к товарам"""
     product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='images/products/%Y/%m/%d', verbose_name=_('картинка'))
-    image_alt = models.CharField(max_length=100, default='Фото к отзыву', verbose_name=_('подсказка'))
+    image_alt = models.CharField(max_length=100, default='Фото к товару', verbose_name=_('подсказка'))
 
 
 class ProductDiscount(models.Model):
@@ -114,12 +115,12 @@ class ProductDiscount(models.Model):
 class SellerProduct(models.Model):
     """Промежуточная модель между моделями товара и продавца"""
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'))
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name=_('продавец'))
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name=_('продавец'), related_name='sellers')
     qty = models.PositiveIntegerField(verbose_name=_('количество'))
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('цена'))
 
     def __str__(self):
-        return f'{self.product.name} - {self.seller.id}'
+        return f'{self.product.name} - {self.seller.name}'
 
     class Meta:
         verbose_name = _('товар-продавец')
@@ -143,12 +144,12 @@ class HistoryView(models.Model):
 
 class ProductReview(models.Model):
     """Модель отзывов к товарам определенных продавцов"""
-    product = models.ForeignKey("Product", on_delete=models.CASCADE, verbose_name=_('отзывы товаров'),
+    product = models.ForeignKey("Product", on_delete=models.CASCADE, verbose_name=_('товар'),
                                 related_name='reviews'
                                 )
-    # Изменить пользователя после создания app_user
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('покупатель'), related_name='customer')
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('покупатель'), related_name='reviews')
     description = models.TextField(max_length=2000, verbose_name=_('описание'))
+    date = models.DateTimeField(auto_now_add=True, verbose_name=_('дата'))
 
     def description_short(self):
         """
@@ -164,8 +165,8 @@ class ProductReview(models.Model):
         return f'Запись: {self.description_short()}, Пользователь: {self.customer}'
 
     class Meta:
-        verbose_name = _('комментарии')
-        verbose_name_plural = _('комментарий')
+        verbose_name = _('отзыв')
+        verbose_name_plural = _('отзывы')
 
 
 class ProductReviewImage(models.Model):
