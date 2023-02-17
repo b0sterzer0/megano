@@ -1,0 +1,74 @@
+[
+  {
+    "model": "market_app.productimage",
+    "pk": 1,
+    "fields": {
+      "product": 1,
+      "image": "../static/assets/img/content/home/bigGoods.png",
+      "image_alt": "Фото к товару"
+    }
+  },
+  {
+    "model": "market_app.productimage",
+    "pk": 2,
+    "fields": {
+      "product": 1,
+      "image": "../static/assets/img/content/home/bigGoods2.jpg",
+      "image_alt": "Фото к товару"
+    }
+  },
+  {
+    "model": "market_app.productimage",
+    "pk": 3,
+    "fields": {
+      "product": 1,
+      "image": "../static/assets/img/content/home/videoca.png",
+      "image_alt": "Фото к товару"
+    }
+  },
+  {
+    "model": "market_app.productimage",
+    "pk": 4,
+    "fields": {
+      "product": 1,
+      "image": "../static/assets/img/content/home/bigGoods2.jpg",
+      "image_alt": "Фото к товару"
+    }
+  },
+  {
+    "model": "market_app.productimage",
+    "pk": 5,
+    "fields": {
+      "product": 2,
+      "image": "../static/assets/img/content/home/bigGoods.png",
+      "image_alt": "Фото к товару"
+    }
+  },
+  {
+    "model": "market_app.productimage",
+    "pk": 6,
+    "fields": {
+      "product": 2,
+      "image": "../static/assets/img/content/home/bigGoods2.jpg",
+      "image_alt": "Фото к товару"
+    }
+  },
+  {
+    "model": "market_app.productimage",
+    "pk": 7,
+    "fields": {
+      "product": 3,
+      "image": "../static/assets/img/content/home/bigGoods2.jpg",
+      "image_alt": "Фото к товару"
+    }
+  },
+  {
+    "model": "market_app.productimage",
+    "pk": 8,
+    "fields": {
+      "product": 3,
+      "image": "../static/assets/img/content/home/bigGoods.png",
+      "image_alt": "Фото к товару"
+    }
+  }
+]
