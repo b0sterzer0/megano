@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.translation import gettext_lazy as _
 
@@ -49,6 +50,8 @@ class Category(MPTTModel):
     """
 
     title = models.CharField(max_length=50, unique=True, verbose_name='Название')
+    image = models.FileField(verbose_name='Картинка категории товаров', default=None, null=True, blank=True)
+    image_alt = models.CharField(max_length=20, default=None, null=True, verbose_name='Название картинки категории')
     slug = models.SlugField()
     parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
                             db_index=True, verbose_name='Родительская категория')
@@ -64,6 +67,9 @@ class Category(MPTTModel):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('catalog', kwargs={'category_name': self.title})
 
 
 class Discount(models.Model):

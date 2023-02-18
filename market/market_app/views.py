@@ -9,7 +9,7 @@ from django.urls import reverse
 
 from market_app.banners import get_banners_list
 from market_app.forms import ProductReviewForm, ProductsForm
-from market_app.models import Seller, Product, ProductReviewImage, SellerProduct
+from market_app.models import Seller, Product, Category, ProductReviewImage, SellerProduct
 from market_app.utils import (
     create_product_review,
     can_create_reviews,
