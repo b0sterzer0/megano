@@ -63,33 +63,33 @@ date2 = datetime.date(year=2022, month=2, day=2)
 
 # Заглушка для списка товаров
 product_list = [
-    {
-        'link': '#',
-        'image': '/static/assets/img/content/home/card.jpg',
-        'image_alt': 'card.jpg',
-        'title': 'Corsair Carbide Series Arctic White Steel',
-        'category': 'Games / XBox',
-        'price': 100,
-        'price_old': 120,
-        'sale': '-60%',
-        'date': date1,
-        'date_to': date2,
-        'description': 'Lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh euismod tincid'
-    }
-] * 20
+                   {
+                       'link': '#',
+                       'image': '/static/assets/img/content/home/card.jpg',
+                       'image_alt': 'card.jpg',
+                       'title': 'Corsair Carbide Series Arctic White Steel',
+                       'category': 'Games / XBox',
+                       'price': 100,
+                       'price_old': 120,
+                       'sale': '-60%',
+                       'date': date1,
+                       'date_to': date2,
+                       'description': 'Lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh euismod tincid'
+                   }
+               ] * 20
 
 # Заглушка для списка элементов слайдера на главной странице
 slider_items = [
-    {
-        'title1': 'Mavic Pro',
-        'title2': '5 ',
-        'title3': 'mini drone',
-        'text': 'Get the best phoneyou ever seen with modern Windows OS plus 70% Off this summer.',
-        'link': '#',
-        'image': '/static/assets/img/content/home/slider.png',
-        'image_alt': 'slider.png'
-    }
-] * 3
+                   {
+                       'title1': 'Mavic Pro',
+                       'title2': '5 ',
+                       'title3': 'mini drone',
+                       'text': 'Get the best phoneyou ever seen with modern Windows OS plus 70% Off this summer.',
+                       'link': '#',
+                       'image': '/static/assets/img/content/home/slider.png',
+                       'image_alt': 'slider.png'
+                   }
+               ] * 3
 
 
 class HomeView(TemplateView):
@@ -98,7 +98,7 @@ class HomeView(TemplateView):
     extra_context = {
         'categories': categories,
         'slider_items': slider_items,
-        #необходимое количество можно взять из конфига
+        # необходимое количество можно взять из конфига
         'popular_list': product_list[:8],
         'hot_offer_list': product_list,
         'limited_edition_list': product_list
@@ -347,7 +347,29 @@ class SellerDetailView(DetailView):
         context['seller'] = seller
 
         #   TODO Заглушка для популярных товаров. Доделать, когда появится история покупок. Добавить все товары
-        context['popular_list'] = product_list[:4]     #get_popular_list_for_seller(pk)
-
+        context['popular_list'] = product_list[:4]  # get_popular_list_for_seller(pk)
 
         return context
+
+
+class ProductFilter(View):
+
+    def post(self, request):
+        """Фильтр товаров"""
+        cards = []
+        products_form = ProductsForm(request.POST)
+        if 'price' in products_form.data:
+            price_product = products_form.data['price'].replace(';', ' ').split()
+            name_product = products_form.data['title']
+            cards_obj = SellerProduct.objects.filter(price__gt=price_product[0], price__lt=price_product[1])
+            for temp_data in cards_obj:
+                if name_product in temp_data.product.name:
+                    cards.append(temp_data)
+        else:
+            name_product = products_form.data['title']
+            card = Product.objects.filter(name__contains=name_product)
+            return render(request, 'catalog.html', context={'cards': card})
+        context = {
+            'cards': cards
+        }
+        return render(request, 'catalog.html', context=context)
