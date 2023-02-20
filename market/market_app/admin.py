@@ -9,7 +9,10 @@ from market_app.models import (
     SellerProduct,
     Seller,
     Discount,
-    ProductDiscount
+    ProductDiscount,
+    CharacteristicsGroup,
+    Characteristic,
+    CharacteristicValue,
 )
 from .models import Banner, Category
 
@@ -17,6 +20,21 @@ from .models import Banner, Category
 @admin.register(Category)
 class CategoryAdmin(DjangoMpttAdmin):
     prepopulated_fields = {"slug": ("title",)}
+
+
+@admin.register(CharacteristicsGroup)
+class CharacteristicsGroupAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Characteristic)
+class CharacteristicAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(CharacteristicValue)
+class CharacteristicValueAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Banner)
