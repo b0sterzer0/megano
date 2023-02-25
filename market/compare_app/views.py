@@ -112,17 +112,6 @@ def get_products_for_compare(compare_object: dict) -> dict:
 
     return products_for_compare_dict
 
-# TODO функция пока закомментирована. Определиться, нужен ли вывод кол-ва добавленных товаров для сравнения
-# def get_number_goods_for_compare() -> int:
-#     """
-#     Данная функция реализует получение кол-ва товаров, добавленных в список для сравнения
-#     """
-#     compare_object = cache.get('compare_object')
-#     if compare_object is None:
-#         return 0
-#     else:
-#         return len(compare_object['products_list'])
-
 
 def get_products_list_for_compare_view(request) -> render:
     """
