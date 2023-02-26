@@ -19,8 +19,12 @@ from market_app.utils import (
     get_popular_list_for_seller
 )
 
+
 # Поскольку меню категорий присутствует на всех страницах сайта, то
 # вероятно, его лучше реализовать через контекст-процессор
+
+
+
 
 # Заглушка для меню категорий товара
 categories = [
@@ -62,21 +66,7 @@ date1 = datetime.date(year=2022, month=1, day=1)
 date2 = datetime.date(year=2022, month=2, day=2)
 
 # Заглушка для списка товаров
-product_list = [
-                   {
-                       'link': '#',
-                       'image': '/static/assets/img/content/home/card.jpg',
-                       'image_alt': 'card.jpg',
-                       'title': 'Corsair Carbide Series Arctic White Steel',
-                       'category': 'Games / XBox',
-                       'price': 100,
-                       'price_old': 120,
-                       'sale': '-60%',
-                       'date': date1,
-                       'date_to': date2,
-                       'description': 'Lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh euismod tincid'
-                   }
-               ] * 20
+product_list = Product.objects.all()[:20]
 
 # Заглушка для списка элементов слайдера на главной странице
 slider_items = [
@@ -95,20 +85,17 @@ slider_items = [
 class HomeView(TemplateView):
     """Главная страница"""
     template_name = 'index.html'
-    extra_context = {
-        'categories': categories,
-        'slider_items': slider_items,
-        # необходимое количество можно взять из конфига
-        'popular_list': product_list[:8],
-        'hot_offer_list': product_list,
-        'limited_edition_list': product_list
-    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Список баннеров
+        products = Product.objects.annotate(min_price=Min('sellers__price'))
         context['banners_list'] = get_banners_list()
-        # Далее будет получение других элементов контекста
+        context['categories'] = categories
+        context['slider_items'] = slider_items
+        # необходимое количество можно взять из конфига
+        context['popular_list'] = products
+        context['hot_offer_list'] = products
+        context['limited_edition_list'] = products
         return context
 
 
@@ -247,11 +234,11 @@ class ProductView(DetailView):
         context = super().get_context_data(**kwargs)
         product = self.object
         page = self.request.GET.get('page')
+        seller_products_list = SellerProduct.objects.filter(product=product).all()
         context['reviews'] = get_product_review_list(product, page)
         context['can_create_reviews'] = can_create_reviews(product, self.request.user)
         context['num_review'] = get_count_product_reviews(product)
         context['images'] = product.images.all()
-        seller_products_list = SellerProduct.objects.filter(product=product).all()
         context['sellers_price'] = seller_products_list
         context['min_price'] = seller_products_list.aggregate(Min('price'))
         context['middle_title_left'] = product.name
@@ -345,9 +332,11 @@ class SellerDetailView(DetailView):
         context['middle_title_left'] = seller.name
         context['middle_title_right'] = seller.name
         context['seller'] = seller
+        context['products'] = SellerProduct.objects.filter(seller=seller).select_related('product').all()
 
         #   TODO Заглушка для популярных товаров. Доделать, когда появится история покупок. Добавить все товары
-        context['popular_list'] = product_list[:4]  # get_popular_list_for_seller(pk)
+        context['popular_list'] = SellerProduct.objects.filter(seller=seller).select_related('product').all()[
+                                  :2]  # get_popular_list_for_seller(pk)
 
         return context
 

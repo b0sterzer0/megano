@@ -82,9 +82,7 @@ class Product(models.Model):
                                  verbose_name=_('категория'))
     seller = models.ManyToManyField(Seller, through='SellerProduct', related_name='products',
                                     verbose_name=_('продавец'))
-    # slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
-    # Временно убрал unique=True - c ним не проходит тест
-    slug = models.SlugField(max_length=255, db_index=True, verbose_name='URL')
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     description = models.TextField(max_length=2000, default='description', verbose_name=_('описание'))
 
     def __str__(self):
@@ -114,7 +112,7 @@ class ProductDiscount(models.Model):
 
 class SellerProduct(models.Model):
     """Промежуточная модель между моделями товара и продавца"""
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'))
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'), related_name='sellers')
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name=_('продавец'), related_name='sellers')
     qty = models.PositiveIntegerField(verbose_name=_('количество'))
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('цена'))

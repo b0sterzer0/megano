@@ -175,7 +175,7 @@
 
         <div class="Section-content">
 
-          {% include 'include/popular_products.html' %}
+          {% include 'include/popular_products.html' with popular_list=popular_list %}
 
         </div>
       </div>
@@ -196,7 +196,7 @@
             <div class="Slider-box Cards Cards_hz">
 
               {# Список карточек Hot Offers #}
-              {% for card in hot_offer_list|slice:":8" %}
+              {% for card in hot_offer_list|slice:":3" %}
                 {% include 'include/slider_item.html' %}
               {% endfor %}
 
