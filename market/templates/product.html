@@ -10,11 +10,11 @@
             <div class="ProductCard-look">
               <div class="ProductCard-photo">
                   <img src="{{ MEDIA_ROOT }}{{ images.first.image.url }}" alt={{ images.first.image_alt }}/>
-                </div>
+              </div>
               <div class="ProductCard-picts">
                 {% for image in images %}
                   <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ MEDIA_ROOT }}{{ image.image.url }}">
-                      <img src="{{ MEDIA_ROOT }}{{ image.image.url }}" alt={{ image.image_alt }}/>
+                    <img src="{{ MEDIA_ROOT }}{{ image.image.url }}" alt={{ image.image_alt }}/>
                   </a>
                 {% endfor %}
               </div>
@@ -27,8 +27,6 @@
                   <div class="ProductCard-cost">
                     <div class="ProductCard-price">₽ {{ min_price.price__min }}
                     </div>
-<!--                    <div class="ProductCard-priceOld">₽{{ product.price }}-->
-<!--                    </div>-->
                   </div>
                   <div class="ProductCard-compare">
                       <a class="btn btn_default" href="#">
@@ -103,7 +101,10 @@
                   <div class="Categories-row">
                     <div class="Categories-block Categories-block_info">
                       <div class="Categories-info">
-                        <strong>{{ product.seller.name }}
+                        <strong>
+                            <a class="btn btn_primary" href="{% url 'seller' product.seller.id %}">
+                                {{ product.seller.name }}
+                            </a>
                         </strong>
                       </div>
                     </div>
@@ -172,50 +173,66 @@
                     </div>
                   </div>
                   {% endfor %}
-                </div>
-  <div class="pagination">
-<span class="step-links">
-{% if reviews.has_previous %}
-<a href="?page={{ page.previous_page_number }}#reviews">Предыдущая</a>
-{% endif %}
-<span class="current">
-Page {{ reviews.number }} of {{ reviews.paginator.num_pages }}.
-</span>
-{% if reviews.has_next %}
-<a href="?page={{ reviews.next_page_number }}#reviews">Следующая</a>
-{% endif %}
-</span>
-</div>
-                {% if request.user.is_authenticated and can_create_reviews %}
-                <header class="Section-header Section-header_product">
-                  <h3 class="Section-title">Написать отзыв
-                  </h3>
-                </header>
-                <div class="Tabs-addComment">
-                  <form class="form" action="/product/{{ product.id }}/" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                      <textarea class="form-textarea" name="description" maxlength="2000" required="" id="id_description" placeholder="Ваш отзыв"></textarea>
-                    </div>
 
-                    <div class="form-group">
-                      <button class="btn btn_muted" type="submit">Отправить отзыв
-                      </button>
+                  <div class="Pagination">
+                    <div class="Pagination-ins">
+                      {% if reviews.has_previous %}
+                      <a class="Pagination-element Pagination-element_prev" href="?page={{ page.previous_page_number }}#reviews">
+                        <img style="margin: 0;" src="{% static "assets/img/icons/prevPagination.svg" %}" alt="prevPagination.svg"/>
+                      </a>
+                      {% endif %}
+                      {% for page in reviews.paginator.page_range %}
+                        {% if reviews.number == page %}
+                        <a class="Pagination-element Pagination-element_current" href="?page={{ page }}#reviews">
+                          <span class="Pagination-text">{{ page }}
+                          </span>
+                        </a>
+                        {% else %}
+                        <a class="Pagination-element" href="?page={{ page }}#reviews">
+                          <span class="Pagination-text">{{ page }}
+                          </span>
+                        </a>
+                      {% endif %}
+                      {% endfor %}
+                      {% if reviews.has_next %}
+                      <a class="Pagination-element Pagination-element_prev" href="?page={{ reviews.next_page_number }}#reviews">
+                        <img style="margin: 0;" src="{% static "assets/img/icons/nextPagination.svg" %}" alt="nextPagination.svg"/>
+                      </a>
+                      {% endif %}
                     </div>
-                  </form>
+                  </div>
+
+                  {% if request.user.is_authenticated and can_create_reviews %}
+                  <header class="Section-header Section-header_product">
+                    <h3 class="Section-title">Написать отзыв
+                    </h3>
+                  </header>
+                  <div class="Tabs-addComment">
+                    <form class="form" action="/product/{{ product.id }}/" method="post">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <textarea class="form-textarea" name="description" maxlength="2000" required="" id="id_description" placeholder="Ваш отзыв"></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <button class="btn btn_muted" type="submit">Отправить отзыв
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                  {% elif request.user.is_authenticated and not can_create_reviews %}
+                  <header class="Section-header Section-header_product">
+                    <h3 class="Section-title">Вы уже оставляли отзыв на данный товар
+                    </h3>
+                  </header>
+                  {% else %}
+                  <header class="Section-header Section-header_product">
+                    <h3 class="Section-title">Чтобы оставить отзыв, вам нужно
+                      <a href="{% url 'login' %}">авторизоваться</a>
+                    </h3>
+                  </header>
+                  {% endif %}
                 </div>
-                {% elif request.user.is_authenticated and not can_create_reviews %}
-                <header class="Section-header Section-header_product">
-                  <h3 class="Section-title">Вы уже оставляли отзыв на данный товар
-                  </h3>
-                </header>
-                {% else %}
-                <header class="Section-header Section-header_product">
-                  <h3 class="Section-title">Чтобы оставить отзыв, вам нужно
-                    <a href="{% url 'login' %}">авторизоваться</a>
-                  </h3>
-                </header>
-                {% endif %}
               </div>
             </div>
           </div>
@@ -224,3 +241,15 @@ Page {{ reviews.number }} of {{ reviews.paginator.num_pages }}.
     </div>
 
 {% endblock %}
+
+    -webkit-text-size-adjust: 100%;
+    font-family: Roboto, Verdana, Arial, "Helvetica CY", Helvetica, "Nimbus Sans L", sans-serif;
+    font-size: 18px;
+    visibility: visible;
+    cursor: pointer;
+    text-align: center;
+    color: #9c9fa6;
+    box-sizing: border-box;
+    border-style: none;
+    line-height: 0;
+    margin: 0;

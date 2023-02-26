@@ -3,12 +3,11 @@
 {# Общий для нескольких страниц div "Card-hover" #}
 
     <div class="Card-hover">
-      <a class="Card-btn" href="#">
-        <img src="{% static "assets/img/icons/card/bookmark.svg" %}" alt="bookmark.svg"/>
-      </a>
-      <a class="Card-btn" href="#">
-        <img src="{% static "assets/img/icons/card/cart.svg" %}" alt="cart.svg"/>
-      </a>
+      {% if seller_product %}
+        <a class="Card-btn" href="#">
+          <img src="{% static "assets/img/icons/card/cart.svg" %}" alt="cart.svg"/>
+        </a>
+      {% endif %}
       <a class="Card-btn" href="#">
         <img src="{% static "assets/img/icons/card/change.svg" %}" alt="change.svg"/>
       </a>
