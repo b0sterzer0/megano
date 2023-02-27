@@ -5,7 +5,8 @@ from django.test.client import RequestFactory
 from market_app.models import Seller, Product, SellerProduct, Category
 from app_login.models import Profile
 from payment_app.models import TestBasketModel
-from payment_app.views import post_method_for_payment_views
+from payment_app.services import post_method_for_payment_views, get_dict_with_payment_status
+from api_for_payment_app.models import PaymentStatusModel
 
 
 USERNAME = 'test'
@@ -28,36 +29,43 @@ class PostMethodForPaymentViewTestClass(TestCase):
         cls.profile = Profile.objects.create(user=cls.user, full_name='test test test', phone='888888')
         cls.seller = Seller.objects.create(name=cls.user.username, profile=cls.profile, description='test')
         cls.seller_product = SellerProduct.objects.create(product=cls.product, seller=cls.seller, qty=1, price=10)
+        PaymentStatusModel.objects.create(status_code='S204', status_description='test desc')
         cls.factory = RequestFactory()
-
 
     def setUp(self) -> None:
         self.login_user = self.client.login(username=USERNAME, password=PASSWORD)
 
-
-    def test_standart_situation(self):
-        response = self.factory.post('/payment/pay_my_card/', {'card_number': '1111 1112'})
+    def get_payment_status(self, card_number):
+        response = self.factory.post('/payment/pay_my_card/', {'card_number': card_number})
         response.user = self.user
         status = post_method_for_payment_views(response)
+        return status
+
+    def test_standart_situation(self):
+        status = self.get_payment_status(card_number='1111 1112')
         self.assertEqual(status['status']['status_code'], 'S200')
 
     def test_wrong_card_number(self):
-        response = self.factory.post('/payment/pay_my_card/', {'card_number': '1111 1114'})
-        response.user = self.user
-        status = post_method_for_payment_views(response)
+        status = self.get_payment_status(card_number='1111 1114')
         self.assertEqual(status['status']['status_code'], 'S404')
 
     def test_wrong_card_balance(self):
-        response = self.factory.post('/payment/pay_my_card/', {'card_number': '1111 1112'})
-        response.user = self.user
         self.seller_product.price = 1000
         self.seller_product.save()
-        status = post_method_for_payment_views(response)
+        status = self.get_payment_status(card_number='1111 1112')
         self.assertEqual(status['status']['status_code'], 'S403')
 
     def test_no_products_in_basket(self):
         TestBasketModel.objects.all().delete()
-        response = self.factory.post('/payment/pay_my_card/', {'card_number': '1111 1112'})
-        response.user = self.user
-        status = post_method_for_payment_views(response)
+        status = self.get_payment_status(card_number='1111 1112')
         self.assertEqual(status['status']['status_code'], 'S000')
+
+    def test_couldnt_get_data_from_api(self):
+        wrong_base_url = 'http://127.0.0.1:8000/test'
+        card_number = '1111 1112'
+        total_price = 40
+        status_dict = get_dict_with_payment_status(base_url=wrong_base_url,
+                                                   card_number=card_number,
+                                                   total_price=total_price)
+
+        self.assertEqual(status_dict['status']['status_code'], 'S204')

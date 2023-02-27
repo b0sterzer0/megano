@@ -3,10 +3,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.cache import cache
 
-from market_app.models import Product, CharacteristicsGroup, Characteristic, CharacteristicValue, ProductImage
+from market_app.models import Product
+from .services import add_product_in_cache, get_products_for_compare, remove_product_from_cache
 
 
-def add_good_for_compare_view(request, product_id: int) -> HttpResponseRedirect or HttpResponse:
+def add_product_for_compare_view(request, product_id: int) -> HttpResponseRedirect or HttpResponse:
     """
     Это представление реализует добавление товара в список для сравнения, хранящийся к кэше
     """
@@ -22,13 +23,8 @@ def add_good_for_compare_view(request, product_id: int) -> HttpResponseRedirect 
                 return render(request, 'comparison.html', context={'products_for_compare_dict': None,
                                                                    'isFalseCategory': True})
 
-            if len(compare_object['products_list']) < 2:
-                compare_object['products_list'].append(product.id)
-                cache.set('compare_object', compare_object)
-            else:
-                compare_object['products_list'].pop(0)
-                compare_object['products_list'].append(product.id)
-                cache.set('compare_object', compare_object)
+            add_product_in_cache(compare_object, product)
+
         else:
             cache.set('compare_object',
                       {
@@ -46,71 +42,10 @@ def remove_good_for_compare_view(request, product_id: int) -> HttpResponseRedire
     compare_object = cache.get('compare_object')
 
     if compare_object:
-        try:
-            compare_object['products_list'].remove(product_id)
-            cache.set('compare_object', compare_object)
-            if len(cache.get('compare_object')['products_list']) < 1:
-                cache.delete('compare_object')
-            return HttpResponseRedirect('/comparison/')
-        except ValueError:
-            return HttpResponseBadRequest('Ошибка: не удалось удалить товар из списка товаров для сравнения')
+        remove_product_from_cache(compare_object, product_id)
+        return HttpResponseRedirect('/comparison/')
     else:
         return HttpResponseBadRequest('Ошибка: данной записи в кэше не существует')
-
-
-def get_products_for_compare(compare_object: dict) -> dict:
-    """
-    Данная функция собирает все необходимые данные в словарь, который впоследствии будет передан в шаблон.
-
-    Структура словаря:
-    { Название товара :
-        {
-            'image_path' (str) - путь до фото товара,
-            'product_id' (str) - id товара,
-            'characteristics' (dict) :
-                {
-                    Группа характеристик :
-                    [
-                        [
-                            Название характеристики,
-                            Значение характеристики
-                        ],
-                        ....
-                    ],
-                    ....
-                }
-        }
-    }
-    """
-
-    products_for_compare_dict = dict()
-    for product_id in compare_object['products_list']:
-        try:
-            product = Product.objects.get(id=product_id)
-            image_path = ProductImage.objects.get(product=product).image
-            products_for_compare_dict[product.name] = {'image_path': image_path,
-                                                       'product_id': product.id,
-                                                       'characteristics': dict()}
-
-            characteristics = CharacteristicValue.objects.select_related('characteristic').filter(product=product)
-            if not characteristics:
-                raise ObjectDoesNotExist
-
-            existing_groups = list()
-            for characteristic in characteristics:
-                characteristic_list = [characteristic.characteristic.characteristic_name, characteristic.value]
-                for characteristic_group in characteristic.characteristic.group.all():
-                    group_name = characteristic_group.group_name
-                    if group_name in existing_groups:
-                        products_for_compare_dict[product.name]['characteristics'][group_name].append(characteristic_list)
-                    else:
-                        products_for_compare_dict[product.name]['characteristics'][group_name] = [characteristic_list]
-                        existing_groups.append(group_name)
-
-        except ObjectDoesNotExist:
-            return HttpResponse('Ошибка: не удалось сформировать словарь для сравнения товаров')
-
-    return products_for_compare_dict
 
 
 def get_products_list_for_compare_view(request) -> render:
@@ -123,4 +58,6 @@ def get_products_list_for_compare_view(request) -> render:
     else:
         products_for_compare_dict = get_products_for_compare(compare_object)
     return render(request, 'comparison.html', context={'products_for_compare_dict': products_for_compare_dict,
-                                                       'isFalseCategory': False})
+                                                       'isFalseCategory': False,
+                                                       'middle_title_left': 'Сравнение',
+                                                       'middle_title_right': 'Сравнение'})

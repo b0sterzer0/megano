@@ -24,44 +24,6 @@ from market_app.utils import (
 # вероятно, его лучше реализовать через контекст-процессор
 
 
-
-
-# Заглушка для меню категорий товара
-categories = [
-    {
-        'name': 'Компьютеры',
-        'link': '#',
-        'icon': '/static/assets/img/icons/departments/1.svg',
-        'icon_alt': '1.svg'
-    },
-    {
-        'name': 'Мониторы',
-        'link': '#',
-        'icon': '/static/assets/img/icons/departments/2.svg',
-        'icon_alt': '2.svg'
-    },
-    {
-        'name': 'Аксессуары',
-        'link': '#',
-        'icon': '/static/assets/img/icons/departments/3.svg',
-        'icon_alt': '3.svg',
-        'sub_categories': [
-            {
-                'name': 'Мышки',
-                'link': '#',
-                'icon': '/static/assets/img/icons/departments/4.svg',
-                'icon_alt': '4.svg'
-            },
-            {
-                'name': 'Коврики',
-                'link': '#',
-                'icon': '/static/assets/img/icons/departments/5.svg',
-                'icon_alt': '5.svg'
-            },
-        ]
-    },
-]
-
 date1 = datetime.date(year=2022, month=1, day=1)
 date2 = datetime.date(year=2022, month=2, day=2)
 
@@ -105,7 +67,6 @@ class AboutView(TemplateView):
     extra_context = {
         'middle_title_left': 'О нас',
         'middle_title_right': 'О нас',
-        'categories': categories
     }
 
 
@@ -115,7 +76,6 @@ class AccountView(TemplateView):
     extra_context = {
         'middle_title_left': 'Личный кабинет',
         'middle_title_right': 'Личный кабинет',
-        'categories': categories,
         'history_view_list': product_list,
         'active_menu': 'account'
     }
@@ -127,7 +87,6 @@ class CartView(TemplateView):
     extra_context = {
         'middle_title_left': 'Корзина',
         'middle_title_right': 'Корзина',
-        'categories': categories,
     }
 
 
@@ -137,18 +96,7 @@ class CatalogView(TemplateView):
     extra_context = {
         'middle_title_left': 'Каталог товаров',
         'middle_title_right': 'Каталог товаров',
-        'categories': categories,
         'catalog_list': product_list,
-    }
-
-
-class CompareView(TemplateView):
-    """Сравнение товаров"""
-    template_name = 'compare.html'
-    extra_context = {
-        'middle_title_left': 'Сравнение товаров',
-        'middle_title_right': 'Сравнение товаров',
-        'categories': categories,
     }
 
 
@@ -158,7 +106,6 @@ class ContactsView(TemplateView):
     extra_context = {
         'middle_title_left': 'Контакты',
         'middle_title_right': 'Контакты',
-        'categories': categories,
     }
 
 
@@ -168,7 +115,6 @@ class HistoryOrderView(TemplateView):
     extra_context = {
         'middle_title_left': 'История заказов',
         'middle_title_right': 'История заказов',
-        'categories': categories,
         'active_menu': 'historyorder',
     }
 
@@ -179,7 +125,6 @@ class HistoryViewView(TemplateView):
     extra_context = {
         'middle_title_left': 'История просмотра',
         'middle_title_right': 'История просмотра',
-        'categories': categories,
         'history_view_list': product_list,
         'active_menu': 'historyview',
     }
@@ -200,7 +145,6 @@ class OrderView(TemplateView):
     extra_context = {
         'middle_title_left': 'Оформление заказа',
         'middle_title_right': 'Оформление заказа',
-        'categories': categories,
     }
 
 
@@ -246,7 +190,6 @@ class ProfileView(TemplateView):
     extra_context = {
         'middle_title_left': 'Профиль',
         'middle_title_right': 'Профиль',
-        'categories': categories,
         'active_menu': 'profile',
     }
 
@@ -257,7 +200,6 @@ class ProfileAvatarView(TemplateView):
     extra_context = {
         'middle_title_left': 'Профиль',
         'middle_title_right': 'Профиль',
-        'categories': categories,
         'active_menu': 'profile',
     }
 
@@ -269,7 +211,6 @@ class SaleView(TemplateView):
         'middle_title_left': 'Распродажа',
         'middle_title_right': 'Распродажа',
         'sale_list': product_list,
-        'categories': categories,
     }
 
 
@@ -280,7 +221,6 @@ class ShopView(TemplateView):
         'middle_title_left': 'О нас',
         'middle_title_right': 'О нас',
         'popular_list': product_list,
-        'categories': categories,
     }
 
 
