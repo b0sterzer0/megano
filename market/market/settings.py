@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'app_settings',
     'compare_app',
     'app_login',
+    'api_for_payment_app',
+    'payment_app',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +76,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'context_processors.categories_context_processor.get_categories',
+                'context_processors.compare_context_processor.get_amount_products_for_compare',
             ],
         },
     },

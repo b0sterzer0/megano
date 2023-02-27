@@ -2,6 +2,8 @@
 
 <!DOCTYPE html>
 {% load static %}
+{% load mptt_tags %}
+{% load market_app_templatetags %}
 
 <html lang="ru">
 
@@ -135,7 +137,7 @@
 
                   {# T-O-D-O: Информацию о сравнениях товаров и корзине брать из профиля пользователя #}
 
-                  <span class="CartBlock-amount">{{ products_for_compare_num }}</span></a>
+                  <span class="CartBlock-amount">{{ amount_products_for_compare }}</span></a>
                   <a class="CartBlock-block" href="{% url 'cart' %}">
                   <img class="CartBlock-img" src="{% static "assets/img/icons/cart.svg" %}" alt="cart.svg"/>
                   <span class="CartBlock-amount">0</span></a>
@@ -165,35 +167,29 @@
 
                   {# Меню категорий товара #}
 
-                  {% for category in categories %}
-
-                    <div class="CategoriesButton-link">
-                      <a href="{{ category.link }}">
-                      {% if category.icon %}
-                        <div class="CategoriesButton-icon">
-                          <img src="{{ category.icon }}" alt="{{ category.icon_alt }}"/>
+                  {% if categories %}
+                    {% recursetree categories %}
+                    {# Меню категорий товара #}
+                        <div class="CategoriesButton-link">
+                            <a href="{{ node.get_absolute_url }}">
+                                {% if node.image %}
+                                    <div class="CategoriesButton-icon">
+                                        <img src="{% static node.image|add_path %}" alt="{{node.image_alt}}"/>
+                                    </div>
+                                {% endif %}
+                                <span class="CategoriesButton-text">{{ node.title }}</span>
+                            </a>
+                            {% if not node.is_leaf_node %}
+                                <a class="CategoriesButton-arrow" href="#"></a>
+                                <div class="CategoriesButton-submenu">
+                                    {{ children }}
+                                </div>
+                            {% endif %}
                         </div>
-                      {% endif %}
-                       <span class="CategoriesButton-text">{{ category.name }}</span>
-                      </a>
-
-                      {# Подменю подкатегорий #}
-                      {% if category.sub_categories %}
-                        <a class="CategoriesButton-arrow" href="#"></a>
-                        <div class="CategoriesButton-submenu">
-                        {% for sub_category in category.sub_categories %}
-                          <a class="CategoriesButton-link" href="{{ sub_category.link }}">
-                            <div class="CategoriesButton-icon">
-                              <img src="{{ sub_category.icon }}" alt="{{ sub_category.icon_alt }}"/>
-                            </div>
-                            <span class="CategoriesButton-text">{{ sub_category.name }}</span>
-                          </a>
-                        {% endfor %}
-                        </div>
-                      {% endif %}
-                    </div>
-
-                  {% endfor category %}
+                    {% endrecursetree %}
+                    {% else %}
+                        <p>Категории не добавлены</p>
+                    {% endif %}
 
                 </div>
               </div>
@@ -232,7 +228,7 @@
               <h1 class="Middle-title">
 
                   {# Название страницы в левой части #}
-                  {{ middle_title_left }}
+                  {{  middle_title_left }}
 
               </h1>
               <ul class="breadcrumbs Middle-breadcrumbs">

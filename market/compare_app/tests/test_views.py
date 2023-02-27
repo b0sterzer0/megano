@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.core.cache import cache
 
-from ..models import TestProduct, TestCategory, TestSpecification, TestSpecificationValue
+from market_app.models import Product, CharacteristicsGroup, Characteristic, CharacteristicValue, ProductImage,\
+    Category
 from ..views import get_products_for_compare
 
 
@@ -9,125 +10,163 @@ class AddGoodForCompareTestClass(TestCase):
     category_name_1 = 'test_category_1'
     category_name_2 = 'test_category_2'
     product_name = 'test product'
-    product_name_2 = 'test product 2'
-    paths_to_good_images = ['asserts/images']
 
     @classmethod
     def setUpClass(cls):
         super(AddGoodForCompareTestClass, cls).setUpClass()
-        category = TestCategory.objects.create(name=cls.category_name_1)
-        another_category = TestCategory.objects.create(name=cls.category_name_2)
-        product = TestProduct(name=cls.product_name, paths_to_good_images=cls.paths_to_good_images,
-                              category=category)
-        product.save()
-        product = TestProduct(name=cls.product_name_2, paths_to_good_images=cls.paths_to_good_images,
-                              category=another_category)
-        product.save()
+        category = Category.objects.create(title=cls.category_name_1)
+        another_category = Category.objects.create(title=cls.category_name_2)
+        Product.objects.create(name=cls.product_name, category=category, slug='abc')
+        Product.objects.create(name=cls.product_name, category=another_category, slug='def')
 
     def test_ordinary_situation(self):
-        product_id = 1
-        resp = self.client.get(f'/comparison/add/{product_id}/')
-        self.assertEqual(resp.status_code, 302)
+        """
+        Проверка на то, что товар добавляется в кэш
+        """
+        self.client.get(f'/comparison/add/{1}/')
         compare_object = cache.get('compare_object')
-        self.assertTrue(compare_object)
-        self.assertEqual(compare_object['products_list'][0], product_id)
         cache.clear()
+
+        self.assertTrue(compare_object)
+        self.assertEqual(compare_object['products_list'][0], 1)
 
     def test_another_category(self):
-        product_id = 1
-        resp = self.client.get(f'/comparison/add/{product_id}/')
-        product_id = 2
-        resp = self.client.get(f'/comparison/add/{product_id}/')
-        self.assertEqual(resp.status_code, 400)
+        """
+        Тестирование функционала, не допускающего добавление для сравнения товаров из разных категорий
+        """
+        self.client.get(f'/comparison/add/{1}/')
+        resp = self.client.get(f'/comparison/add/{2}/')
+        compare_object = cache.get('compare_object')
         cache.clear()
 
-    def test_more_than_four_items(self):
-        product_id = 1
-        for _ in range(5):
-            self.client.get(f'/comparison/add/{product_id}/')
+        self.assertEqual(resp.context['isFalseCategory'], True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(compare_object['products_list']), 1)
+
+    def test_more_than_two_items(self):
+        """
+        Тестирование функционала, не допускающего добавление для сравнения более 2-ух товаров
+        """
+        for _ in range(3):
+            self.client.get(f'/comparison/add/{1}/')
         compare_object = cache.get('compare_object')
-        self.assertEqual(len(compare_object['products_list']), 4)
         cache.clear()
+
+        self.assertEqual(len(compare_object['products_list']), 2)
 
 
 class RemoveGoodForCompareTestClass(TestCase):
     category_name = 'test category'
     product_name = 'test product'
-    product_name_2 = 'test product 2'
-    paths_to_good_images = ['asserts/images']
 
     @classmethod
     def setUpClass(cls):
         super(RemoveGoodForCompareTestClass, cls).setUpClass()
-        category = TestCategory.objects.create(name=cls.category_name)
-        product_1 = TestProduct(name=cls.product_name, paths_to_good_images=cls.paths_to_good_images,
-                                category=category)
-        product_1.save()
-        product_2 = TestProduct(name=cls.product_name_2, paths_to_good_images=cls.paths_to_good_images,
-                                category=category)
-        product_2.save()
+        category = Category.objects.create(title=cls.category_name)
+        cls.product_1 = Product.objects.create(name=cls.product_name, category=category, slug='ghi')
+        cls.product_2 = Product.objects.create(name=cls.product_name, category=category, slug='klm')
         cache.set('compare_object', {
             'category_for_compare': category,
-            'products_list': [product_1.id, product_2.id]
+            'products_list': [cls.product_1.id, cls.product_2.id]
         })
 
-    def test_set_up_data(self):
-        compare_object = cache.get('compare_object')
-        self.assertEqual(len(compare_object), 2)
-
     def test_ordinary_situation(self):
-        product_id = 6
-        resp = self.client.get(f'/comparison/remove/{product_id}/')
-        self.assertEqual(resp.status_code, 302)
+        """
+        Проверка на то, что нужный товар удаляется из кэша
+        """
+        resp = self.client.get(f'/comparison/remove/{self.product_2.id}/')
         compare_object = cache.get('compare_object')
-        self.assertEqual(compare_object['products_list'][0], 7)
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(len(compare_object['products_list']), 1)
 
     def test_zero_items(self):
-        product_id = 7
-        resp = self.client.get(f'/comparison/remove/{product_id}/')
-        self.assertEqual(resp.status_code, 302)
+        """
+        Проверка на то, что при удалении последнего товара из кэша, оттуда же удаляется сама структура 'compare_object'
+        """
+        resp = self.client.get(f'/comparison/remove/{self.product_1.id}/')
         compare_object = cache.get('compare_object')
-        self.assertFalse(compare_object)
         cache.clear()
 
+        self.assertEqual(resp.status_code, 302)
+        self.assertFalse(compare_object)
 
-class GetProductsForCompareTestClass(TestCase):
-    category_name = 'test category'
-    product_name_1 = 'test product 1'
-    product_name_2 = 'test product 2'
-    product_name_3 = 'test product 3'
-    paths_to_good_images = ['asserts/images']
-    spec_name = 'test_spec_name'
-    spec_value = 'test_spec_value'
-    spec_code = 'test_spec_code'
-    spec_uom = 'test_spec_uom'
+
+class GetProductsForCompareFuncTestClass(TestCase):
+    category_name = 'test'
+    product_name = 'test product 1'
+    group_name_1 = 'test_group_1'
+    group_name_2 = 'test_group_2'
+    characteristic_name_1 = 'characteristic_name_1'
+    characteristic_name_2 = 'characteristic_name_2'
+    characteristic_name_3 = 'characteristic_name_3'
+    characteristic_name_4 = 'characteristic_name_4'
 
     @classmethod
     def setUpClass(cls):
-        super(GetProductsForCompareTestClass, cls).setUpClass()
-        category = TestCategory.objects.create(name=cls.category_name)
-        product_1 = TestProduct.objects.create(name=cls.product_name_1, paths_to_good_images=cls.paths_to_good_images,
-                                               category=category)
-        product_2 = TestProduct.objects.create(name=cls.product_name_2, paths_to_good_images=cls.paths_to_good_images,
-                                               category=category)
-        product_3 = TestProduct.objects.create(name=cls.product_name_3, paths_to_good_images=cls.paths_to_good_images,
-                                               category=category)
-        spec = TestSpecification.objects.create(code=cls.spec_code, name=cls.spec_name, uom=cls.spec_uom)
-        TestSpecificationValue.objects.create(specification=spec, value=cls.spec_value, product=product_1)
-        TestSpecificationValue.objects.create(specification=spec, value=cls.spec_value, product=product_2)
-        TestSpecificationValue.objects.create(specification=spec, value=cls.spec_value, product=product_3)
+        super(GetProductsForCompareFuncTestClass, cls).setUpClass()
+        category = Category.objects.create(title=cls.category_name)
+        cls.product = Product.objects.create(name=cls.product_name, category=category, slug='lmn')
+        cls.image = ProductImage.objects.create(product=cls.product, image='/test/test/test')
+        cls.group_1 = CharacteristicsGroup.objects.create(group_name=cls.group_name_1)
+        cls.group_1.category.add(category)
+        cls.group_2 = CharacteristicsGroup.objects.create(group_name=cls.group_name_2)
+        cls.group_2.category.add(category)
+        cls.char_1 = Characteristic.objects.create(characteristic_name=cls.characteristic_name_1)
+        cls.char_2 = Characteristic.objects.create(characteristic_name=cls.characteristic_name_2)
+        cls.char_3 = Characteristic.objects.create(characteristic_name=cls.characteristic_name_3)
+        cls.char_4 = Characteristic.objects.create(characteristic_name=cls.characteristic_name_4)
+        cls.char_1.group.add(cls.group_1)
+        cls.char_2.group.add(cls.group_1)
+        cls.char_3.group.add(cls.group_2)
+        cls.char_4.group.add(cls.group_2)
+        cls.value_1 = CharacteristicValue.objects.create(value='test', characteristic=cls.char_1, product=cls.product)
+        cls.value_2 = CharacteristicValue.objects.create(value='test', characteristic=cls.char_2, product=cls.product)
+        cls.value_3 = CharacteristicValue.objects.create(value='test', characteristic=cls.char_3, product=cls.product)
+        cls.value_4 = CharacteristicValue.objects.create(value='test', characteristic=cls.char_4, product=cls.product)
         cache.set('compare_objects', {
             'category_for_compare': category,
-            'products_list': [product_1.id, product_2.id, product_3.id]
+            'products_list': [cls.product.id]
         })
 
     def test_ordinary_situation(self):
+        """
+        Проверка поведения функции и возвращаемых ею данных при запланированном сценарии
+        """
         compare_object = cache.get('compare_objects')
-        self.assertTrue(compare_object)
-        products_for_compare = get_products_for_compare(compare_object)
-        self.assertTrue(products_for_compare)
-        self.assertEqual(len(products_for_compare['products']), 3)
-        self.assertEqual(len(products_for_compare['specifications_for_compare']), 1)
-        self.assertTrue(products_for_compare['specifications_for_compare'][self.spec_name])
-        self.assertEqual(len(products_for_compare['specifications_for_compare'][self.spec_name]), 3)
-        self.assertEqual(len(products_for_compare['ratings']), 0)
+        products_dict = get_products_for_compare(compare_object=compare_object)
+        product_data_dict = products_dict[self.product_name]
+        characteristics_groups_dict = product_data_dict['characteristics']
+
+        # Такое большое кол-во проверок необходимо ввиду особой важности формируемых функцией данных
+        self.assertEqual(len(products_dict.keys()), 1)
+        self.assertEqual(list(products_dict.keys())[0], self.product.name)
+
+        # Проверка корректности пути к картинке товара и его id
+        self.assertEqual(product_data_dict['image_path'], self.image.image)
+        self.assertEqual(product_data_dict['product_id'], self.product.id)
+
+        # Проверка кол-ва сформированных групп характеристик и корректности их названий
+        self.assertEqual(len(characteristics_groups_dict), 2)
+        self.assertEqual(list(characteristics_groups_dict.keys())[0], self.group_1.group_name)
+        self.assertEqual(list(characteristics_groups_dict.keys())[1], self.group_2.group_name)
+
+        # Проверка кол-ва сформированных списков с конкретными характеристиками в каждой группе
+        self.assertEqual(len(characteristics_groups_dict[self.group_1.group_name]), 2)
+        self.assertEqual(len(characteristics_groups_dict[self.group_2.group_name]), 2)
+
+        # Проверка того, что в каждом списке с характеристикой присутствует 2 элемента (ее название и значение)
+        self.assertEqual(len(characteristics_groups_dict[self.group_1.group_name][0]), 2)
+        self.assertEqual(len(characteristics_groups_dict[self.group_1.group_name][1]), 2)
+        self.assertEqual(len(characteristics_groups_dict[self.group_2.group_name][0]), 2)
+        self.assertEqual(len(characteristics_groups_dict[self.group_2.group_name][1]), 2)
+
+        # Проверка корректности названий характеристик и их значений
+        self.assertEqual(characteristics_groups_dict[self.group_1.group_name][0][0], self.char_1.characteristic_name)
+        self.assertEqual(characteristics_groups_dict[self.group_1.group_name][0][1], self.value_1.value)
+        self.assertEqual(characteristics_groups_dict[self.group_1.group_name][1][0], self.char_2.characteristic_name)
+        self.assertEqual(characteristics_groups_dict[self.group_1.group_name][1][1], self.value_2.value)
+        self.assertEqual(characteristics_groups_dict[self.group_2.group_name][0][0], self.char_3.characteristic_name)
+        self.assertEqual(characteristics_groups_dict[self.group_2.group_name][0][1], self.value_3.value)
+        self.assertEqual(characteristics_groups_dict[self.group_2.group_name][1][0], self.char_4.characteristic_name)
+        self.assertEqual(characteristics_groups_dict[self.group_2.group_name][1][1], self.value_4.value)

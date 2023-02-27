@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.translation import gettext_lazy as _
 
@@ -49,6 +50,8 @@ class Category(MPTTModel):
     """
 
     title = models.CharField(max_length=50, unique=True, verbose_name='Название')
+    image = models.FileField(verbose_name='Картинка категории товаров', default=None, null=True, blank=True)
+    image_alt = models.CharField(max_length=20, default=None, null=True, verbose_name='Название картинки категории')
     slug = models.SlugField()
     parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
                             db_index=True, verbose_name='Родительская категория')
@@ -65,14 +68,8 @@ class Category(MPTTModel):
     def __str__(self):
         return self.title
 
-
-class Discount(models.Model):
-    """Модель скидки для товаров"""
-    discount = models.IntegerField()
-
-    class Meta:
-        verbose_name = 'скидка'
-        verbose_name_plural = 'скидки'
+    def get_absolute_url(self):
+        return reverse('catalog')
 
 
 class Product(models.Model):
@@ -91,6 +88,54 @@ class Product(models.Model):
     class Meta:
         verbose_name = _('товар')
         verbose_name_plural = _('товары')
+
+
+class CharacteristicsGroup(models.Model):
+    group_name = models.CharField(max_length=30, verbose_name='название группы характеристик')
+    category = models.ManyToManyField(Category, verbose_name='связь категория - группа характеристик')
+
+    class Meta:
+        verbose_name = 'группа характеристик'
+        verbose_name_plural = 'группы характеристик'
+
+    def __str__(self):
+        return self.group_name
+
+
+class Characteristic(models.Model):
+    characteristic_name = models.CharField(max_length=30, verbose_name='название характеристики')
+    group = models.ManyToManyField(CharacteristicsGroup, verbose_name='связь группа характеристик - характеристика')
+
+    class Meta:
+        verbose_name = 'характеристика'
+        verbose_name_plural = 'характеристики'
+
+    def __str__(self):
+        return self.characteristic_name
+
+
+class CharacteristicValue(models.Model):
+    value = models.CharField(max_length=200, verbose_name='значение характеристики')
+    characteristic = models.ForeignKey(Characteristic, verbose_name='связь значение характеристики - характеристика',
+                                       on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, default=None, blank=True,
+                                verbose_name='связь значение характеристики - продукт')
+
+    class Meta:
+        verbose_name = 'значение характеристик'
+        verbose_name_plural = 'значения характеристик'
+
+    def __str__(self):
+        return f'{self.characteristic.characteristic_name} {self.product.name}'
+
+
+class Discount(models.Model):
+    """Модель скидки для товаров"""
+    discount = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'скидка'
+        verbose_name_plural = 'скидки'
 
 
 class ProductImage(models.Model):
