@@ -2,10 +2,12 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseBadRequest
 
+from typing import Union
+
 from market_app.models import Product, CharacteristicsGroup, Characteristic, CharacteristicValue, ProductImage
 
 
-def add_product_in_cache(compare_object: dict, product):
+def add_product_in_cache(compare_object: dict, product) -> None:
     """
     Функция реализует функционал добавления товара в кэш и проверку, чтобы кол-во товаров в корзине не превышало два
     """
@@ -18,7 +20,7 @@ def add_product_in_cache(compare_object: dict, product):
         cache.set('compare_object', compare_object)
 
 
-def remove_product_from_cache(compare_object, product_id):
+def remove_product_from_cache(compare_object: dict, product_id: str) -> Union[None, HttpResponseBadRequest]:
     """
     Функция реализует функционал удаления товара из кэша
     """
@@ -31,7 +33,7 @@ def remove_product_from_cache(compare_object, product_id):
         return HttpResponseBadRequest('Ошибка: не удалось удалить товар из списка товаров для сравнения')
 
 
-def formation_initial_dict_for_product(product_id, compare_dict):
+def formation_initial_dict_for_product(product_id: str, compare_dict: dict) -> Union[dict, HttpResponse]:
     """
     Функция формирует изначальный словарь для продукта, в который после будут добавляться его характеристики
     """
@@ -46,7 +48,7 @@ def formation_initial_dict_for_product(product_id, compare_dict):
     return product, compare_dict
 
 
-def add_characteristics_in_dict(compare_dict, characteristics, product):
+def add_characteristics_in_dict(compare_dict: dict, characteristics, product) -> dict:
     """
     Функция реализует функционал добавления групп характеристик и их самих в словарь товара
     """

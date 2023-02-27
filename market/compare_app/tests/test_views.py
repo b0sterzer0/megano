@@ -16,8 +16,8 @@ class AddGoodForCompareTestClass(TestCase):
         super(AddGoodForCompareTestClass, cls).setUpClass()
         category = Category.objects.create(title=cls.category_name_1)
         another_category = Category.objects.create(title=cls.category_name_2)
-        Product.objects.create(name=cls.product_name, category=category)
-        Product.objects.create(name=cls.product_name, category=another_category)
+        Product.objects.create(name=cls.product_name, category=category, slug='abc')
+        Product.objects.create(name=cls.product_name, category=another_category, slug='def')
 
     def test_ordinary_situation(self):
         """
@@ -63,8 +63,8 @@ class RemoveGoodForCompareTestClass(TestCase):
     def setUpClass(cls):
         super(RemoveGoodForCompareTestClass, cls).setUpClass()
         category = Category.objects.create(title=cls.category_name)
-        cls.product_1 = Product.objects.create(name=cls.product_name, category=category)
-        cls.product_2 = Product.objects.create(name=cls.product_name, category=category)
+        cls.product_1 = Product.objects.create(name=cls.product_name, category=category, slug='ghi')
+        cls.product_2 = Product.objects.create(name=cls.product_name, category=category, slug='klm')
         cache.set('compare_object', {
             'category_for_compare': category,
             'products_list': [cls.product_1.id, cls.product_2.id]
@@ -106,7 +106,7 @@ class GetProductsForCompareFuncTestClass(TestCase):
     def setUpClass(cls):
         super(GetProductsForCompareFuncTestClass, cls).setUpClass()
         category = Category.objects.create(title=cls.category_name)
-        cls.product = Product.objects.create(name=cls.product_name, category=category)
+        cls.product = Product.objects.create(name=cls.product_name, category=category, slug='lmn')
         cls.image = ProductImage.objects.create(product=cls.product, image='/test/test/test')
         cls.group_1 = CharacteristicsGroup.objects.create(group_name=cls.group_name_1)
         cls.group_1.category.add(category)

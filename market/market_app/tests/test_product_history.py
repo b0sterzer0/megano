@@ -1,4 +1,5 @@
 import time
+from random import choice
 
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -15,8 +16,12 @@ class HistoryViewOperationsTest(TestCase):
         user = User.objects.create_user('test_user')
         cls.user = user
         category = Category.objects.create()
-        cls.products = [Product.objects.create(name=f'Product {i}', category=category)
-                        for i in range(21)]
+        slug_list = ['a' * num for num in range(1, 22)]
+        cls.products = list()
+        for num in range(1, 22):
+            slug = 'a' * num
+            product = Product.objects.create(name=f'Product {num}', category=category, slug=slug)
+            cls.products.append(product)
         cls.history = HistoryViewOperations(user=user)
 
     def test_add_product(self):

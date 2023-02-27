@@ -41,7 +41,7 @@ def get_dict_with_payment_status(base_url: str, card_number: str, total_price: i
     return status
 
 
-def post_method_for_payment_views(request) -> Union[str, HttpResponseBadRequest, HttpResponseNotFound]:
+def post_method_for_payment_views(request) -> dict:
     """
     В этой функции реализован POST метод для представлений PayMyCardView и PaySomeoneCardView
     """
