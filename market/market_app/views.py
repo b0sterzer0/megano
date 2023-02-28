@@ -23,12 +23,44 @@ from market_app.utils import (
 # Поскольку меню категорий присутствует на всех страницах сайта, то
 # вероятно, его лучше реализовать через контекст-процессор
 
+# Заглушка для меню категорий товара
 
-date1 = datetime.date(year=2022, month=1, day=1)
-date2 = datetime.date(year=2022, month=2, day=2)
 
-# Заглушка для списка товаров
-product_list = Product.objects.all()[:20]
+def get_catalog(queryset):
+    products_list = []
+    if queryset is None:
+        queryset = SellerProduct.objects.select_related('product').all()
+    for product in queryset:
+        if product.discount:
+            products_list.append(
+                {
+                    'link': product.product.slug,
+                    'image': '/static/assets/img/content/home/card.jpg',
+                    'image_alt': 'card.jpg',
+                    'title': product.product.name,
+                    'category': product.product.category,
+                    'price': round(float(product.price) * (1 - product.discount.discount / 100), 2),
+                    'price_old': product.price,
+                    'sale': product.discount.discount,
+                    'date': product.discount.start_date,
+                    'date_to': product.discount.end_date,
+                    'description': product.product.description
+                }
+            )
+        else:
+            products_list.append(
+                {
+                    'link': product.product.slug,
+                    'image': '/static/assets/img/content/home/card.jpg',
+                    'image_alt': 'card.jpg',
+                    'title': product.product.name,
+                    'category': product.product.category,
+                    'price': product.price,
+                    'description': product.product.description
+                }
+            )
+    return products_list
+
 
 # Заглушка для списка элементов слайдера на главной странице
 slider_items = [
@@ -47,17 +79,22 @@ slider_items = [
 class HomeView(TemplateView):
     """Главная страница"""
     template_name = 'index.html'
+    extra_context = {
+        'slider_items': slider_items,
+        # необходимое количество можно взять из конфига
+        'popular_list': get_catalog(None)[:8],
+        'hot_offer_list': get_catalog(None),
+        'limited_edition_list': get_catalog(None)
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = Product.objects.annotate(min_price=Min('sellers__price'))
         context['banners_list'] = get_banners_list()
-        context['categories'] = categories
         context['slider_items'] = slider_items
         # необходимое количество можно взять из конфига
-        context['popular_list'] = products
-        context['hot_offer_list'] = products
-        context['limited_edition_list'] = products
+        context['popular_list'] = get_catalog(None)
+        context['hot_offer_list'] = get_catalog(None)
+        context['limited_edition_list'] = get_catalog(None)
         return context
 
 
@@ -76,7 +113,7 @@ class AccountView(TemplateView):
     extra_context = {
         'middle_title_left': 'Личный кабинет',
         'middle_title_right': 'Личный кабинет',
-        'history_view_list': product_list,
+        'history_view_list': get_catalog(None),
         'active_menu': 'account'
     }
 
@@ -96,7 +133,7 @@ class CatalogView(TemplateView):
     extra_context = {
         'middle_title_left': 'Каталог товаров',
         'middle_title_right': 'Каталог товаров',
-        'catalog_list': product_list,
+        'cards': get_catalog(None),
     }
 
 
@@ -125,7 +162,7 @@ class HistoryViewView(TemplateView):
     extra_context = {
         'middle_title_left': 'История просмотра',
         'middle_title_right': 'История просмотра',
-        'history_view_list': product_list,
+        'history_view_list': get_catalog(None),
         'active_menu': 'historyview',
     }
 
@@ -210,7 +247,7 @@ class SaleView(TemplateView):
     extra_context = {
         'middle_title_left': 'Распродажа',
         'middle_title_right': 'Распродажа',
-        'sale_list': product_list,
+        'sale_list': get_catalog(None),
     }
 
 
@@ -220,7 +257,7 @@ class ShopView(TemplateView):
     extra_context = {
         'middle_title_left': 'О нас',
         'middle_title_right': 'О нас',
-        'popular_list': product_list,
+        'popular_list': get_catalog(None),
     }
 
 
@@ -257,17 +294,17 @@ class ProductFilter(View):
         """Фильтр товаров"""
         cards = []
         products_form = ProductsForm(request.POST)
-        if 'price' in products_form.data:
-            price_product = products_form.data['price'].replace(';', ' ').split()
+        if 'price' not in products_form.data:
             name_product = products_form.data['title']
-            cards_obj = SellerProduct.objects.filter(price__gt=price_product[0], price__lt=price_product[1])
-            for temp_data in cards_obj:
-                if name_product in temp_data.product.name:
-                    cards.append(temp_data)
-        else:
-            name_product = products_form.data['title']
-            card = Product.objects.filter(name__contains=name_product)
-            return render(request, 'catalog.html', context={'cards': card})
+            card = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
+            return render(request, 'catalog.html', context={'cards': get_catalog(card)})
+        price_product = products_form.data['price'].replace(';', ' ').split()
+        name_product = products_form.data['title']
+        cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
+        cards_list = get_catalog(cards_obj)
+        for card in cards_list:
+            if int(price_product[0]) <= card['price'] <= int(price_product[1]):
+                cards.append(card)
         context = {
             'cards': cards
         }

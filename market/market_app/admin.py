@@ -9,7 +9,6 @@ from market_app.models import (
     SellerProduct,
     Seller,
     Discount,
-    ProductDiscount,
     CharacteristicsGroup,
     Characteristic,
     CharacteristicValue,
@@ -91,8 +90,3 @@ class ProductReviewAdmin(admin.ModelAdmin):
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
     list_display = ['discount']
-
-
-@admin.register(ProductDiscount)
-class EnrollmentAdmin(admin.ModelAdmin):
-    list_display = ['product', 'discount']
