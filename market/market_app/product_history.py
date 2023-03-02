@@ -10,6 +10,7 @@
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db import transaction
+from django.db.models import Min
 
 from .models import Product, HistoryView
 from utils.utils import CacheCleaner
@@ -23,6 +24,12 @@ class HistoryViewOperations:
         # Идентификатор истории просмотра в кэше
         self.cache_id = f'history_view:{self.user.pk}'
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
     def products(self):
         """
         Возвращает список просмотренных товаров.
@@ -30,8 +37,8 @@ class HistoryViewOperations:
         """
 
         def _get_products_from_db():
-            return HistoryView.objects.filter(user=self.user).values_list('product', flat=True)
-
+            return Product.objects.filter(histories__user=self.user).order_by('-histories__view_time').\
+                annotate(min_price=Min('sellers__price'))
         return cache.get_or_set(self.cache_id, _get_products_from_db)
 
     def count(self) -> int:

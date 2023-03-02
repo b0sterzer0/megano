@@ -169,8 +169,8 @@ class SellerProduct(models.Model):
 
 class HistoryView(models.Model):
     """ История просмотров пользователя """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', related_name='histories')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар', related_name='histories')
     view_time = models.DateTimeField(auto_now=True, auto_created=True, verbose_name='Время просмотра')
 
     def __str__(self):

@@ -10,6 +10,7 @@ from django.urls import reverse
 from market_app.banners import get_banners_list
 from market_app.forms import ProductReviewForm, ProductsForm
 from market_app.models import Seller, Product, Category, ProductReviewImage, SellerProduct
+from market_app.product_history import HistoryViewOperations
 from market_app.utils import (
     create_product_review,
     can_create_reviews,
@@ -79,22 +80,16 @@ slider_items = [
 class HomeView(TemplateView):
     """Главная страница"""
     template_name = 'index.html'
-    extra_context = {
-        'slider_items': slider_items,
-        # необходимое количество можно взять из конфига
-        'popular_list': get_catalog(None)[:8],
-        'hot_offer_list': get_catalog(None),
-        'limited_edition_list': get_catalog(None)
-    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        products = Product.objects.annotate(min_price=Min('sellers__price'))
         context['banners_list'] = get_banners_list()
         context['slider_items'] = slider_items
         # необходимое количество можно взять из конфига
-        context['popular_list'] = get_catalog(None)
-        context['hot_offer_list'] = get_catalog(None)
-        context['limited_edition_list'] = get_catalog(None)
+        context['popular_list'] = products
+        context['hot_offer_list'] = products
+        context['limited_edition_list'] = products
         return context
 
 
@@ -110,12 +105,16 @@ class AboutView(TemplateView):
 class AccountView(TemplateView):
     """Личный кабинет"""
     template_name = 'account.html'
-    extra_context = {
-        'middle_title_left': 'Личный кабинет',
-        'middle_title_right': 'Личный кабинет',
-        'history_view_list': get_catalog(None),
-        'active_menu': 'account'
-    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        with HistoryViewOperations(self.request.user) as history:
+            history_view_list = history.products()[:3]
+        context['middle_title_left'] = 'Личный кабинет'
+        context['middle_title_right'] = 'Личный кабинет'
+        context['active_menu'] = 'account'
+        context['history_view_list'] = history_view_list
+        return context
 
 
 class CartView(TemplateView):
@@ -159,12 +158,16 @@ class HistoryOrderView(TemplateView):
 class HistoryViewView(TemplateView):
     """История просмотров пользователя"""
     template_name = 'historyview.html'
-    extra_context = {
-        'middle_title_left': 'История просмотра',
-        'middle_title_right': 'История просмотра',
-        'history_view_list': get_catalog(None),
-        'active_menu': 'historyview',
-    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        with HistoryViewOperations(self.request.user) as history:
+            history_view_list = history.products()
+        context['middle_title_left'] = 'История просмотра'
+        context['middle_title_right'] = 'История просмотра'
+        context['active_menu'] = 'historyview'
+        context['history_view_list'] = history_view_list
+        return context
 
 
 class OneOrderView(TemplateView):
@@ -205,6 +208,8 @@ class ProductView(DetailView):
         context['middle_title_left'] = product.name
         context['middle_title_right'] = product.name
         context['review_form'] = ProductReviewForm()
+        with HistoryViewOperations(self.request.user) as history:
+            history.add_product(product)
         return context
 
     def post(self, request, *args, **kwargs):

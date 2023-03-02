@@ -5,29 +5,49 @@
 
 {# TODO: Разобраться с выводом старой и новой цены при наличии скидки на товар #}
 
-  <a class="Card-picture" href="#">
-    <img src="{{ MEDIA_ROOT }}{{ card.images.first.image.url }}" alt="{{ card.images.first.image_alt }}"/>
+  {#  <a class="Card-picture" href="{% url 'product' card.product.id %}"> #}
+
+  {% if seller_product %}
+  <a class="Card-picture" href="{% url 'product' card.product.id %}">
+    <img src="{{ MEDIA_ROOT }}{{ card.product.images.first.image.url }}" alt="{{ card.product.images.first.image_alt }}"/>
   </a>
   <div class="Card-content">
     <strong class="Card-title">
-      <a href="#">
-        {{ card.title }}
+      <a href="{% url 'product' card.product.id %}">
+        {{ card.product.name }}
       </a>
     </strong>
     <div class="Card-description">
       <div class="Card-cost">
-        <span class="Card-priceOld">{{ card.price_old }}</span>
+        <span class="Card-priceOld">666</span>
         <span class="Card-price">{{ card.price }}</span>
+      </div>
+      <div class="Card-category">
+        {{ card.product.category.parent }}/{{ card.product.category }}
+      </div>
+
+  {% else %}
+  <a class="Card-picture" href="{% url 'product' card.id %}">
+    <img src="{{ MEDIA_ROOT }}{{ card.images.first.image.url }}" alt="{{ card.images.first.image_alt }}"/>
+  </a>
+  <div class="Card-content">
+    <strong class="Card-title">
+      <a href="{% url 'product' card.id %}">
+        {{ card.name }}
+      </a>
+    </strong>
+    <div class="Card-description">
+      <div class="Card-cost">
+        <span class="Card-priceOld">666</span>
+        <span class="Card-price">{{ card.min_price }}</span>
       </div>
       <div class="Card-category">{{ card.category.parent }}/{{ card.category }}
       </div>
+  {% endif %}
 
       {% include 'include/card_hover.html' %}
 
     </div>
   </div>
-    {% if card.sale %}
-      <div class="Card-sale">-{{ card.sale }}%
-      </div>
-    {% endif %}
-
+  <div class="Card-sale">-100
+  </div>
