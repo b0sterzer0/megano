@@ -17,7 +17,8 @@ from market_app.utils import (
     get_product_review_list,
     get_seller,
     get_count_product_reviews,
-    get_popular_list_for_seller
+    get_popular_list_for_seller,
+    get_count_product_in_cart
 )
 
 
@@ -27,40 +28,40 @@ from market_app.utils import (
 # Заглушка для меню категорий товара
 
 
-def get_catalog(queryset):
-    products_list = []
-    if queryset is None:
-        queryset = SellerProduct.objects.select_related('product').all()
-    for product in queryset:
-        if product.discount:
-            products_list.append(
-                {
-                    'link': product.product.slug,
-                    'image': '/static/assets/img/content/home/card.jpg',
-                    'image_alt': 'card.jpg',
-                    'title': product.product.name,
-                    'category': product.product.category,
-                    'price': round(float(product.price) * (1 - product.discount.discount / 100), 2),
-                    'price_old': product.price,
-                    'sale': product.discount.discount,
-                    'date': product.discount.start_date,
-                    'date_to': product.discount.end_date,
-                    'description': product.product.description
-                }
-            )
-        else:
-            products_list.append(
-                {
-                    'link': product.product.slug,
-                    'image': '/static/assets/img/content/home/card.jpg',
-                    'image_alt': 'card.jpg',
-                    'title': product.product.name,
-                    'category': product.product.category,
-                    'price': product.price,
-                    'description': product.product.description
-                }
-            )
-    return products_list
+# def get_catalog(queryset):
+#     products_list = []
+#     if queryset is None:
+#         queryset = SellerProduct.objects.select_related('product').all()
+#     for product in queryset:
+#         if product.discount:
+#             products_list.append(
+#                 {
+#                     'link': product.product.slug,
+#                     'image': '/static/assets/img/content/home/card.jpg',
+#                     'image_alt': 'card.jpg',
+#                     'title': product.product.name,
+#                     'category': product.product.category,
+#                     'price': round(float(product.price) * (1 - product.discount.discount / 100), 2),
+#                     'price_old': product.price,
+#                     'sale': product.discount.discount,
+#                     'date': product.discount.start_date,
+#                     'date_to': product.discount.end_date,
+#                     'description': product.product.description
+#                 }
+#             )
+#         else:
+#             products_list.append(
+#                 {
+#                     'link': product.product.slug,
+#                     'image': '/static/assets/img/content/home/card.jpg',
+#                     'image_alt': 'card.jpg',
+#                     'title': product.product.name,
+#                     'category': product.product.category,
+#                     'price': product.price,
+#                     'description': product.product.description
+#                 }
+#             )
+#     return products_list
 
 
 # Заглушка для списка элементов слайдера на главной странице
@@ -90,6 +91,7 @@ class HomeView(TemplateView):
         context['popular_list'] = products
         context['hot_offer_list'] = products
         context['limited_edition_list'] = products
+        context['product_in_cart'] = get_count_product_in_cart(self.request)
         return context
 
 
@@ -117,22 +119,13 @@ class AccountView(TemplateView):
         return context
 
 
-class CartView(TemplateView):
-    """Корзина"""
-    template_name = 'cart.html'
-    extra_context = {
-        'middle_title_left': 'Корзина',
-        'middle_title_right': 'Корзина',
-    }
-
-
 class CatalogView(TemplateView):
     """Каталог товаров"""
     template_name = 'catalog.html'
     extra_context = {
         'middle_title_left': 'Каталог товаров',
         'middle_title_right': 'Каталог товаров',
-        'cards': get_catalog(None),
+        # 'cards': get_catalog(None),
     }
 
 
@@ -208,6 +201,8 @@ class ProductView(DetailView):
         context['middle_title_left'] = product.name
         context['middle_title_right'] = product.name
         context['review_form'] = ProductReviewForm()
+        context['product_id'] = product.id
+        context['product_in_cart'] = get_count_product_in_cart(self.request)
         with HistoryViewOperations(self.request.user) as history:
             history.add_product(product)
         return context
@@ -252,7 +247,7 @@ class SaleView(TemplateView):
     extra_context = {
         'middle_title_left': 'Распродажа',
         'middle_title_right': 'Распродажа',
-        'sale_list': get_catalog(None),
+        # 'sale_list': get_catalog(None),
     }
 
 
@@ -262,7 +257,7 @@ class ShopView(TemplateView):
     extra_context = {
         'middle_title_left': 'О нас',
         'middle_title_right': 'О нас',
-        'popular_list': get_catalog(None),
+        # 'popular_list': get_catalog(None),
     }
 
 
@@ -294,23 +289,24 @@ class SellerDetailView(DetailView):
 
 
 class ProductFilter(View):
+    pass
 
-    def post(self, request):
-        """Фильтр товаров"""
-        cards = []
-        products_form = ProductsForm(request.POST)
-        if 'price' not in products_form.data:
-            name_product = products_form.data['title']
-            card = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
-            return render(request, 'catalog.html', context={'cards': get_catalog(card)})
-        price_product = products_form.data['price'].replace(';', ' ').split()
-        name_product = products_form.data['title']
-        cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
-        cards_list = get_catalog(cards_obj)
-        for card in cards_list:
-            if int(price_product[0]) <= card['price'] <= int(price_product[1]):
-                cards.append(card)
-        context = {
-            'cards': cards
-        }
-        return render(request, 'catalog.html', context=context)
+#     def post(self, request):
+#         """Фильтр товаров"""
+#         cards = []
+#         products_form = ProductsForm(request.POST)
+#         if 'price' not in products_form.data:
+#             name_product = products_form.data['title']
+#             card = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
+#             return render(request, 'catalog.html', context={'cards': get_catalog(card)})
+#         price_product = products_form.data['price'].replace(';', ' ').split()
+#         name_product = products_form.data['title']
+#         cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
+#         cards_list = get_catalog(cards_obj)
+#         for card in cards_list:
+#             if int(price_product[0]) <= card['price'] <= int(price_product[1]):
+#                 cards.append(card)
+#         context = {
+#             'cards': cards
+#         }
+#         return render(request, 'catalog.html', context=context)

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'app_login',
     'api_for_payment_app',
     'payment_app',
+    'app_cart',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +65,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'market.urls'
+
+LOGIN_REDIRECT_URL = '/'
 
 TEMPLATES = [
     {

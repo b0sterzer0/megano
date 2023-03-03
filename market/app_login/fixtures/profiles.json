@@ -6,7 +6,8 @@
       "user": 2,
       "full_name": "Иванов Иван Иванович",
       "phone": "+70000000000",
-      "avatar": "../static/assets/img/content/blackandwhite_3.jpg"
+      "avatar": "../static/assets/img/content/blackandwhite_3.jpg",
+      "product_in_cart": 0
     }
   },
   {
@@ -16,7 +17,8 @@
       "user": 3,
       "full_name": "Сидоров Тихон",
       "phone": "+70000000000",
-      "avatar": "../static/assets/img/content/boy.jpg"
+      "avatar": "../static/assets/img/content/boy.jpg",
+      "product_in_cart": 0
     }
   },
   {
@@ -26,7 +28,8 @@
       "user": 4,
       "full_name": "Барсик",
       "phone": "+70000000000",
-      "avatar": "../static/assets/img/content/cat.jpg"
+      "avatar": "../static/assets/img/content/cat.jpg",
+      "product_in_cart": 0
     }
   }
 ]

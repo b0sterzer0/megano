@@ -114,15 +114,15 @@
                       <strong>₽&#32;{{ product.price }}
                       </strong>
                     </div>
-                    <div class="Categories-block Amount Amount_product">
-                      <button class="Amount-remove" type="button">
-                      </button>
-                      <input class="Amount-input form-input" name="amount" type="text" value="1"/>
-                      <button class="Amount-add" type="button">
-                      </button>
-                    </div>
+{#                    <div class="Categories-block Amount Amount_product">#}
+{#                      <button class="Amount-remove" type="button">#}
+{#                      </button>#}
+{#                      <input class="Amount-input form-input" name="amount" type="text" value="1"/>#}
+{#                      <button class="Amount-add" type="button">#}
+{#                      </button>#}
+{#                    </div>#}
                     <div class="Categories-block Categories-button">
-                        <a class="btn btn_primary" href="#">
+                        <a class="btn btn_primary" href="{% url 'add_cart' product_id=product_id product_price=product.price %}">
                             <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg"/>
                             <span class="btn-content">Добавить в корзину</span>
                         </a>
