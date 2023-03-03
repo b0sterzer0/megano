@@ -1,8 +1,11 @@
 from django.urls import path
 
-from .views import OrderView
+from .views import OrderStepOneView, OrderStepTwoView, OrderStepThreeView, OrderStepFourView
 
 
 urlpatterns = [
-    path('', OrderView.as_view(), name='order')
+    path('', OrderStepOneView.as_view(), name='order_step_1'),
+    path('step2/', OrderStepTwoView.as_view(), name='order_step_2'),
+    path('step3/', OrderStepThreeView.as_view(), name='order_step_3'),
+    path('step4/', OrderStepFourView.as_view(), name='order_step_4')
 ]
