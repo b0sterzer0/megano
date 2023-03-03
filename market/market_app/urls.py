@@ -5,7 +5,7 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('about/', views.AboutView.as_view(), name='about'),
     path('account/', views.AccountView.as_view(), name='account'),
-    path('cart/', views.CartView.as_view(), name='cart'),
+    # path('carts/', views.CartView.as_view(), name='cart'),
     path('catalog/', views.CatalogView.as_view(), name='catalog'),
     path('catalog/filter/', views.ProductFilter.as_view(), name='filter'),
     path('comparison/', include('compare_app.urls')),
@@ -21,6 +21,5 @@ urlpatterns = [
     path('profile_avatar/', views.ProfileAvatarView.as_view(), name='profile_avatar'),
     path('sale/', views.SaleView.as_view(), name='sale'),
     path('shop/', views.ShopView.as_view(), name='shop'),
-    path('login_or_register/', views.LoginOrRegisterView.as_view(), name='login_or_register'),
     path('seller/<int:pk>/', views.SellerDetailView.as_view(), name='seller'),
 ]

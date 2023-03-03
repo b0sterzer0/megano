@@ -35,4 +35,5 @@ urlpatterns = [
     path('password-reset/done/', UserPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', UserPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', UserPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('cart/', include('app_cart.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,6 +1,8 @@
 from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from app_cart.models import AnonimCart
+from app_login.models import Profile
 from market_app.models import ProductReview, Seller
 from app_settings.utils import get_settings
 
@@ -98,3 +100,16 @@ def get_popular_list_for_seller(pk):
     #     top_list = Seller.objects.select_related('profile').get(pk=pk)
     #     cache.set(cache_key, top_list, sellers_products_top_cache_time)
     # return top_list
+
+def get_count_product_in_cart(request):
+    """
+    Функция для вычисления количества товаров в корзине пользователя
+    """
+
+    if request.user.is_authenticated:
+        count_in_cart = [count.product_in_cart for count in
+                         Profile.objects.filter(user_id=request.user.id).only('product_in_cart')]
+        return count_in_cart[0]
+    else:
+        cart = AnonimCart(request)
+        return cart.get_count_product_in_cart()
