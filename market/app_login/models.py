@@ -19,7 +19,8 @@ class Profile(models.Model):
         verbose_name='Номер телелфона'
     )
     avatar = models.ImageField(
-        upload_to='user_files/'
+        upload_to='user_files/',
+        default=None
     )
     product_in_cart = models.IntegerField(
         default=0,
