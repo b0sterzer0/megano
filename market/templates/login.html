@@ -1,11 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
+
 <body>
 {% block content %}
     <div class="wrapper">
@@ -19,7 +14,7 @@
                 {{ form.as_p }}
             </div>
             <div>
-                <input type="submit" value="Войти" />
+                <button type="submit">Войти</button>
             </div>
             <a class="forgot-label" href="{% url 'password_reset' %}">Забыли пароль?</a>
             <a class="registr" href="{% url 'registration' %}">
@@ -29,4 +24,3 @@
     </div>
 {% endblock %}
 </body>
-</html>

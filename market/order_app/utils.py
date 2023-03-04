@@ -33,7 +33,7 @@ def if_user_is_not_authenticate(request, **user_data):
     if not users:
         users = User.objects.filter(email=user_data['mail'])
     if users:
-        pass
+        return users.first()
     else:
         user = create_user_from_order_data(email=user_data['mail'], password=user_data['password'])
         Profile.objects.create(user=user, full_name=user_data['full_name'], phone=user_data['phone'], avatar='none')

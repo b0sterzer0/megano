@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.cache import cache
+from django.contrib import auth
 
 from app_login.models import Profile
 from order_app.utils import add_data_in_order_cache, delete_data_from_order_cache
@@ -24,6 +25,19 @@ class OrderStepOneViewTest(TestCase):
                                              full_name=cls.FULL_NAME,
                                              phone=cls.PHONE,
                                              avatar=cls.AVATAR)
+
+    def test_post_method_user_is_not_authenticated(self):
+        self.client.logout()
+        resp = self.client.post(reverse('order_step_1'), {'name': 'test test test',
+                                                          'phone': self.PHONE,
+                                                          'mail': 'another_test@mail.ru',
+                                                          'password': self.PASSWORD,
+                                                          'passwordReply': self.PASSWORD})
+        user = auth.get_user(self.client)
+        users_queryset = User.objects.filter(id=user.id)
+
+        self.assertTrue(user.is_authenticated)
+        self.assertTrue(users_queryset)
 
     def setUp(self) -> None:
         self.client.login(username=self.USERNAME, password=self.PASSWORD)

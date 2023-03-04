@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 from django.contrib.auth.models import User
 from django.core.cache import cache
@@ -32,10 +33,11 @@ class OrderStepOneView(View):
         add_data_in_order_cache(**data_dict)
         if not request.user.is_authenticated:
             data_dict['password'] = request.POST.get('password')
-            if_user_is_not_authenticate(request, **data_dict)
-            return HttpResponseRedirect('/order/')
+            user = if_user_is_not_authenticate(request, **data_dict)
+            if user:
+                return HttpResponseRedirect(reverse('login'))
 
-        return HttpResponseRedirect('/order/step2/')
+        return HttpResponseRedirect(reverse('order_step_2'))
 
 
 class OrderStepTwoView(View):
@@ -54,7 +56,7 @@ class OrderStepTwoView(View):
                      'address': response.POST.get('address')}
         add_data_in_order_cache(**data_dict)
 
-        return HttpResponseRedirect('/order/step3/')
+        return HttpResponseRedirect(reverse('order_step_3'))
 
 
 class OrderStepThreeView(View):
@@ -68,7 +70,7 @@ class OrderStepThreeView(View):
     def post(self, response):
         add_data_in_order_cache(**{'pay': response.POST.get('pay')})
 
-        return HttpResponseRedirect('/order/step4/')
+        return HttpResponseRedirect(reverse('order_step_4'))
 
 
 class OrderStepFourView(View):
