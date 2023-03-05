@@ -108,7 +108,7 @@ class Product(models.Model):
 
 class CharacteristicsGroup(models.Model):
     group_name = models.CharField(max_length=30, verbose_name='название группы характеристик')
-    category = models.ManyToManyField(Category, verbose_name='связь категория - группа характеристик')
+    category = models.ManyToManyField(Category, verbose_name='категория', related_name='characteristicsgroups')
 
     class Meta:
         verbose_name = 'группа характеристик'
@@ -120,7 +120,7 @@ class CharacteristicsGroup(models.Model):
 
 class Characteristic(models.Model):
     characteristic_name = models.CharField(max_length=30, verbose_name='название характеристики')
-    group = models.ManyToManyField(CharacteristicsGroup, verbose_name='связь группа характеристик - характеристика')
+    group = models.ForeignKey(CharacteristicsGroup, on_delete=models.CASCADE, verbose_name='группа характеристик', related_name='characteristics')
 
     class Meta:
         verbose_name = 'характеристика'
@@ -132,10 +132,10 @@ class Characteristic(models.Model):
 
 class CharacteristicValue(models.Model):
     value = models.CharField(max_length=200, verbose_name='значение характеристики')
-    characteristic = models.ForeignKey(Characteristic, verbose_name='связь значение характеристики - характеристика',
-                                       on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, default=None, blank=True,
-                                verbose_name='связь значение характеристики - продукт')
+    characteristic = models.ForeignKey(Characteristic, verbose_name='характеристика',
+                                       on_delete=models.CASCADE, related_name='values')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True,
+                                verbose_name='продукт', related_name='values')
 
     class Meta:
         verbose_name = 'значение характеристик'

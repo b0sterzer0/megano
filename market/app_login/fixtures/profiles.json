@@ -3,6 +3,17 @@
     "model": "app_login.profile",
     "pk": 1,
     "fields": {
+      "user": 1,
+      "full_name": "ADMIN",
+      "phone": "+70000000000",
+      "avatar": "../static/assets/img/content/blackandwhite_3.jpg",
+      "product_in_cart": 0
+    }
+  },
+  {
+    "model": "app_login.profile",
+    "pk": 2,
+    "fields": {
       "user": 2,
       "full_name": "Иванов Иван Иванович",
       "phone": "+70000000000",
@@ -12,7 +23,7 @@
   },
   {
     "model": "app_login.profile",
-    "pk": 2,
+    "pk": 3,
     "fields": {
       "user": 3,
       "full_name": "Сидоров Тихон",
@@ -23,7 +34,7 @@
   },
   {
     "model": "app_login.profile",
-    "pk": 3,
+    "pk": 4,
     "fields": {
       "user": 4,
       "full_name": "Барсик",
