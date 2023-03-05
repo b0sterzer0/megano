@@ -14,3 +14,6 @@ class Command(BaseCommand):
         management.call_command('loaddata', 'market_app/fixtures/product_images.json')
         management.call_command('loaddata', 'market_app/fixtures/seller_products.json')
         management.call_command('loaddata', 'market_app/fixtures/product_reviews.json')
+        management.call_command('loaddata', 'market_app/fixtures/characteristicsgroups.json')
+        management.call_command('loaddata', 'market_app/fixtures/characteristics.json')
+        management.call_command('loaddata', 'market_app/fixtures/characteristicvalues.json')

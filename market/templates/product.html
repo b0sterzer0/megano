@@ -29,7 +29,7 @@
                     </div>
                   </div>
                   <div class="ProductCard-compare">
-                      <a class="btn btn_default" href="#">
+                      <a class="btn btn_default" href="{% url 'add-good-for-compare' product.id %}">
                           <img class="btn-icon" src="{% static "assets/img/icons/card/change.svg" %}" alt="change.svg"/>
                       </a>
                   </div>
@@ -133,22 +133,19 @@
               </div>
               <div class="Tabs-block" id="addit">
                 <div class="Product-props">
-                  <div class="Product-prop">
-                    <strong>Lorem
-                    </strong><span> Pfizer</span>
+                {% for group, characteristics in characteristics.items %}
+                  <div class="Product-prop-title">
+                    <strong>{{ group }}</strong>
                   </div>
-                  <div class="Product-prop">
-                    <strong>ipsum
-                    </strong><span> Lorem ipsum dolor sit</span>
-                  </div>
-                  <div class="Product-prop">
-                    <strong>dolor sit
-                    </strong><span> 5 ans</span>
-                  </div>
-                  <div class="Product-prop">
-                    <strong>psum dolo
-                    </strong><span> 2–3 jours</span>
-                  </div>
+                  {% for characteristic, value in characteristics %}
+                    <div class="Product-prop">
+                      <strong>
+                        {{ characteristic }}
+                      </strong>
+                      <span>{{ value }}</span>
+                    </div>
+                  {% endfor %}
+                {% endfor %}
                 </div>
               </div>
               <div class="Tabs-block" id="reviews">

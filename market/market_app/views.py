@@ -7,9 +7,10 @@ from django.views import View
 from django.views.generic import TemplateView, DetailView
 from django.urls import reverse
 
+from compare_app.services import create_characteristics_dict
 from market_app.banners import get_banners_list
 from market_app.forms import ProductReviewForm, ProductsForm
-from market_app.models import Seller, Product, Category, ProductReviewImage, SellerProduct
+from market_app.models import Seller, Product, Category, CharacteristicsGroup, ProductReviewImage, SellerProduct
 from market_app.product_history import HistoryViewOperations
 from market_app.utils import (
     create_product_review,
@@ -203,8 +204,10 @@ class ProductView(DetailView):
         context['review_form'] = ProductReviewForm()
         context['product_id'] = product.id
         context['product_in_cart'] = get_count_product_in_cart(self.request)
-        with HistoryViewOperations(self.request.user) as history:
-            history.add_product(product)
+        context['characteristics'] = create_characteristics_dict(product)
+        if self.request.user.is_authenticated:
+            with HistoryViewOperations(self.request.user) as history:
+                history.add_product(product)
         return context
 
     def post(self, request, *args, **kwargs):

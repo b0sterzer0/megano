@@ -23,17 +23,20 @@ class CategoryAdmin(DjangoMpttAdmin):
 
 @admin.register(CharacteristicsGroup)
 class CharacteristicsGroupAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'group_name']
+    search_fields = ['group_name']
+
+
+class CharacteristicValueInline(admin.TabularInline):
+    model = CharacteristicValue
 
 
 @admin.register(Characteristic)
 class CharacteristicAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(CharacteristicValue)
-class CharacteristicValueAdmin(admin.ModelAdmin):
-    pass
+    model = Characteristic
+    list_display = ['id', 'characteristic_name', 'group']
+    search_fields = ['characteristic_name', 'group']
+    inlines = [CharacteristicValueInline, ]
 
 
 @admin.register(Banner)

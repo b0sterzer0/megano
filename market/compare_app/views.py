@@ -32,7 +32,11 @@ def add_product_for_compare_view(request, product_id: int) -> HttpResponseRedire
                           'products_list': [product_id]
                       }
                       )
-        return HttpResponseRedirect('/comparison/')
+
+        # с данного url был переход, на него же и возвращаемся
+        url = request.META.get('HTTP_REFERER')
+        # return HttpResponseRedirect('/comparison/')
+        return HttpResponseRedirect(url)
 
 
 def remove_good_for_compare_view(request, product_id: int) -> HttpResponseRedirect or HttpResponse:
