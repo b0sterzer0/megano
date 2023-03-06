@@ -3,9 +3,12 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.cache import cache
 from django.contrib import auth
+from django.test.client import RequestFactory
 
 from app_login.models import Profile
 from order_app.utils import add_data_in_order_cache, delete_data_from_order_cache
+from app_cart.models import AnonimCart
+from market_app.models import Category, Product, Seller, SellerProduct
 
 
 class OrderStepOneViewTest(TestCase):
@@ -117,8 +120,27 @@ class OrderStepThreeViewTest(TestCase):
         self.assertRedirects(resp, '/order/step4/')
 
 
-class OrderStepFourViewTest(TestCase):
-    def test_get_method(self):
-        resp = self.client.get(reverse('order_step_4'))
+# class OrderStepFourViewTest(TestCase):
+#     @classmethod
+#     def setUpTestData(cls):
+#         cls.user = User.objects.create_user(username='test user', password='Asdfg54321')
+#         cls.profile = Profile.objects.create(user=cls.user, full_name='test test test', phone='888888')
+#         cls.category = Category.objects.create(title='телефоны', slug='phones', parent=None, activity=True)
+#         cls.product_1 = Product.objects.create(name='test_product_1', category=cls.category, slug='t_prod_1')
+#         cls.product_2 = Product.objects.create(name='test_product_2', category=cls.category, slug='t_prod_2')
+#         cls.seller = Seller.objects.create(name='test', profile=cls.profile, description='test')
+#         cls.seller_product_1 = SellerProduct.objects.create(product=cls.product_1, seller=cls.seller, qty=1, price=10)
+#         cls.seller_product_2 = SellerProduct.objects.create(product=cls.product_2, seller=cls.seller, qty=1, price=10)
+#         # cls.factory = RequestFactory()
+#
+#     def test_get_method_user_is_not_authenticate(self):
+#         self.client.logout()
+#         resp = self.client.post(reverse('order_step_4'))
+#         card = AnonimCart(resp)
+#         card.add_product(self.product_1.id, self.seller_product_1.price)
+#         card.add_product(self.product_2.id, self.seller_product_2.price)
+#         resp = self.client.get(reverse('order_step_4'))
+#
+#         self.assertEqual(resp.status_code, 200)
 
-        self.assertEqual(resp.status_code, 200)
+

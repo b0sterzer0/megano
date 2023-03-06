@@ -8,6 +8,8 @@ from django.core.cache import cache
 
 from app_login.models import Profile
 from order_app.utils import add_data_in_order_cache, if_user_is_not_authenticate
+from app_cart.models import AnonimCart
+from market_app.models import Product, ProductImage
 
 
 class OrderStepOneView(View):
@@ -75,7 +77,25 @@ class OrderStepThreeView(View):
 
 class OrderStepFourView(View):
     def get(self, request):
+        cart = AnonimCart(request)
+        cart_dict = cart.get_cart()
+        total_price = 0
+        products = []
+        for product_id in cart_dict.keys():
+            product_dict = {}
+            try:
+                product = Product.objects.select_related('category').get(id=product_id)
+                product_dict['image'] = ProductImage.objects.get(product).image
+                product_dict['category'] = product.category.title
+                product_dict['description'] = product.description
+                product_dict['price'] = cart_dict[product_id]['price']
+                product_dict['qty'] = cart_dict[product_id]['count']
+            except ObjectDoesNotExist:
+                return HttpResponseRedirect(reverse('del_product_cart'), {'product_id': product_id})
+            total_price += product_dict['price']
+            products.append(product_dict)
+
         return render(request, 'order/order_step_4.html')
 
     def post(self, response):
-        pass
+        return HttpResponse('OK')
