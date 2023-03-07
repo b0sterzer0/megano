@@ -5,16 +5,16 @@
 
 {# TODO: Разобраться с выводом старой и новой цены при наличии скидки на товар #}
 
-  {#  <a class="Card-picture" href="{% url 'product' card.product.id %}"> #}
+  {#  <a class="Card-picture" href="{% url 'product' card.id %}"> #}
 
   {% if seller_product %}
-  <a class="Card-picture" href="{% url 'product' card.product.id %}">
+  <a class="Card-picture" href="{% url 'product' card.id %}">
     <img src="{{ MEDIA_ROOT }}{{ card.product.images.first.image.url }}" alt="{{ card.product.images.first.image_alt }}"/>
   </a>
   <div class="Card-content">
     <strong class="Card-title">
-      <a href="{% url 'product' card.product.id %}">
-        {{ card.product.name }}
+      <a href="{% url 'product' card.id %}">
+        {{ card.name }}
       </a>
     </strong>
     <div class="Card-description">
@@ -22,7 +22,7 @@
         <span class="Card-price">{{ card.price }}</span>
       </div>
       <div class="Card-category">
-        {{ card.product.category.parent }}/{{ card.product.category }}
+        {{ card.category }}/{{ card.category }}
       </div>
 
   {% else %}

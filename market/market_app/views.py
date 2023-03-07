@@ -244,11 +244,10 @@ class SellerDetailView(DetailView):
         context['middle_title_left'] = seller.name
         context['middle_title_right'] = seller.name
         context['seller'] = seller
-        context['products'] = SellerProduct.objects.filter(seller=seller).select_related('product').all()
+        context['products'] = get_seller_products(SellerProduct.objects.filter(seller=seller).select_related('product').all())
 
         #   TODO Заглушка для популярных товаров. Доделать, когда появится история покупок. Добавить все товары
-        context['popular_list'] = SellerProduct.objects.filter(seller=seller).select_related('product').all()[
-                                  :2]  # get_popular_list_for_seller(pk)
+        context['popular_list'] = get_seller_products(SellerProduct.objects.filter(seller=seller).select_related('product').all()[:2])  # get_popular_list_for_seller(pk)
 
         return context
 

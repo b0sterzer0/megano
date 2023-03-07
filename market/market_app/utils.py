@@ -124,8 +124,7 @@ def get_price(product_obj):
     price_after_discount = products_obj[0]
     for product in products_obj:
         if product.discount:
-            return float(product.price) * (1 - product.discount.discount / 100)
-    for product in products_obj:
+            product.price = round(float(product.price) * (1 - product.discount.discount / 100), 2)
         if product.price < price_after_discount.price:
             price_after_discount = product
     return price_after_discount.price
@@ -165,7 +164,7 @@ def get_seller_products(queryset):
                     'image_alt': 'card.jpg',
                     'name': product.product.name,
                     'category': product.product.category,
-                    'price': float(product.price) * (1 - sale.discount / 100),
+                    'price': round(float(product.price) * (1 - sale.discount / 100), 2),
                     'price_old': product.price,
                     'sale': sale.discount,
                     'date': sale.start_date,
