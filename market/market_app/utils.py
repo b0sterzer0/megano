@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from app_cart.models import AnonimCart
 from app_login.models import Profile
-from market_app.models import ProductReview, Seller
+from market_app.models import ProductReview, Seller, Product, SellerProduct
 from app_settings.utils import get_settings
 
 
@@ -101,6 +101,7 @@ def get_popular_list_for_seller(pk):
     #     cache.set(cache_key, top_list, sellers_products_top_cache_time)
     # return top_list
 
+
 def get_count_product_in_cart(request):
     """
     Функция для вычисления количества товаров в корзине пользователя
@@ -113,3 +114,78 @@ def get_count_product_in_cart(request):
     else:
         cart = AnonimCart(request)
         return cart.get_count_product_in_cart()
+
+
+def get_price(product_obj):
+    products_obj = []
+    for product_form_seller_product in SellerProduct.objects.all():
+        if product_form_seller_product.product.name == product_obj.name:
+            products_obj.append(product_form_seller_product)
+    price_after_discount = products_obj[0]
+    for product in products_obj:
+        if product.discount:
+            return float(product.price) * (1 - product.discount.discount / 100)
+    for product in products_obj:
+        if product.price < price_after_discount.price:
+            price_after_discount = product
+    return price_after_discount.price
+
+
+def get_catalog_product():
+    products_list = []
+    queryset = Product.objects.all()
+    for product_obj in queryset:
+        products_list.append(
+            {
+                'id': product_obj.id,
+                'link': product_obj.slug,
+                'image': '/static/assets/img/content/home/card.jpg',
+                'image_alt': 'card.jpg',
+                'name': product_obj.name,
+                'category': product_obj.category,
+                'price': get_price(product_obj),
+                'description': product_obj.description
+            }
+        )
+    return products_list
+
+
+def get_seller_products(queryset):
+    products_list = []
+    for product in queryset:
+        if product.discount:
+            sale = product.discount
+            products_list.append(
+                {
+                    'id': product.id,
+                    'seller': product.seller.name,
+                    'seller_id': product.seller.id,
+                    'link': product.product.slug,
+                    'image': '/static/assets/img/content/home/card.jpg',
+                    'image_alt': 'card.jpg',
+                    'name': product.product.name,
+                    'category': product.product.category,
+                    'price': float(product.price) * (1 - sale.discount / 100),
+                    'price_old': product.price,
+                    'sale': sale.discount,
+                    'date': sale.start_date,
+                    'date_to': sale.end_date,
+                    'description': product.product.description
+                }
+            )
+        else:
+            products_list.append(
+                {
+                    'id': product.id,
+                    'seller': product.seller.name,
+                    'seller_id': product.seller.id,
+                    'link': product.product.slug,
+                    'image': '/static/assets/img/content/home/card.jpg',
+                    'image_alt': 'card.jpg',
+                    'name': product.product.name,
+                    'category': product.product.category,
+                    'price': product.price,
+                    'description': product.product.description
+                }
+            )
+    return products_list

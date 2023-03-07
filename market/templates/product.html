@@ -25,7 +25,7 @@
                 </h2>
                 <div class="ProductCard-info">
                   <div class="ProductCard-cost">
-                    <div class="ProductCard-price">₽ {{ min_price.price__min }}
+                    <div class="ProductCard-price">₽ {{ min_price }}
                     </div>
                   </div>
                   <div class="ProductCard-compare">
@@ -102,8 +102,8 @@
                     <div class="Categories-block Categories-block_info">
                       <div class="Categories-info">
                         <strong>
-                            <a class="btn btn_primary" href="{% url 'seller' product.seller.id %}">
-                                {{ product.seller.name }}
+                            <a class="btn btn_primary" href="{% url 'seller' product.seller_id %}">
+                                {{ product.seller }}
                             </a>
                         </strong>
                       </div>
