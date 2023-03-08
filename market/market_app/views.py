@@ -46,7 +46,7 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = Product.objects.annotate(min_price=Min('seller_product__price'))
+        products = Product.objects.annotate(min_price=Min('sellers_products__price'))
         context['banners_list'] = get_banners_list()
         context['slider_items'] = slider_items
         # необходимое количество можно взять из конфига
