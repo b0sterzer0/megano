@@ -1,10 +1,10 @@
 from django.core.cache import cache
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 
-from order_app.utils import add_data_in_order_cache, delete_data_from_order_cache
+from order_app.utils import add_data_in_order_cache, delete_data_from_order_cache, calculate_delivery_cost
 
 
-class AddDataInOrderCacheTest(TestCase):
+class AddDataInOrderCacheFuncTest(TestCase):
     TEST_1 = 'test test test'
     TEST_2 = '0000000000'
     TEST_3 = 'test@mail.ru'
@@ -20,7 +20,7 @@ class AddDataInOrderCacheTest(TestCase):
         self.assertEqual(order_dict['test_3'], 'test@mail.ru')
 
 
-class DeleteDataFromOrderCacheTest(TestCase):
+class DeleteDataFromOrderCacheFuncTest(TestCase):
     def test_ordinary_situation(self):
         param_keys = ['test_1', 'test_2', 'test_3']
         delete_data_from_order_cache(*param_keys)
@@ -29,3 +29,17 @@ class DeleteDataFromOrderCacheTest(TestCase):
         self.assertIsNotNone(order_dict)
         self.assertNotIn('test_2', order_dict.keys())
 
+
+class GetProductsFromCartForAnonUserFuncTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.factory = RequestFactory()
+
+
+class GetProductsFromCartForAuthUserFuncTest(TestCase):
+    pass
+
+
+class CalculateDeliveryCostFuncTest(TestCase):
+    pass
