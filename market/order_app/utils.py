@@ -7,7 +7,8 @@ from django.http import HttpResponseRedirect
 
 from app_login.models import Profile
 from app_cart.models import AnonimCart, AuthShoppingCart
-from market_app.models import Product, ProductImage
+from market_app.models import Product, ProductImage, SellerProduct
+from app_settings.models import SiteSettings
 
 
 def add_data_in_order_cache(**kwargs):
@@ -47,11 +48,23 @@ def if_user_is_not_authenticate(request, **user_data):
             login(request, user)
 
 
-def get_products_from_cart_for_anon_user(request):
+def is_one_seller(products_id):
+    sellers_set = set()
+    for product_id in products_id:
+        seller = SellerProduct.objects.select_related('product', 'seller').get(product=product_id).seller
+        sellers_set.add(seller)
+    if len(sellers_set) == 1:
+        return True
+    else:
+        return False
+
+
+def get_data_from_cart_for_anon_user(request):
     cart = AnonimCart(request)
     cart_dict = cart.get_cart()
     total_price = cart.get_total_price()
     products = []
+    products_id = []
     for product_id in cart_dict.keys():
         product_dict = {}
         try:
@@ -64,14 +77,17 @@ def get_products_from_cart_for_anon_user(request):
         except ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('del_product_cart'), {'product_id': product_id})
         products.append(product_dict)
+        products_id.append(product_id)
+    one_seller = is_one_seller(products_id=products_id)
 
-    return total_price, products
+    return total_price, products, one_seller
 
 
-def get_products_from_cart_for_auth_user(request):
+def get_data_from_cart_for_auth_user(request):
     products_in_cart = AuthShoppingCart.objects.select_related('products').filter(user=request.user)
     total_price = 0
     products = []
+    products_id = []
     for product in products_in_cart:
         product_dict = {}
         try:
@@ -84,9 +100,20 @@ def get_products_from_cart_for_auth_user(request):
             return HttpResponseRedirect(reverse('del_product_cart'), {'product_id': product.products.id})
         products.append(product_dict)
         total_price += product_dict['price']
+        products_id.append(product.products.id)
 
-    return total_price, products
+    one_seller = is_one_seller(products_id)
+
+    return total_price, products, one_seller
 
 
-def calculate_delivery_cost():
-    pass
+def calculate_delivery_cost(order_data, one_seller):
+    settings = SiteSettings.objects.get(id=1)
+    delivery_cost = 0
+    if order_data['order_dict']['delivery'] == 'express':
+        delivery_cost = int(settings.express_delivery_cost)
+    elif order_data['order_dict']['delivery'] == 'ordinary':
+        if order_data['t_price'] > settings.min_amount_for_free_delivery or not one_seller:
+            delivery_cost = int(settings.ordinary_delivery_cost)
+
+    return delivery_cost

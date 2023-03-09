@@ -1,34 +1,34 @@
 [
-  {
-    "model": "api_for_payment_app.paymentstatusmodel",
-    "pk": 1,
-    "fields": {
-      "status_code": "S404",
-      "status_description": "РћС€РёР±РєР°: СѓРєР°Р·Р°РЅРЅС‹Р№ РЅРѕРјРµСЂ РєР°СЂС‚С‹ РЅРµ РЅР°Р№РґРµРЅ"
-    }
-  },
-  {
-    "model": "api_for_payment_app.paymentstatusmodel",
-    "pk": 2,
-    "fields": {
-      "status_code": "S000",
-      "status_description": "РћС€РёР±РєР°: РІ РІР°С€РµР№ РєРѕСЂР·РёРЅРµ РЅРµС‚ С‚РѕРІР°СЂРѕРІ"
-    }
-  },
-  {
-    "model": "api_for_payment_app.paymentstatusmodel",
-    "pk": 3,
-    "fields": {
-      "status_code": "S403",
-      "status_description": "РћС€РёР±РєР°: РЅР° Р±Р°Р»Р°РЅСЃРµ РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЃСЂРµРґСЃС‚РІ"
-    }
-  },
-  {
-    "model": "api_for_payment_app.paymentstatusmodel",
-    "pk": 4,
-    "fields": {
-      "status_code": "S200",
-      "status_description": "РћРїР»Р°С‚Р° РїСЂРѕС€Р»Р° СѓСЃРїРµС€РЅРѕ"
-    }
+{
+  "model": "api_for_payment_app.paymentstatusmodel",
+  "pk": 1,
+  "fields": {
+    "status_code": "S404",
+    "status_description": "Ошибка: указанный номер карты не найден"
   }
+},
+{
+  "model": "api_for_payment_app.paymentstatusmodel",
+  "pk": 2,
+  "fields": {
+    "status_code": "S000",
+    "status_description": "Ошибка: в вашей корзине нет товаров"
+  }
+},
+{
+  "model": "api_for_payment_app.paymentstatusmodel",
+  "pk": 3,
+  "fields": {
+    "status_code": "S403",
+    "status_description": "Ошибка: на балансе недостаточно средств"
+  }
+},
+{
+  "model": "api_for_payment_app.paymentstatusmodel",
+  "pk": 4,
+  "fields": {
+    "status_code": "S200",
+    "status_description": "Оплата прошла успешно"
+  }
+}
 ]

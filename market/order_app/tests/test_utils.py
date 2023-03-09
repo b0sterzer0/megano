@@ -30,14 +30,26 @@ class DeleteDataFromOrderCacheFuncTest(TestCase):
         self.assertNotIn('test_2', order_dict.keys())
 
 
-class GetProductsFromCartForAnonUserFuncTest(TestCase):
+class CreateUserFromOrderDataFuncTest(TestCase):
+    pass
+
+
+class IfUserIsNotAuthenticateFuncTest(TestCase):
+    pass
+
+
+class IsOneSeller(TestCase):
+    pass
+
+
+class GetDataFromCartForAnonUserFuncTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
         cls.factory = RequestFactory()
 
 
-class GetProductsFromCartForAuthUserFuncTest(TestCase):
+class GetDataFromCartForAuthUserFuncTest(TestCase):
     pass
 
 

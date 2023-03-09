@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 
 from app_login.models import Profile
-from order_app.utils import add_data_in_order_cache, if_user_is_not_authenticate, get_products_from_cart_for_anon_user,\
-get_products_from_cart_for_auth_user
+from order_app.utils import add_data_in_order_cache, if_user_is_not_authenticate, get_data_from_cart_for_anon_user,\
+get_data_from_cart_for_auth_user, calculate_delivery_cost
 
 
 class OrderStepOneView(View):
@@ -77,16 +77,13 @@ class OrderStepThreeView(View):
 class OrderStepFourView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            total_price, products = get_products_from_cart_for_auth_user(request)
+            total_price, products, one_seller = get_data_from_cart_for_auth_user(request)
         else:
-            total_price, products = get_products_from_cart_for_anon_user(request)
+            total_price, products, one_seller = get_data_from_cart_for_anon_user(request)
 
         order_dict = cache.get('order')
-        print(f'!!!! {order_dict} !!!!!!')
+        order_data = {'t_price': total_price, 'products_list': products, 'order_dict': order_dict}
+        order_data['delivery_cost'] = calculate_delivery_cost(order_data, one_seller)
+        order_data['t_price'] += order_data['delivery_cost']
 
-        return render(request, 'order/order_step_4.html', context={'t_price': total_price,
-                                                                   'products_list': products,
-                                                                   'order_dict': order_dict})
-
-    def post(self, response):
-        return HttpResponse('OK')
+        return render(request, 'order/order_step_4.html', context=order_data)
