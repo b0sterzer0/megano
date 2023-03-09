@@ -1,16 +1,12 @@
-import datetime
-
 from django.db.models import Min
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import TemplateView, DetailView
-from django.urls import reverse
 
 from compare_app.services import create_characteristics_dict
 from market_app.banners import get_banners_list
 from market_app.forms import ProductReviewForm, ProductsForm
-from market_app.models import Seller, Product, Category, CharacteristicsGroup, ProductReviewImage, SellerProduct
+from market_app.models import Seller, Product, SellerProduct
 from market_app.product_history import HistoryViewOperations
 from market_app.utils import (
     create_product_review,
@@ -18,8 +14,9 @@ from market_app.utils import (
     get_product_review_list,
     get_seller,
     get_count_product_reviews,
-    get_popular_list_for_seller,
-    get_count_product_in_cart
+    get_count_product_in_cart,
+    get_seller_products,
+    get_catalog_product
 )
 
 
@@ -27,42 +24,6 @@ from market_app.utils import (
 # вероятно, его лучше реализовать через контекст-процессор
 
 # Заглушка для меню категорий товара
-
-
-# def get_catalog(queryset):
-#     products_list = []
-#     if queryset is None:
-#         queryset = SellerProduct.objects.select_related('product').all()
-#     for product in queryset:
-#         if product.discount:
-#             products_list.append(
-#                 {
-#                     'link': product.product.slug,
-#                     'image': '/static/assets/img/content/home/card.jpg',
-#                     'image_alt': 'card.jpg',
-#                     'title': product.product.name,
-#                     'category': product.product.category,
-#                     'price': round(float(product.price) * (1 - product.discount.discount / 100), 2),
-#                     'price_old': product.price,
-#                     'sale': product.discount.discount,
-#                     'date': product.discount.start_date,
-#                     'date_to': product.discount.end_date,
-#                     'description': product.product.description
-#                 }
-#             )
-#         else:
-#             products_list.append(
-#                 {
-#                     'link': product.product.slug,
-#                     'image': '/static/assets/img/content/home/card.jpg',
-#                     'image_alt': 'card.jpg',
-#                     'title': product.product.name,
-#                     'category': product.product.category,
-#                     'price': product.price,
-#                     'description': product.product.description
-#                 }
-#             )
-#     return products_list
 
 
 # Заглушка для списка элементов слайдера на главной странице
@@ -85,11 +46,11 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = Product.objects.annotate(min_price=Min('sellers__price'))
+        products = Product.objects.annotate(min_price=Min('sellers_products__price'))
         context['banners_list'] = get_banners_list()
         context['slider_items'] = slider_items
         # необходимое количество можно взять из конфига
-        context['popular_list'] = products
+        context['popular_list'] = get_catalog_product()
         context['hot_offer_list'] = products
         context['limited_edition_list'] = products
         context['product_in_cart'] = get_count_product_in_cart(self.request)
@@ -126,7 +87,7 @@ class CatalogView(TemplateView):
     extra_context = {
         'middle_title_left': 'Каталог товаров',
         'middle_title_right': 'Каталог товаров',
-        # 'cards': get_catalog(None),
+        'cards': get_catalog_product(),
     }
 
 
@@ -193,12 +154,13 @@ class ProductView(DetailView):
         product = self.object
         page = self.request.GET.get('page')
         seller_products_list = SellerProduct.objects.filter(product=product).all()
+        min_price = min(get_seller_products(seller_products_list), key=lambda i: int(i['price']))['price']
         context['reviews'] = get_product_review_list(product, page)
         context['can_create_reviews'] = can_create_reviews(product, self.request.user)
         context['num_review'] = get_count_product_reviews(product)
         context['images'] = product.images.all()
-        context['sellers_price'] = seller_products_list
-        context['min_price'] = seller_products_list.aggregate(Min('price'))
+        context['sellers_price'] = get_seller_products(seller_products_list)
+        context['min_price'] = min_price
         context['middle_title_left'] = product.name
         context['middle_title_right'] = product.name
         context['review_form'] = ProductReviewForm()
@@ -250,7 +212,7 @@ class SaleView(TemplateView):
     extra_context = {
         'middle_title_left': 'Распродажа',
         'middle_title_right': 'Распродажа',
-        # 'sale_list': get_catalog(None),
+        'sale_list': get_catalog_product(),
     }
 
 
@@ -260,7 +222,7 @@ class ShopView(TemplateView):
     extra_context = {
         'middle_title_left': 'О нас',
         'middle_title_right': 'О нас',
-        # 'popular_list': get_catalog(None),
+        'popular_list': get_catalog_product(),
     }
 
 
@@ -282,34 +244,32 @@ class SellerDetailView(DetailView):
         context['middle_title_left'] = seller.name
         context['middle_title_right'] = seller.name
         context['seller'] = seller
-        context['products'] = SellerProduct.objects.filter(seller=seller).select_related('product').all()
+        context['products'] = get_seller_products(SellerProduct.objects.filter(seller=seller).select_related('product').all())
 
         #   TODO Заглушка для популярных товаров. Доделать, когда появится история покупок. Добавить все товары
-        context['popular_list'] = SellerProduct.objects.filter(seller=seller).select_related('product').all()[
-                                  :2]  # get_popular_list_for_seller(pk)
+        context['popular_list'] = get_seller_products(SellerProduct.objects.filter(seller=seller).select_related('product').all()[:2])  # get_popular_list_for_seller(pk)
 
         return context
 
 
 class ProductFilter(View):
-    pass
 
-#     def post(self, request):
-#         """Фильтр товаров"""
-#         cards = []
-#         products_form = ProductsForm(request.POST)
-#         if 'price' not in products_form.data:
-#             name_product = products_form.data['title']
-#             card = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
-#             return render(request, 'catalog.html', context={'cards': get_catalog(card)})
-#         price_product = products_form.data['price'].replace(';', ' ').split()
-#         name_product = products_form.data['title']
-#         cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
-#         cards_list = get_catalog(cards_obj)
-#         for card in cards_list:
-#             if int(price_product[0]) <= card['price'] <= int(price_product[1]):
-#                 cards.append(card)
-#         context = {
-#             'cards': cards
-#         }
-#         return render(request, 'catalog.html', context=context)
+    def post(self, request):
+        """Фильтр товаров"""
+        cards = []
+        products_form = ProductsForm(request.POST)
+        if 'price' not in products_form.data:
+            name_product = products_form.data['title']
+            card = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
+            return render(request, 'catalog.html', context={'cards': get_seller_products(card)})
+        price_product = products_form.data['price'].replace(';', ' ').split()
+        name_product = products_form.data['title']
+        cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
+        cards_list = get_seller_products(cards_obj)
+        for card in cards_list:
+            if int(price_product[0]) <= card['price'] <= int(price_product[1]):
+                cards.append(card)
+        context = {
+            'cards': cards
+        }
+        return render(request, 'catalog.html', context=context)

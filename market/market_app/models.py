@@ -155,8 +155,10 @@ class ProductImage(models.Model):
 
 class SellerProduct(models.Model):
     """Промежуточная модель между моделями товара и продавца"""
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'), related_name='sellers')
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name=_('продавец'), related_name='sellers')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'),
+                                related_name='sellers_products')
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name=_('продавец'),
+                               related_name='sellers_products')
     qty = models.PositiveIntegerField(verbose_name=_('количество'))
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE, verbose_name=_('скидка'), blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('цена'))
