@@ -84,11 +84,13 @@ class AccountView(TemplateView):
 class CatalogView(TemplateView):
     """Каталог товаров"""
     template_name = 'catalog.html'
-    extra_context = {
-        'middle_title_left': 'Каталог товаров',
-        'middle_title_right': 'Каталог товаров',
-        'cards': get_catalog_product(),
-    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['middle_title_left'] = 'Личный кабинет'
+        context['middle_title_right'] = 'Личный кабинет'
+        context['cards'] = get_catalog_product()
+        return context
 
 
 class ContactsView(TemplateView):
@@ -209,21 +211,25 @@ class ProfileAvatarView(TemplateView):
 class SaleView(TemplateView):
     """Распродажа"""
     template_name = 'sale.html'
-    extra_context = {
-        'middle_title_left': 'Распродажа',
-        'middle_title_right': 'Распродажа',
-        'sale_list': get_catalog_product(),
-    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['middle_title_left'] = 'Распродажа'
+        context['middle_title_right'] = 'Распродажа'
+        context['cards'] = get_catalog_product()
+        return context
 
 
 class ShopView(TemplateView):
     """Информация о магазине"""
     template_name = 'shop.html'
-    extra_context = {
-        'middle_title_left': 'О нас',
-        'middle_title_right': 'О нас',
-        'popular_list': get_catalog_product(),
-    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['middle_title_left'] = 'О нас'
+        context['middle_title_right'] = 'О нас'
+        context['cards'] = get_catalog_product()
+        return context
 
 
 class LoginOrRegisterView(View):

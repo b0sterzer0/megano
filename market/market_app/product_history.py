@@ -38,7 +38,7 @@ class HistoryViewOperations:
 
         def _get_products_from_db():
             return Product.objects.filter(histories__user=self.user).order_by('-histories__view_time').\
-                annotate(min_price=Min('sellers__price'))
+                annotate(min_price=Min('sellers_products__price'))
         return cache.get_or_set(self.cache_id, _get_products_from_db)
 
     def count(self) -> int:
