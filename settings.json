@@ -10,5 +10,8 @@
   "seller_cache_time": 86400,
   "sellers_products_top_cache_time": 3600,
   "sellers_products_top_number": 10,
-  "common_products_top_number": 8
+  "common_products_top_number": 8,
+  "ordinary_delivery_cost": 200,
+  "min_amount_for_free_delivery":  2000,
+  "express_delivery_cost": 500
 }

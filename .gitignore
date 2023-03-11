@@ -161,3 +161,9 @@ cython_debug/
 
 /market/data/
 /data/
+market/api_for_payment_app/migrations/
+market/app_cart/migrations/
+market/app_login/migrations/
+market/compare_app/migrations/
+market/market_app/migrations/
+market/payment_app/migrations/
