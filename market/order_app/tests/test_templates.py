@@ -1,8 +1,13 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.core.cache import cache
 
 
 class OrderTemplateTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cache.set('order', {'delivery': 'express', 'city': 'test', 'address': 'test'})
+
     def test_correct_template_in_order(self):
         step_1 = self.client.get(reverse('order_step_1'))
         step_2 = self.client.get(reverse('order_step_2'))

@@ -46,6 +46,7 @@ def if_user_is_not_authenticate(request, **user_data):
         user = authenticate(username=user_data['mail'], password=user_data['password'])
         if user:
             login(request, user)
+            return user
 
 
 def is_one_seller(products_id):
