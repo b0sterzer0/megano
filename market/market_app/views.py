@@ -106,6 +106,37 @@ class CatalogView(View):
         }
         return render(request, 'catalog.html', context=context)
 
+    def post(self, request):
+        """Фильтр товаров"""
+        cards = []
+        products_form = ProductsForm(request.POST)
+        if 'price' not in products_form.data:
+            name_product = products_form.data['title']
+            cards_obj = SellerProduct.objects.filter(product__name__contains=name_product)
+            cards_list = get_seller_products(cards_obj)
+            for card in cards_list:
+                cards.append(card)
+            for card_1 in cards_list:
+                for card_2 in cards:
+                    if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
+                        cards.pop(cards.index(card_2))
+            return render(request, 'catalog.html', context={'cards': cards})
+        price_product = products_form.data['price'].replace(';', ' ').split()
+        name_product = products_form.data['title']
+        cards_obj = SellerProduct.objects.filter(product__name__contains=name_product)
+        cards_list = get_seller_products(cards_obj)
+        for card in cards_list:
+            if int(price_product[0]) <= card['price'] <= int(price_product[1]):
+                cards.append(card)
+        for card_1 in cards_list:
+            for card_2 in cards:
+                if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
+                    cards.pop(cards.index(card_2))
+        context = {
+            'cards': cards
+        }
+        return render(request, 'catalog.html', context=context)
+
 
 class ContactsView(TemplateView):
     """Контакты"""
