@@ -14,7 +14,16 @@ def create_settings_data(apps, schema_editor):
                                        banner_number=settings_config['banner_number'],
                                        stopping_sales=settings_config['stopping_sales'],
                                        banner_cache_time=settings_config['banner_cache_time'],
-                                       total_cache_time=settings_config['total_cache_time']
+                                       total_cache_time=settings_config['total_cache_time'],
+                                       seller_cache_time=settings_config['seller_cache_time'],
+                                       sellers_products_top_cache_time=settings_config[
+                                           'sellers_products_top_cache_time'],
+                                       sellers_products_top_number=settings_config['sellers_products_top_number'],
+                                       common_products_top_number=settings_config['common_products_top_number'],
+                                       ordinary_delivery_cost=settings_config['ordinary_delivery_cost'],
+                                       min_amount_for_free_delivery=settings_config['min_amount_for_free_delivery'],
+                                       express_delivery_cost=settings_config['express_delivery_cost']
+
                                        )
 
 

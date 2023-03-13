@@ -27,6 +27,7 @@ from app_login.views import (
 
 urlpatterns = [
     path('', include('market_app.urls')),
+    path('i18n', include('django.conf.urls.i18n')),
     path('admin/', admin.site.urls),
     path('settings/', include('app_settings.urls')),
     path('comparison/', include('compare_app.urls')),

@@ -48,7 +48,10 @@ class TestSettingsView(TestCase):
                      "seller_cache_time": 300,
                      "sellers_products_top_cache_time": 400,
                      "sellers_products_top_number": 10,
-                     "common_products_top_number": 10
+                     "common_products_top_number": 10,
+                     "ordinary_delivery_cost": 200,
+                     "min_amount_for_free_delivery": 2000,
+                     "express_delivery_cost": 500
                      }
         response = self.authorized_client.post(reverse('settings'), form_data)
         self.assertRedirects(response, reverse('settings'))
@@ -66,3 +69,6 @@ class TestSettingsView(TestCase):
         self.assertEqual(settings.sellers_products_top_cache_time, 400)
         self.assertEqual(settings.sellers_products_top_number, 10)
         self.assertEqual(settings.common_products_top_number, 10)
+        self.assertEqual(settings.ordinary_delivery_cost, 200)
+        self.assertEqual(settings.min_amount_for_free_delivery, 2000)
+        self.assertEqual(settings.express_delivery_cost, 500)

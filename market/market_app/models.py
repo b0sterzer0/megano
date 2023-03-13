@@ -8,19 +8,19 @@ from django.utils.translation import gettext_lazy as _
 
 class Banner(models.Model):
     """ Модель рекламного баннера на главной странице сайта """
-    title = models.CharField(max_length=50, verbose_name='Заголовок')
+    title = models.CharField(max_length=50, verbose_name=_('заголовок'))
     # Цены в рублях (без копеек)
-    price = models.IntegerField(verbose_name='Цена')
-    image = models.ImageField(upload_to='images/banners', verbose_name='Изображение')
-    image_alt = models.CharField(max_length=100, verbose_name='Подсказка')
+    price = models.IntegerField(verbose_name=_('цена'))
+    image = models.ImageField(upload_to='images/banners', verbose_name=_('изображение'))
+    image_alt = models.CharField(max_length=100, verbose_name=_('подсказка'))
     link = models.CharField(max_length=300, verbose_name='url')
 
     def __str__(self):
         return self.title
 
     class Meta:
-        verbose_name = 'Баннер'
-        verbose_name_plural = 'Баннеры'
+        verbose_name = _('баннер')
+        verbose_name_plural = _('баннеры')
 
 
 class Seller(models.Model):
@@ -108,7 +108,7 @@ class Product(models.Model):
 
 class CharacteristicsGroup(models.Model):
     group_name = models.CharField(max_length=30, verbose_name='название группы характеристик')
-    category = models.ManyToManyField(Category, verbose_name='связь категория - группа характеристик')
+    category = models.ManyToManyField(Category, verbose_name='категория', related_name='characteristicsgroups')
 
     class Meta:
         verbose_name = 'группа характеристик'
@@ -120,7 +120,8 @@ class CharacteristicsGroup(models.Model):
 
 class Characteristic(models.Model):
     characteristic_name = models.CharField(max_length=30, verbose_name='название характеристики')
-    group = models.ManyToManyField(CharacteristicsGroup, verbose_name='связь группа характеристик - характеристика')
+    group = models.ForeignKey(CharacteristicsGroup, on_delete=models.CASCADE, verbose_name='группа характеристик',
+                              related_name='characteristics')
 
     class Meta:
         verbose_name = 'характеристика'
@@ -132,10 +133,10 @@ class Characteristic(models.Model):
 
 class CharacteristicValue(models.Model):
     value = models.CharField(max_length=200, verbose_name='значение характеристики')
-    characteristic = models.ForeignKey(Characteristic, verbose_name='связь значение характеристики - характеристика',
-                                       on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, default=None, blank=True,
-                                verbose_name='связь значение характеристики - продукт')
+    characteristic = models.ForeignKey(Characteristic, verbose_name='характеристика',
+                                       on_delete=models.CASCADE, related_name='values')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True,
+                                verbose_name='продукт', related_name='values')
 
     class Meta:
         verbose_name = 'значение характеристик'
@@ -147,7 +148,7 @@ class CharacteristicValue(models.Model):
 
 class ProductImage(models.Model):
     """Модель фотографий к товарам"""
-    product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name='images')
+    product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name='images', verbose_name=_('товар'))
     image = models.ImageField(upload_to='images/products/%Y/%m/%d', verbose_name=_('картинка'))
     image_alt = models.CharField(max_length=100, default='Фото к товару', verbose_name=_('подсказка'))
     objects = models.Manager()
@@ -155,8 +156,10 @@ class ProductImage(models.Model):
 
 class SellerProduct(models.Model):
     """Промежуточная модель между моделями товара и продавца"""
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'), related_name='sellers')
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name=_('продавец'), related_name='sellers')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'),
+                                related_name='sellers_products')
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, verbose_name=_('продавец'),
+                               related_name='sellers_products')
     qty = models.PositiveIntegerField(verbose_name=_('количество'))
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE, verbose_name=_('скидка'), blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('цена'))
@@ -172,16 +175,16 @@ class SellerProduct(models.Model):
 
 class HistoryView(models.Model):
     """ История просмотров пользователя """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', related_name='histories')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар', related_name='histories')
-    view_time = models.DateTimeField(auto_now=True, auto_created=True, verbose_name='Время просмотра')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('пользователь'), related_name='histories')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_('товар'), related_name='histories')
+    view_time = models.DateTimeField(auto_now=True, auto_created=True, verbose_name=_('время просмотра'))
 
     def __str__(self):
         return self.product.name
 
     class Meta:
-        verbose_name = 'История просмотров'
-        verbose_name_plural = 'История просмотров'
+        verbose_name = _('история просмотров')
+        verbose_name_plural = _('история просмотров')
         ordering = ['view_time']
 
 
@@ -214,6 +217,7 @@ class ProductReview(models.Model):
 
 class ProductReviewImage(models.Model):
     """Модель фотографий к отзывам"""
-    review = models.ForeignKey("ProductReview", on_delete=models.CASCADE, related_name='images')
+    review = models.ForeignKey("ProductReview", on_delete=models.CASCADE, related_name='images',
+                               verbose_name=_('отзыв'))
     image = models.ImageField(upload_to='images/product_reviews/%Y/%m/%d', verbose_name=_('картинка'))
     image_alt = models.CharField(max_length=100, default='Фото к отзыву', verbose_name=_('подсказка'))

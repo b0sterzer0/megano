@@ -39,7 +39,7 @@ def formation_initial_dict_for_product(product_id: str, compare_dict: dict) -> U
     """
     try:
         product = Product.objects.get(id=product_id)
-        image_path = ProductImage.objects.get(product=product).image
+        image_path = ProductImage.objects.filter(product=product).first().image
         compare_dict[product.name] = {'image_path': image_path,
                                       'product_id': product.id,
                                       'characteristics': dict()}
@@ -48,21 +48,26 @@ def formation_initial_dict_for_product(product_id: str, compare_dict: dict) -> U
     return product, compare_dict
 
 
-def add_characteristics_in_dict(compare_dict: dict, characteristics, product) -> dict:
+def create_characteristics_dict(product) -> dict:
     """
-    Функция реализует функционал добавления групп характеристик и их самих в словарь товара
+    Функция создает словарь групп характеристик и списков - характеристика - значение характеристики.
     """
     existing_groups = list()
-    for characteristic in characteristics:
-        characteristic_list = [characteristic.characteristic.characteristic_name, characteristic.value]
-        for characteristic_group in characteristic.characteristic.group.all():
-            group_name = characteristic_group.group_name
-            if group_name in existing_groups:
-                compare_dict[product.name]['characteristics'][group_name].append(characteristic_list)
-            else:
-                compare_dict[product.name]['characteristics'][group_name] = [characteristic_list]
-                existing_groups.append(group_name)
-    return compare_dict
+    characteristics_dict = dict()
+
+    characteristics = CharacteristicValue.objects.select_related('characteristic').filter(product=product)
+    if not characteristics:
+        raise ObjectDoesNotExist
+
+    for characteristic_value in characteristics:
+        characteristic_list = [characteristic_value.characteristic.characteristic_name, characteristic_value.value]
+        group_name = characteristic_value.characteristic.group.group_name
+        if group_name in existing_groups:
+            characteristics_dict[group_name].append(characteristic_list)
+        else:
+            characteristics_dict[group_name] = [characteristic_list]
+            existing_groups.append(group_name)
+    return characteristics_dict
 
 
 def get_products_for_compare(compare_object: dict) -> dict:
@@ -94,13 +99,6 @@ def get_products_for_compare(compare_object: dict) -> dict:
     for product_id in compare_object['products_list']:
         product, products_for_compare_dict = formation_initial_dict_for_product(product_id=product_id,
                                                                                 compare_dict=products_for_compare_dict)
-
-        characteristics = CharacteristicValue.objects.select_related('characteristic').filter(product=product)
-        if not characteristics:
-            raise ObjectDoesNotExist
-
-        products_for_compare_dict = add_characteristics_in_dict(compare_dict=products_for_compare_dict,
-                                                                characteristics=characteristics,
-                                                                product=product)
+        products_for_compare_dict[product.name]['characteristics'] = create_characteristics_dict(product=product)
 
     return products_for_compare_dict

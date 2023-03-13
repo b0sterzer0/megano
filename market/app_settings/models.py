@@ -20,6 +20,10 @@ class SiteSettings(models.Model):
     common_products_top_number = models.PositiveSmallIntegerField(default=8,
                                                                   verbose_name=_(
                                                                       'количество популярных товаров главной страницы'))
+    ordinary_delivery_cost = models.PositiveIntegerField(verbose_name=_('стоимость обычной доставки'))
+    min_amount_for_free_delivery = models.PositiveIntegerField(verbose_name=
+                                                               _('минимальная сумма для бесплатной обычной доставки'))
+    express_delivery_cost = models.PositiveIntegerField(verbose_name=_('стоимость экспресс доставки'))
 
     def __str__(self):
         return 'Настройки сайта'
@@ -30,5 +34,5 @@ class SiteSettings(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = _('Настройка сайта')
-        verbose_name_plural = _('Настройки сайта')
+        verbose_name = _('настройка сайта')
+        verbose_name_plural = _('настройки сайта')

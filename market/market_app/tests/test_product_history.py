@@ -1,5 +1,4 @@
 import time
-from random import choice
 
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -16,7 +15,6 @@ class HistoryViewOperationsTest(TestCase):
         user = User.objects.create_user('test_user')
         cls.user = user
         category = Category.objects.create()
-        slug_list = ['a' * num for num in range(1, 22)]
         cls.products = list()
         for num in range(1, 22):
             slug = 'a' * num
@@ -36,21 +34,18 @@ class HistoryViewOperationsTest(TestCase):
         self.history.add_product(self.products[0])
         self.history.add_product(self.products[1])
         product_list = list(self.history.products())
-        self.assertEqual(product_list, [self.products[0].id, self.products[1].id])
+        self.assertEqual(product_list, [self.products[1], self.products[0]])
 
     def test_product_delete(self):
         """ Тест удаления товара из истории просмотров """
         products = self.products[:10]
         for product in products:
             self.history.add_product(product)
-
+        products.reverse()
         self.history.delete_product(products[5])
         products.pop(5)
-
-        product_id_list = [product.id for product in products]
         product_list_from_history = list(self.history.products())
-
-        self.assertEqual(product_id_list, product_list_from_history)
+        self.assertEqual(products, product_list_from_history)
 
     def test_count(self):
         """ Тест получения количества продуктов в истории """
@@ -69,8 +64,8 @@ class HistoryViewOperationsTest(TestCase):
         history2.add_product(self.products[0])
         history3.add_product(self.products[1])
 
-        self.assertEqual(list(history2.products()), [self.products[0].id])
-        self.assertEqual(list(history3.products()), [self.products[1].id])
+        self.assertEqual(list(history2.products()), [self.products[0]])
+        self.assertEqual(list(history3.products()), [self.products[1]])
 
     def test_order(self):
         """ Тест изменения порядка товаров при повторном добавлении товара """
@@ -80,15 +75,16 @@ class HistoryViewOperationsTest(TestCase):
         time.sleep(0.1)
         self.history.add_product(self.products[0])
 
-        id_list = [self.products[1].id, self.products[0].id]
-        self.assertEqual(list(self.history.products()), id_list)
+        products_list = [self.products[0], self.products[1]]
+        self.assertEqual(list(self.history.products()), products_list)
 
     def test_add_21(self):
         """ Тест добавления 21-го товара """
-        result_id_list = [product.id for product in self.products[1:]]
-
         for product in self.products:
             self.history.add_product(product)
 
-        id_list = list(self.history.products())
-        self.assertEqual(id_list, result_id_list)
+        result_product_list = self.products[1:]
+        product_history_list = list(self.history.products())
+        product_history_list.reverse()
+
+        self.assertEqual(result_product_list, product_history_list)
