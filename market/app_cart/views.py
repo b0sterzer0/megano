@@ -72,20 +72,24 @@ class AddToCartView(View):
 
         if request.user.is_authenticated:
 
-            product_price = Decimal(product_price)
+            current_product = AuthShoppingCart.objects.filter(user_id=request.user.id, products_id=product_id)
 
-            AuthShoppingCart.objects.create(
-                user_id=request.user.id,
-                products_id=product_id,
-                count=1,
-                price=product_price
-            )
-            user = Profile.objects.filter(user_id=request.user.id)
-            user_count = [count.product_in_cart for count in user.only('product_in_cart')]
-            new_user_count = user_count[0] + 1
-            user.update(
-                product_in_cart=new_user_count
-            )
+            if len(current_product) == 0:
+
+                product_price = Decimal(product_price)
+
+                AuthShoppingCart.objects.create(
+                    user_id=request.user.id,
+                    products_id=product_id,
+                    count=1,
+                    price=product_price
+                )
+                user = Profile.objects.filter(user_id=request.user.id)
+                user_count = [count.product_in_cart for count in user.only('product_in_cart')]
+                new_user_count = user_count[0] + 1
+                user.update(
+                    product_in_cart=new_user_count
+                )
 
         else:
 

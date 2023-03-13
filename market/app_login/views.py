@@ -48,6 +48,7 @@ def register_view(request):
                         count=cart[item]['count'],
                         price=Decimal(cart[item]['price'])
                     )
+                cart.clear()
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             return HttpResponseRedirect('/')
