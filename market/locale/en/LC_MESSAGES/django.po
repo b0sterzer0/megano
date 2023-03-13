@@ -1,0 +1,289 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-03-12 14:10+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: app_settings/apps.py:9 app_settings/models.py:38
+msgid "настройки сайта"
+msgstr ""
+
+#: app_settings/models.py:7
+msgid "название сайта"
+msgstr ""
+
+#: app_settings/models.py:8
+msgid "номер телефона 1"
+msgstr ""
+
+#: app_settings/models.py:9
+msgid "номер телефона 2"
+msgstr ""
+
+#: app_settings/models.py:10
+msgid "адрес"
+msgstr ""
+
+#: app_settings/models.py:11
+msgid "количество баннеров"
+msgstr ""
+
+#: app_settings/models.py:12
+msgid "остановка продаж"
+msgstr ""
+
+#: app_settings/models.py:13
+msgid "кэш баннеров"
+msgstr ""
+
+#: app_settings/models.py:14
+msgid "общий кэш"
+msgstr ""
+
+#: app_settings/models.py:15 app_settings/models.py:16
+msgid "время кэша продавцов"
+msgstr ""
+
+#: app_settings/models.py:19
+msgid "количество популярных товаров продавца"
+msgstr ""
+
+#: app_settings/models.py:22
+msgid "количество популярных товаров главной страницы"
+msgstr ""
+
+#: app_settings/models.py:23
+msgid "стоимость обычной доставки"
+msgstr ""
+
+#: app_settings/models.py:25
+msgid "минимальная сумма для бесплатной обычной доставки"
+msgstr ""
+
+#: app_settings/models.py:26
+msgid "стоимость экспресс доставки"
+msgstr ""
+
+#: app_settings/models.py:37
+msgid "настройка сайта"
+msgstr ""
+
+#: app_settings/templates/app_settings/settings.html:26
+msgid "Настройки сайта"
+msgstr ""
+
+#: app_settings/templates/app_settings/settings.html:30
+msgid "Сохранить"
+msgstr ""
+
+#: app_settings/templates/app_settings/settings.html:34
+msgid "Сброс кэша"
+msgstr ""
+
+#: app_settings/templates/app_settings/settings.html:39
+msgid "Сбросить кэш раздела:"
+msgstr ""
+
+#. Translators: разделы кэша на странице настроек
+#: app_settings/views.py:17
+msgid "Баннеры"
+msgstr ""
+
+#: app_settings/views.py:18
+msgid "Кэш страницы продавца"
+msgstr ""
+
+#: app_settings/views.py:19
+msgid "Кэш топ товаров продавца"
+msgstr ""
+
+#: app_settings/views.py:20
+msgid "Общий кэш"
+msgstr ""
+
+#: app_settings/views.py:31
+msgid "настройки"
+msgstr ""
+
+#: market_app/models.py:11
+msgid "заголовок"
+msgstr ""
+
+#: market_app/models.py:13 market_app/models.py:165
+msgid "цена"
+msgstr ""
+
+#: market_app/models.py:14
+msgid "изображение"
+msgstr ""
+
+#: market_app/models.py:15 market_app/models.py:153 market_app/models.py:223
+msgid "подсказка"
+msgstr ""
+
+#: market_app/models.py:22
+msgid "баннер"
+msgstr ""
+
+#: market_app/models.py:23
+msgid "баннеры"
+msgstr ""
+
+#: market_app/models.py:30
+msgid "профиль"
+msgstr ""
+
+#: market_app/models.py:32 market_app/models.py:98 market_app/models.py:197
+msgid "описание"
+msgstr ""
+
+#: market_app/models.py:33
+msgid "название магазина"
+msgstr ""
+
+#: market_app/models.py:37 market_app/models.py:96 market_app/models.py:161
+msgid "продавец"
+msgstr ""
+
+#: market_app/models.py:38
+msgid "продавцы"
+msgstr ""
+
+#: market_app/models.py:79
+msgid "дата начала"
+msgstr ""
+
+#: market_app/models.py:80
+msgid "Дата окончания"
+msgstr ""
+
+#: market_app/models.py:86 market_app/models.py:164
+msgid "скидка"
+msgstr ""
+
+#: market_app/models.py:87
+msgid "скидки"
+msgstr ""
+
+#: market_app/models.py:92
+msgid "название"
+msgstr ""
+
+#: market_app/models.py:94
+msgid "категория"
+msgstr ""
+
+#: market_app/models.py:105 market_app/models.py:151 market_app/models.py:159
+#: market_app/models.py:179 market_app/models.py:193
+msgid "товар"
+msgstr ""
+
+#: market_app/models.py:106
+msgid "товары"
+msgstr ""
+
+#: market_app/models.py:152 market_app/models.py:222
+msgid "картинка"
+msgstr ""
+
+#: market_app/models.py:163
+msgid "количество"
+msgstr ""
+
+#: market_app/models.py:172 market_app/models.py:173
+msgid "товар-продавец"
+msgstr ""
+
+#: market_app/models.py:178
+msgid "пользователь"
+msgstr ""
+
+#: market_app/models.py:180
+msgid "время просмотра"
+msgstr ""
+
+#: market_app/models.py:186 market_app/models.py:187
+msgid "история просмотров"
+msgstr ""
+
+#: market_app/models.py:196
+msgid "покупатель"
+msgstr ""
+
+#: market_app/models.py:198
+msgid "дата"
+msgstr ""
+
+#: market_app/models.py:214 market_app/models.py:221
+msgid "отзыв"
+msgstr ""
+
+#: market_app/models.py:215
+msgid "отзывы"
+msgstr ""
+
+#: templates/product.html:54
+msgid "Описание"
+msgstr "Description"
+
+#: templates/product.html:57
+msgid "Продавцы"
+msgstr "Sellers"
+
+#: templates/product.html:60
+msgid "Характеристики"
+msgstr "Additional info"
+
+#: templates/product.html:63
+msgid "Отзывы"
+msgstr "Reviews"
+
+#: templates/product.html:102
+msgid "Добавить в корзину"
+msgstr "Add yo cart"
+
+#: templates/product.html:179
+msgid "Написать отзыв"
+msgstr "Make review"
+
+#: templates/product.html:186
+msgid "Ваш отзыв"
+msgstr "Your review"
+
+#: templates/product.html:190
+msgid "Отправить отзыв"
+msgstr "Send a review"
+
+#: templates/product.html:197
+msgid "Вы уже оставляли отзыв на данный товар"
+msgstr "You've already left a review"
+
+#: templates/product.html:202
+msgid "Чтобы оставить отзыв, вам нужно"
+msgstr "If ypu want to auth you need"
+
+#: templates/product.html:203
+msgid "авторизоваться"
+msgstr "auth"
+
+#: templates/seller.html:14
+msgid "О магазине"
+msgstr "About"
+
+#: templates/seller.html:29
+msgid "Все товары"
+msgstr "All products"

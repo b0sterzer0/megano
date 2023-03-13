@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 
@@ -45,47 +46,21 @@
                   </li>
                 </ul>
               </div>
-<!--              <div class="ProductCard-cart">-->
-<!--                <div class="ProductCard-cartElement ProductCard-cartElement_amount">-->
-<!--                  <div class="Amount Amount_product">-->
-<!--                    <button class="Amount-remove" type="button">-->
-<!--                    </button>-->
-<!--                    <input class="Amount-input form-input" name="amount" type="text" value="1"/>-->
-<!--                    <button class="Amount-add" type="button">-->
-<!--                    </button>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <div class="ProductCard-cartElement">-->
-<!--                    <a class="btn btn_primary" href="#">-->
-<!--                        <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg"/>-->
-<!--                        <span class="btn-content">Add To Cart</span>-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="ProductCard-footer">-->
-<!--                <div class="ProductCard-tags">-->
-<!--                  <strong class="ProductCard-tagsTitle">Tags:</strong>-->
-<!--                    <a href="#">Accessories</a>,-->
-<!--                    <a href="#">Creative</a>,-->
-<!--                    <a href="#">Design</a>,-->
-<!--                    <a href="#">Gaming</a>-->
-<!--                </div>-->
-<!--              </div>-->
             </div>
           </div>
           <div class="Tabs Tabs_default">
             <div class="Tabs-links">
                 <a class="Tabs-link_ACTIVE Tabs-link" href="#description">
-                    <span>Описание</span>
+                    <span>{% trans "Описание" %}</span>
                 </a>
                 <a class="Tabs-link" href="#sellers">
-                    <span>Продавцы</span>
+                    <span>{% trans "Продавцы" %}</span>
                 </a>
                 <a class="Tabs-link" href="#addit">
-                    <span>Характеристики</span>
+                    <span>{% trans "Характеристики" %}</span>
                 </a>
                 <a class="Tabs-link" href="#reviews">
-                    <span>Отзывы {{ num_review }}</span>
+                    <span>{% trans "Отзывы" %} {{ num_review }}</span>
                 </a>
             </div>
             <div class="Tabs-wrap">
@@ -124,7 +99,7 @@
                     <div class="Categories-block Categories-button">
                         <a class="btn btn_primary" href="{% url 'add_cart' product_id=product_id product_price=product.price %}">
                             <img class="btn-icon" src="{% static "assets/img/icons/card/cart_white.svg" %}" alt="cart_white.svg"/>
-                            <span class="btn-content">Добавить в корзину</span>
+                            <span class="btn-content">{% trans "Добавить в корзину" %}</span>
                         </a>
                     </div>
                   </div>
@@ -201,31 +176,31 @@
 
                   {% if request.user.is_authenticated and can_create_reviews %}
                   <header class="Section-header Section-header_product">
-                    <h3 class="Section-title">Написать отзыв
+                    <h3 class="Section-title">{% trans "Написать отзыв" %}
                     </h3>
                   </header>
                   <div class="Tabs-addComment">
                     <form class="form" action="/product/{{ product.id }}/" method="post">
                       {% csrf_token %}
                       <div class="form-group">
-                        <textarea class="form-textarea" name="description" maxlength="2000" required="" id="id_description" placeholder="Ваш отзыв"></textarea>
+                        <textarea class="form-textarea" name="description" maxlength="2000" required="" id="id_description" placeholder="{% trans "Ваш отзыв" %}"></textarea>
                       </div>
 
                       <div class="form-group">
-                        <button class="btn btn_muted" type="submit">Отправить отзыв
+                        <button class="btn btn_muted" type="submit">{% trans "Отправить отзыв" %}
                         </button>
                       </div>
                     </form>
                   </div>
                   {% elif request.user.is_authenticated and not can_create_reviews %}
                   <header class="Section-header Section-header_product">
-                    <h3 class="Section-title">Вы уже оставляли отзыв на данный товар
+                    <h3 class="Section-title">{% trans "Вы уже оставляли отзыв на данный товар" %}
                     </h3>
                   </header>
                   {% else %}
                   <header class="Section-header Section-header_product">
-                    <h3 class="Section-title">Чтобы оставить отзыв, вам нужно
-                      <a href="{% url 'login' %}">авторизоваться</a>
+                    <h3 class="Section-title">{% trans "Чтобы оставить отзыв, вам нужно" %}
+                      <a href="{% url 'login' %}">{% trans "авторизоваться" %}</a>
                     </h3>
                   </header>
                   {% endif %}
@@ -238,15 +213,3 @@
     </div>
 
 {% endblock %}
-
-    -webkit-text-size-adjust: 100%;
-    font-family: Roboto, Verdana, Arial, "Helvetica CY", Helvetica, "Nimbus Sans L", sans-serif;
-    font-size: 18px;
-    visibility: visible;
-    cursor: pointer;
-    text-align: center;
-    color: #9c9fa6;
-    box-sizing: border-box;
-    border-style: none;
-    line-height: 0;
-    margin: 0;

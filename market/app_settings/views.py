@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.utils.translation import gettext_lazy as _
 
 from .forms import SettingsForm
 from .models import SiteSettings
@@ -12,10 +13,11 @@ from .models import SiteSettings
 
 class SettingsView(View):
     """Класс-представление страницы настроек"""
-    sections = (('banners', 'Баннеры'),
-                ('seller_cache_time', 'Кэш страницы продавца'),
-                ('sellers_products_top_cache_time', 'Кэш топ товаров продавца'),
-                ('all', 'Общий кэш')
+    # Translators: разделы кэша на странице настроек
+    sections = (('banners', _('Баннеры')),
+                ('seller_cache_time', _('Кэш страницы продавца')),
+                ('sellers_products_top_cache_time', _('Кэш топ товаров продавца')),
+                ('all', _('Общий кэш'))
                 )
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
@@ -26,7 +28,7 @@ class SettingsView(View):
         """
         settings = SiteSettings.objects.first()
         settings_form = SettingsForm(instance=settings)
-        middle_title_left = 'настройки'
+        middle_title_left = _('настройки')
         middle_title_right = 'settings'
         return render(request, 'app_settings/settings.html', context={'settings_forms': settings_form,
                                                                       'sections': self.sections,
