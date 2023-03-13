@@ -2,6 +2,7 @@ from django.core.cache import cache
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.urls import reverse
 from django.utils.module_loading import import_module
 
 from order_app.utils import add_data_in_order_cache, delete_data_from_order_cache, calculate_delivery_cost,\
@@ -29,12 +30,14 @@ class AddDataInOrderCacheFuncTest(TestCase):
 
 
 class DeleteDataFromOrderCacheFuncTest(TestCase):
-    def test_ordinary_situation(self):
-        param_keys = ['test_1', 'test_2', 'test_3']
-        delete_data_from_order_cache(*param_keys)
-        order_dict = cache.get('order')
 
-        self.assertIsNotNone(order_dict)
+    def test_ordinary_situation(self):
+        data_dict = {'test_1': 'test', 'test_2': 'test', 'test_3': 'test'}
+        cache.set('order', data_dict)
+        delete_data_from_order_cache(*data_dict.keys())
+        order_dict = cache.get('order')
+        cache.clear()
+
         self.assertNotIn('test_2', order_dict.keys())
 
 
@@ -204,15 +207,40 @@ class CalculateDeliveryCostFuncTest(TestCase):
     def test_ordinary_delivery_amount_less_than_2000(self):
         del_cost = calculate_delivery_cost(self.order_data, True)
 
-        self.assertEqual(del_cost, 0)
+        self.assertEqual(del_cost, 200)
 
     def test_ordinary_delivery_amount_more_than_2000(self):
         self.order_data['t_price'] = 2001
         del_cost = calculate_delivery_cost(self.order_data, True)
 
-        self.assertEqual(del_cost, 200)
+        self.assertEqual(del_cost, 0)
 
     def test_few_sellers(self):
         del_cost = calculate_delivery_cost(self.order_data, False)
 
         self.assertEqual(del_cost, 200)
+
+
+class CheckCacheFuncTest(TestCase):
+
+    def test_cache_order_is_empty(self):
+        cache.clear()
+        request = self.client.get(reverse('order_step_4'))
+
+        self.assertRedirects(request, reverse('order_step_1'))
+
+    def test_cache_order_only_with_delivery(self):
+        order_dict_with_delivery = {'delivery': 'express',
+                                    'city': 'test',
+                                    'address': 'test address'}
+        cache.set('order', order_dict_with_delivery)
+        request = self.client.get(reverse('order_step_4'))
+
+        self.assertRedirects(request, reverse('order_step_1'))
+
+    def test_cache_only_with_payment_method(self):
+        order_dict_with_payment_method = {'pay': 'someone'}
+        cache.set('order', order_dict_with_payment_method)
+        request = self.client.get(reverse('order_step_4'))
+
+        self.assertRedirects(request, reverse('order_step_1'))

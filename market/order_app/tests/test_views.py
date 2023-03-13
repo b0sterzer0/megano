@@ -156,9 +156,8 @@ class OrderStepFourViewTest(TestCase):
                           'address': 'test address',
                           'pay': 'test'}
 
-        cache.set('order', cls.order_dict)
-
     def test_get_method_user_is_authenticate(self):
+        cache.set('order', self.order_dict)
         self.client.login(username='test user', password='Asdfg54321')
         request = self.client.get(reverse('order_step_4'))
 

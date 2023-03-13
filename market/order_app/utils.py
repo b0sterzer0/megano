@@ -109,12 +109,19 @@ def get_data_from_cart_for_auth_user(request):
 
 
 def calculate_delivery_cost(order_data, one_seller):
-    settings = SiteSettings.objects.get(id=1)
+    settings = SiteSettings.objects.all().first()
     delivery_cost = 0
     if order_data['order_dict']['delivery'] == 'express':
         delivery_cost = int(settings.express_delivery_cost)
     elif order_data['order_dict']['delivery'] == 'ordinary':
-        if order_data['t_price'] > settings.min_amount_for_free_delivery or not one_seller:
+        if order_data['t_price'] < settings.min_amount_for_free_delivery or not one_seller:
             delivery_cost = int(settings.ordinary_delivery_cost)
 
     return delivery_cost
+
+
+def check_cache(order_dict):
+    if order_dict:
+        if {'full_name', 'delivery', 'pay'}.issubset(set(order_dict.keys())):
+            return None
+    return HttpResponseRedirect(reverse('order_step_1'))

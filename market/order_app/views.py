@@ -8,7 +8,7 @@ from django.core.cache import cache
 
 from app_login.models import Profile
 from order_app.utils import add_data_in_order_cache, if_user_is_not_authenticate, get_data_from_cart_for_anon_user,\
-get_data_from_cart_for_auth_user, calculate_delivery_cost
+get_data_from_cart_for_auth_user, calculate_delivery_cost, check_cache
 
 
 class OrderStepOneView(View):
@@ -76,12 +76,15 @@ class OrderStepThreeView(View):
 
 class OrderStepFourView(View):
     def get(self, request):
+        order_dict = cache.get('order')
+        returned_check_cache_data = check_cache(order_dict)
+        if returned_check_cache_data:
+            return returned_check_cache_data
         if request.user.is_authenticated:
             total_price, products, one_seller = get_data_from_cart_for_auth_user(request)
         else:
             total_price, products, one_seller = get_data_from_cart_for_anon_user(request)
 
-        order_dict = cache.get('order')
         order_data = {'t_price': total_price, 'products_list': products, 'order_dict': order_dict}
         order_data['delivery_cost'] = calculate_delivery_cost(order_data, one_seller)
         order_data['t_price'] += order_data['delivery_cost']
