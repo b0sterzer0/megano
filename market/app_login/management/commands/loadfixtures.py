@@ -7,6 +7,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         management.call_command('loaddata', 'app_login/fixtures/users.json')
+        management.call_command('loaddata', 'app_login/fixtures/avatarprofiles.json')
         management.call_command('loaddata', 'app_login/fixtures/profiles.json')
         management.call_command('loaddata', 'market_app/fixtures/categories.json')
         management.call_command('loaddata', 'market_app/fixtures/sellers.json')

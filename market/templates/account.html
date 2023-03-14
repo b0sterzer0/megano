@@ -6,11 +6,11 @@
   <div class="Account">
     <div class="Account-group">
       <div class="Account-column">
-        <div class="Account-avatar"><img src="{% static "assets/img/content/home/card.jpg" %}" alt="card.jpg"/>
+        <div class="Account-avatar"><img src="http://127.0.0.1:8000/media/{{ profile.avatar.avatar }}" alt="card.jpg"/>
         </div>
       </div>
       <div class="Account-column">
-        <div class="Account-name">{{ full_name }}
+        <div class="Account-name">{{ profile.full_name }}
         </div><a class="Account-editLink" href="{% url 'profile' %}">Редактировать профиль</a>
       </div>
     </div>

@@ -18,10 +18,12 @@ class Profile(models.Model):
         default='+70000000000',
         verbose_name='Номер телелфона'
     )
-    avatar = models.ImageField(
-        upload_to='user_files/',
-        default=None
-    )
+    avatar = models.ForeignKey(
+        'ProfileAvatar',
+        default=None,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name='Аватар пользователя')
     product_in_cart = models.IntegerField(
         default=0,
         verbose_name='Количество товара в корзине'
@@ -31,3 +33,13 @@ class Profile(models.Model):
     class Meta:
         verbose_name_plural = 'profiles'
         verbose_name = 'profile'
+
+
+class ProfileAvatar(models.Model):
+
+    avatar = models.ImageField(
+        upload_to='user_files/',
+        default=None
+    )
+    img_name = models.CharField(max_length=500)
+    objects = models.Manager()
