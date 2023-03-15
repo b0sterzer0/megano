@@ -5,9 +5,10 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils.module_loading import import_module
 
+from order_app.models import OrderModel
 from order_app.utils import add_data_in_order_cache, delete_data_from_order_cache, calculate_delivery_cost,\
-    create_user_from_order_data, if_user_is_not_authenticate, is_one_seller, get_data_from_cart_for_anon_user,\
-    get_data_from_cart_for_auth_user, calculate_delivery_cost
+    create_user_from_order_data, if_user_is_not_authenticate, is_one_seller,\
+    get_data_from_cart_for_auth_user, calculate_delivery_cost, create_order_object
 from app_login.models import Profile
 from market_app.models import Product, Seller, SellerProduct, Category, ProductImage
 from app_cart.models import AnonimCart, AuthShoppingCart
@@ -93,13 +94,14 @@ class IfUserIsNotAuthenticateFuncTest(TestCase):
                      'phone': self.PHONE,
                      'mail': self.EMAIL_2,
                      'password': self.PASSWORD}
-        user = if_user_is_not_authenticate(req, **user_data)
-        profiles = Profile.objects.filter(user=user)
+        if_user_is_not_authenticate(req, **user_data)
+        user = User.objects.filter(username=user_data['mail'])
+        profiles = Profile.objects.filter(user=user.first())
 
-        self.assertTrue(user.is_authenticated)
+        self.assertTrue(user.first().is_authenticated)
         self.assertTrue(profiles)
         self.assertEqual(profiles.first().full_name, self.FULL_NAME)
-        self.assertEqual(profiles.first().phone, self.PHONE)
+        self.assertEqual(profiles.first().phone, self.PHONE[2:])
 
 
 class IsOneSeller(TestCase):
@@ -129,36 +131,6 @@ class IsOneSeller(TestCase):
         result = is_one_seller(products_id)
 
         self.assertFalse(result)
-
-
-class GetDataFromCartForAnonUserFuncTest(TestCase):
-
-    @classmethod
-    def setUpTestData(cls):
-        user = User.objects.create_user(username='test user', password='Asdfg54321')
-        profile = Profile.objects.create(user=user, full_name='test test test', phone='888888')
-        category = Category.objects.create(title='телефоны', slug='phones', parent=None, activity=True)
-        cls.product_1 = Product.objects.create(name='test_product_1', category=category, slug='t_prod_1')
-        cls.product_2 = Product.objects.create(name='test_product_2', category=category, slug='t_prod_2')
-        cls.product_3 = Product.objects.create(name='test_product_3', category=category, slug='t_prod_3')
-        seller = Seller.objects.create(name='test seller 1', profile=profile, description='test')
-
-        cls.factory = RequestFactory()
-        cls.request = cls.factory.get('/order/')
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        cls.request.session = engine.SessionStore(session_key)
-        anonim_cart = AnonimCart(cls.request)
-        for product in [cls.product_1, cls.product_2, cls.product_3]:
-            anonim_cart.add_product(product.id, 50)
-            ProductImage.objects.create(product=product, image='/test_image/', image_alt='image.png')
-            SellerProduct.objects.create(product=product, seller=seller, qty=1, price=10)
-
-    def test_ordinary_situation(self):
-        total_price, products, one_seller = get_data_from_cart_for_anon_user(self.request)
-        self.assertEqual(total_price, 150)
-        self.assertEqual(len(products), 3)
-        self.assertTrue(one_seller)
 
 
 class GetDataFromCartForAuthUserFuncTest(TestCase):
@@ -244,3 +216,18 @@ class CheckCacheFuncTest(TestCase):
         request = self.client.get(reverse('order_step_4'))
 
         self.assertRedirects(request, reverse('order_step_1'))
+
+
+class CreateOrderObjectFuncTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username='test user', password='Asdfg54321')
+        cls.order_data = {'test': 'test', 'products': [{'test': 'test'}, {'test_2': 'test'}], 'o': {'test': 'test'}}
+
+    def test_ordinary_situation(self):
+        create_order_object(self.user, self.order_data)
+        created_object = OrderModel.objects.filter(user=self.user)
+
+        self.assertTrue(created_object)
+        self.assertTrue(created_object.first().json_order_data)

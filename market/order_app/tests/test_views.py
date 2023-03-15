@@ -1,6 +1,8 @@
+import json
+from datetime import date
+
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.contrib.auth import logout, login
 from django.urls import reverse
 from django.core.cache import cache
 from django.contrib import auth
@@ -10,7 +12,7 @@ from django.utils.module_loading import import_module
 
 from app_login.models import Profile
 from order_app.utils import add_data_in_order_cache, delete_data_from_order_cache
-from order_app.views import OrderStepFourView
+from order_app.models import OrderModel
 from app_cart.models import AnonimCart, AuthShoppingCart
 from market_app.models import Category, Product, Seller, SellerProduct, ProductImage
 
@@ -25,6 +27,7 @@ class OrderStepOneViewTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        cache.clear()
         user = User.objects.create_user(username=cls.USERNAME, email=cls.EMAIL)
         user.set_password(cls.PASSWORD)
         user.save()
@@ -102,6 +105,12 @@ class OrderStepTwoViewTest(TestCase):
 class OrderStepThreeViewTest(TestCase):
     PAY = 'someone'
 
+    @classmethod
+    def setUpTestData(cls):
+        user = User.objects.create_user(username='test user step 3', email='step_3@mail.ru')
+        user.set_password('Asdfg54321')
+        user.save()
+
     def test_get_method(self):
         resp = self.client.get(reverse('order_step_3'))
 
@@ -117,6 +126,9 @@ class OrderStepThreeViewTest(TestCase):
         self.assertEqual(context['pay'], self.PAY)
 
     def test_post_method(self):
+        cache.set('order', {'full_name': 'test', 'delivery': 'express', 'city': 'test', 'address': 'test',
+                            'phone': 'test', 'mail': 'test', 'pay': 'test'})
+        self.client.login(username='test user step 3', password='Asdfg54321')
         resp = self.client.post(reverse('order_step_3'), {'pay': self.PAY})
         order_dict = cache.get('order')
 
@@ -154,7 +166,9 @@ class OrderStepFourViewTest(TestCase):
                           'delivery': 'express',
                           'city': 'test city',
                           'address': 'test address',
-                          'pay': 'test'}
+                          'pay': 'test',
+                          'added_date': date.today(),
+                          'payment_status': 'Не оплачено'}
 
     def test_get_method_user_is_authenticate(self):
         cache.set('order', self.order_dict)
@@ -165,8 +179,14 @@ class OrderStepFourViewTest(TestCase):
         self.assertEqual(len(request.context['products_list']), 2)
         self.assertEqual(request.context['order_dict'], self.order_dict)
 
-    def test_get_method_user_is_not_authenticate(self):
-        self.client.logout()
-        request = self.client.get(reverse('order_step_4'))
+    def test_post_method(self):
+        self.client.login(username='test user', password='Asdfg54321')
+        self.client.post(reverse('order_step_4'))
+        order = OrderModel.objects.all().first()
+        test_loaded_order_data = json.loads(order.json_order_data)
+        self.order_dict['added_date'] = str(date.today())
 
-        self.assertEqual(request.context['order_dict'], self.order_dict)
+        self.assertTrue(order)
+        self.assertEqual(test_loaded_order_data['order_dict'], self.order_dict)
+        self.assertTrue(order.activity)
+        self.assertTrue(order.user)

@@ -167,3 +167,5 @@ market/app_login/migrations/
 market/compare_app/migrations/
 market/market_app/migrations/
 market/payment_app/migrations/
+market/order_app/migrations/
+market/app_settings/migrations/

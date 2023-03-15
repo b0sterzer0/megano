@@ -1,3 +1,5 @@
+import json
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -7,12 +9,16 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 
 from app_login.models import Profile
-from order_app.utils import add_data_in_order_cache, if_user_is_not_authenticate, get_data_from_cart_for_anon_user,\
-get_data_from_cart_for_auth_user, calculate_delivery_cost, check_cache
+from order_app.utils import add_data_in_order_cache, check_cache, prepare_order_data, if_user_is_not_authenticate,\
+    create_order_object, clear_user_cart
+from order_app.models import OrderModel
 
 
 class OrderStepOneView(View):
-    def get(self, request):
+    """
+    Представления для первого шага оформления товара
+    """
+    def get(self, request) -> render:
         context = {}
         if request.user.is_authenticated:
             try:
@@ -27,7 +33,7 @@ class OrderStepOneView(View):
 
         return render(request, 'order/order_step_1.html', context=context)
 
-    def post(self, request):
+    def post(self, request) -> HttpResponseRedirect:
         data_dict = {'full_name': request.POST.get('name'),
                      'phone': request.POST.get('phone'),
                      'mail': request.POST.get('mail')}
@@ -36,13 +42,16 @@ class OrderStepOneView(View):
             data_dict['password'] = request.POST.get('password')
             user = if_user_is_not_authenticate(request, **data_dict)
             if user:
-                return HttpResponseRedirect(reverse('login'))
+                return HttpResponseRedirect(reverse('order_login'))
 
         return HttpResponseRedirect(reverse('order_step_2'))
 
 
 class OrderStepTwoView(View):
-    def get(self, request):
+    """
+    Представление для второго шага оформления товара
+    """
+    def get(self, request) -> render:
         context = {}
         order_dict = cache.get('order') or {}
         if 'delivery' in order_dict.keys():
@@ -51,7 +60,7 @@ class OrderStepTwoView(View):
                        'address': order_dict['address']}
         return render(request, 'order/order_step_2.html', context)
 
-    def post(self, response):
+    def post(self, response) -> HttpResponseRedirect:
         data_dict = {'delivery': response.POST.get('delivery'),
                      'city': response.POST.get('city'),
                      'address': response.POST.get('address')}
@@ -61,32 +70,52 @@ class OrderStepTwoView(View):
 
 
 class OrderStepThreeView(View):
-    def get(self, request):
+    """
+    Представление для третьего шага оформления заказа
+    """
+    def get(self, request) -> render:
         context = {}
         order_dict = cache.get('order') or {}
         if 'pay' in order_dict.keys():
             context = {'pay': order_dict['pay']}
         return render(request, 'order/order_step_3.html', context)
 
-    def post(self, response):
+    def post(self, response) -> HttpResponseRedirect:
         add_data_in_order_cache(**{'pay': response.POST.get('pay')})
 
         return HttpResponseRedirect(reverse('order_step_4'))
 
 
 class OrderStepFourView(View):
-    def get(self, request):
+    """
+    Представление для четвертого шага оформления товара
+    """
+    def get(self, request) -> render:
         order_dict = cache.get('order')
+
         returned_check_cache_data = check_cache(order_dict)
         if returned_check_cache_data:
             return returned_check_cache_data
-        if request.user.is_authenticated:
-            total_price, products, one_seller = get_data_from_cart_for_auth_user(request)
-        else:
-            total_price, products, one_seller = get_data_from_cart_for_anon_user(request)
 
-        order_data = {'t_price': total_price, 'products_list': products, 'order_dict': order_dict}
-        order_data['delivery_cost'] = calculate_delivery_cost(order_data, one_seller)
-        order_data['t_price'] += order_data['delivery_cost']
+        order_data = prepare_order_data(request, order_dict)
 
         return render(request, 'order/order_step_4.html', context=order_data)
+
+    def post(self, request) -> HttpResponseRedirect:
+        order_dict = cache.get('order')
+        order_data = prepare_order_data(request, order_dict)
+
+        order = create_order_object(request.user, order_data)
+
+        return HttpResponseRedirect(reverse('order_detail', kwargs={'order_id': order.id}))
+
+
+class OrderView(View):
+    """
+    Представление для вывода уже оформленного и добавленного в БД заказа
+    """
+    def get(self, request, order_id) -> render:
+        order_object = OrderModel.objects.get(user=request.user, id=order_id)
+        order_data = json.loads(order_object.json_order_data)
+        clear_user_cart(request)
+        return render(request, 'order/oneorder.html', context=order_data)

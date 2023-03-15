@@ -2,10 +2,12 @@ from decimal import Decimal
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import *
+
 from app_login.models import Profile
 from market_app.models import ProductImage, Product
 from .models import AuthShoppingCart, AnonimCart
 from market_app.utils import get_count_product_in_cart
+from app_cart.utils import delete_product_auth_user
 
 
 class ShoppingCartView(View):
@@ -151,15 +153,7 @@ class DelProductView(View):
 
         if request.user.is_authenticated:
 
-            current_product = AuthShoppingCart.objects.filter(user_id=request.user.id, products_id=product_id)
-            current_product.delete()
-
-            user = Profile.objects.filter(user_id=request.user.id)
-            user_count = [count.product_in_cart for count in user.only('product_in_cart')]
-            new_user_count = user_count[0] - 1
-            user.update(
-                product_in_cart=new_user_count
-            )
+            delete_product_auth_user(request, product_id)
 
         else:
 

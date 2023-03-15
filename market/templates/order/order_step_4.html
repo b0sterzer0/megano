@@ -2,6 +2,7 @@
 
 {% block order_step %}
     <form class="form" action="#" method="post">
+        {% csrf_token %}
         <div class="Order-block Order-block_OPEN" id="step4">
             <header class="Section-header Section-header_sm">
                 <h2 class="Section-title">Шаг 4. Подтверждение заказа
@@ -93,7 +94,7 @@
                             <div class="Cart-block Cart-block_row">
                                 {% for key, value in product.items %}
                                     {% if key == "image" %}
-                                    <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="/media/{{value}}" alt="card.jpg" /></a>
+                                    <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="{{value}}" alt="card.jpg" /></a>
                                     </div>
                                     {% endif %}
                                 {% endfor %}

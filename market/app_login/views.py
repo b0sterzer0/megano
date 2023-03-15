@@ -1,7 +1,9 @@
 from decimal import Decimal
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from app_cart.models import AnonimCart, AuthShoppingCart
@@ -97,3 +99,12 @@ class UserPasswordResetCompleteView(PasswordResetCompleteView):
         context['middle_title_left'] = 'Восстановление пароля'
         context['middle_title_right'] = 'Восстановление пароля'
         return context
+
+
+class LoginRedirectToOrder(LoginRequiredMixin, TemplateView):
+    template_name = 'login.html'
+    login_url = '/login/'
+    redirect_field_name = 'order_step_1'
+
+    def get(self, request):
+        return self.render_to_response({})
