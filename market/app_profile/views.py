@@ -18,8 +18,6 @@ class AccountView(TemplateView):
         context = super().get_context_data(**kwargs)
         with HistoryViewOperations(self.request.user) as history:
             history_view_list = history.products()[:3]
-        f = Profile.objects.get(user_id=self.request.user.id)
-        print(f.avatar.id)
         context['middle_title_left'] = 'Личный кабинет'
         context['middle_title_right'] = 'Личный кабинет'
         context['active_menu'] = 'account'
@@ -34,32 +32,56 @@ class ProfileView(View):
     """Профиль пользователя"""
 
     def get(self, request):
+
         profile_form = ProfileForm()
+
         return render(request, 'profile.html', context={'profile_form': profile_form,
                                                         'middle_title_left': 'Профиль',
                                                         'middle_title_right': 'Профиль',
                                                         'active_menu': 'profile'})
 
+
     def post(self, request):
+
         profile_form = ProfileForm(request.POST, request.FILES)
 
         if profile_form.is_valid():
-            # profile_form.save()
-    #         about = user_form.cleaned_data.get('about')
-            print(profile_form.cleaned_data)
-            avatar = profile_form.cleaned_data.get('avatar')
-            print(avatar)
-            ProfileAvatar.objects.create(avatar=avatar, img_name=f'{avatar}')
 
-    #         user_avatar = UserAvatar.objects.create(avatar=avatar)
-    #         user_profile = Profile.objects.filter(user=user_id)
-    #         Profile.objects.filter(user_id=request.user.id).create(
-    #             user_id=request.user.id,
-    #             avatar=avatar
-    #         )
-            return HttpResponseRedirect('/')
-    #     return render(request, 'app_media/edit_user.html', context={'user_form': user_form, 'user_id': user_id})
-    #
+            avatar = profile_form.cleaned_data.pop('avatar')
+            new_password1 = profile_form.cleaned_data.pop('new_password1')
+            new_password2 = profile_form.cleaned_data.pop('new_password2')
+
+            if avatar:
+                ProfileAvatar.objects.create(avatar=avatar, img_name=f'{avatar}')
+                profile_avatar = ProfileAvatar.objects.get(img_name=f'{avatar}')
+                Profile.objects.filter(user_id=request.user.id).update(
+                    avatar=profile_avatar
+                )
+            elif new_password1:
+                if new_password1 == new_password2:
+                    # user = User.objects.get(id=request.user.id)
+                    # user.set_password(new_password1)
+                    print('Password change')
+                else:
+                    raise Exception('Password not correct')
+
+            for key in profile_form.cleaned_data.keys():
+
+                if key == 'full_name' and profile_form.cleaned_data.get(key):
+                    Profile.objects.filter(id=request.user.id).update(full_name=profile_form.cleaned_data[key])
+
+                elif key == 'email' and profile_form.cleaned_data.get(key):
+                    User.objects.filter(id=request.user.id).update(email=profile_form.cleaned_data[key])
+
+                elif key == 'phone' and profile_form.cleaned_data.get(key):
+                    Profile.objects.filter(id=request.user.id).update(phone=profile_form.cleaned_data[key])
+
+            return HttpResponseRedirect('/account/')
+
+        return render(request, 'profile.html', context={'profile_form': profile_form,
+                                                        'middle_title_left': 'Профиль',
+                                                        'middle_title_right': 'Профиль',
+                                                        'active_menu': 'profile'})
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['middle_title_left'] = 'Профиль'
@@ -78,6 +100,7 @@ class HistoryOrderView(TemplateView):
         context['middle_title_left'] = 'История заказов'
         context['middle_title_right'] = 'История заказов'
         context['active_menu'] = 'historyorder'
+        return context
 
 
 class HistoryViewView(TemplateView):
