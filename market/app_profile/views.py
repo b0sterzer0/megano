@@ -40,7 +40,6 @@ class ProfileView(View):
                                                         'middle_title_right': 'Профиль',
                                                         'active_menu': 'profile'})
 
-
     def post(self, request):
 
         profile_form = ProfileForm(request.POST, request.FILES)

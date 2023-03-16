@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views import *
+from django.views import View
 from app_login.models import Profile
 from market_app.models import ProductImage, Product
 from .models import AuthShoppingCart, AnonimCart
@@ -18,7 +18,7 @@ class ShoppingCartView(View):
 
         if request.user.is_authenticated:
 
-            cart = AuthShoppingCart.objects.filter(user_id=request.user.id).select_related('products').all()  # QuerySet
+            cart = AuthShoppingCart.objects.filter(user_id=request.user.id).select_related('products').all()
 
             if len(cart) != 0:
                 total = sum([item.price*item.count for item in cart])
@@ -47,7 +47,8 @@ class ShoppingCartView(View):
 
                 products = [cart_product for cart_product in Product.objects.filter(id=int(cart_item))]
                 product_price = Decimal(anonim_cart[cart_item]['price'])
-                item_image = [cart_item_image for cart_item_image in ProductImage.objects.filter(product_id=int(cart_item))]
+                item_image = [cart_item_image for cart_item_image in ProductImage.objects.filter(
+                    product_id=int(cart_item))]
                 shopping_carts = {
                     'id': products[0].id,
                     'name': products[0].name,
@@ -94,7 +95,7 @@ class AddToCartView(View):
         else:
 
             cart = AnonimCart(request)
-            cart.add_product(product_id,product_price)
+            cart.add_product(product_id, product_price)
 
         return HttpResponseRedirect(f'/product/{product_id}')
 

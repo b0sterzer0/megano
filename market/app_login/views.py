@@ -1,13 +1,18 @@
 from decimal import Decimal
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from app_cart.models import AnonimCart, AuthShoppingCart
 from .forms import RegisterForm
 from .models import Profile
 from market_app.models import Category
+from django.contrib.auth.views import (LoginView,
+                                       LogoutView,
+                                       PasswordResetView,
+                                       PasswordResetDoneView,
+                                       PasswordResetConfirmView,
+                                       PasswordResetCompleteView)
 
 
 categories = Category.objects.all()
