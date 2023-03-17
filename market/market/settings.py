@@ -83,6 +83,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'context_processors.categories_context_processor.get_categories',
                 'context_processors.compare_context_processor.get_amount_products_for_compare',
+                'context_processors.cart_context_processor.get_products_in_cart',
             ],
         },
     },

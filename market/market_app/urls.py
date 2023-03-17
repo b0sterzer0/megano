@@ -12,7 +12,6 @@ urlpatterns = [
     path('contacts/', views.ContactsView.as_view(), name='contacts'),
     path('history_order/', views.HistoryOrderView.as_view(), name='historyorder'),
     path('history_view/', views.HistoryViewView.as_view(), name='historyview'),
-    path('oneorder/', views.OneOrderView.as_view(), name='oneorder'),
     path('order/', include('order_app.urls')),
     path('product/<int:pk>/', views.ProductView.as_view(), name='product'),
     path('payment/', include('payment_app.urls')),
