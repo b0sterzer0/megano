@@ -232,11 +232,6 @@ class ShopView(TemplateView):
         return context
 
 
-class LoginOrRegisterView(View):
-    """Вход или регистрация"""
-    pass
-
-
 class SellerDetailView(DetailView):
     """Страница продавца"""
     model = Seller

@@ -13,7 +13,7 @@ urlpatterns = [
     path('history_order/', views.HistoryOrderView.as_view(), name='historyorder'),
     path('history_view/', views.HistoryViewView.as_view(), name='historyview'),
     path('oneorder/', views.OneOrderView.as_view(), name='oneorder'),
-    path('order/', views.OrderView.as_view(), name='order'),
+    path('order/', include('order_app.urls')),
     path('product/<int:pk>/', views.ProductView.as_view(), name='product'),
     path('payment/', include('payment_app.urls')),
     path('APIPayment/', include('api_for_payment_app.urls')),
