@@ -16,7 +16,8 @@ from market_app.utils import (
     get_count_product_reviews,
     get_count_product_in_cart,
     get_seller_products,
-    get_catalog_product
+    get_catalog_product,
+    get_min_cards
 )
 
 
@@ -81,16 +82,47 @@ class AccountView(TemplateView):
         return context
 
 
-class CatalogView(TemplateView):
+class CatalogView(View):
     """Каталог товаров"""
-    template_name = 'catalog.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['middle_title_left'] = 'Личный кабинет'
-        context['middle_title_right'] = 'Личный кабинет'
-        context['cards'] = get_catalog_product()
-        return context
+    def get(self, request):
+        cards = []
+        price = request.GET.get('price')
+        title = request.GET.get('title')
+        stock = request.GET.get('stock')
+        if not price and not title:
+            middle_title_left = 'Личный кабинет'
+            middle_title_right = 'Личный кабинет'
+            cards = get_catalog_product()
+            context = {
+                'middle_title_left': middle_title_left,
+                'middle_title_right': middle_title_right,
+                'cards': cards
+            }
+            return render(request, 'catalog.html', context=context)
+        if not price:
+            name_product = title
+            cards_obj = SellerProduct.objects.filter(product__name__contains=name_product)
+            get_min_cards(cards, cards_obj)
+            return render(request, 'catalog.html', context={'cards': cards})
+        price_product = price.replace(';', ' ').split()
+        cards_obj = SellerProduct.objects.filter(product__name__contains=title)
+        if stock:
+            cards_obj = SellerProduct.objects.filter(product__name__contains=title).filter(qty__gt=0)
+        cards_list = get_seller_products(cards_obj)
+        for card in cards_list:
+            if int(price_product[0]) <= card['price'] <= int(price_product[1]):
+                cards.append(card)
+        for card_1 in cards_list:
+            for card_2 in cards:
+                if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
+                    cards.pop(cards.index(card_2))
+        add_url = f'price={price_product[0]}%3B{price_product[1]}&title={title}'
+        context = {
+            'cards': cards,
+            'add_url': add_url
+        }
+        return render(request, 'catalog.html', context=context)
 
 
 class ContactsView(TemplateView):
@@ -233,26 +265,3 @@ class SellerDetailView(DetailView):
         context['popular_list'] = get_seller_products(SellerProduct.objects.filter(seller=seller).select_related('product').all()[:2])  # get_popular_list_for_seller(pk)
 
         return context
-
-
-class ProductFilter(View):
-
-    def post(self, request):
-        """Фильтр товаров"""
-        cards = []
-        products_form = ProductsForm(request.POST)
-        if 'price' not in products_form.data:
-            name_product = products_form.data['title']
-            card = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
-            return render(request, 'catalog.html', context={'cards': get_seller_products(card)})
-        price_product = products_form.data['price'].replace(';', ' ').split()
-        name_product = products_form.data['title']
-        cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
-        cards_list = get_seller_products(cards_obj)
-        for card in cards_list:
-            if int(price_product[0]) <= card['price'] <= int(price_product[1]):
-                cards.append(card)
-        context = {
-            'cards': cards
-        }
-        return render(request, 'catalog.html', context=context)
