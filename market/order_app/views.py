@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -9,27 +10,28 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 
 from app_login.models import Profile
-from order_app.utils import add_data_in_order_cache, check_cache, prepare_order_data, if_user_is_not_authenticate,\
-    create_order_object, clear_user_cart
+from order_app.utils import add_data_in_order_cache, check_cache, prepare_order_data, create_order_object,\
+    clear_user_cart
 from order_app.models import OrderModel
 
 
-class OrderStepOneView(View):
+class OrderStepOneView(LoginRequiredMixin, View):
     """
     Представления для первого шага оформления товара
     """
-    def get(self, request) -> render:
-        context = {}
-        if request.user.is_authenticated:
-            try:
-                profile = Profile.objects.get(user=request.user)
-                user_email = User.objects.get(id=request.user.id).email
-                context = {'full_name': profile.full_name,
-                           'phone': profile.phone,
-                           'email': user_email}
 
-            except ObjectDoesNotExist:
-                return HttpResponse('Не удалось получить данные пользователя')
+    login_url = '/login/'
+
+    def get(self, request) -> render:
+        try:
+            profile = Profile.objects.get(user=request.user)
+            user_email = User.objects.get(id=request.user.id).email
+            context = {'full_name': profile.full_name,
+                       'phone': profile.phone,
+                       'email': user_email}
+
+        except ObjectDoesNotExist:
+            return HttpResponse('Не удалось получить данные пользователя')
 
         return render(request, 'order/order_step_1.html', context=context)
 
@@ -38,11 +40,6 @@ class OrderStepOneView(View):
                      'phone': request.POST.get('phone'),
                      'mail': request.POST.get('mail')}
         add_data_in_order_cache(**data_dict)
-        if not request.user.is_authenticated:
-            data_dict['password'] = request.POST.get('password')
-            user = if_user_is_not_authenticate(request, **data_dict)
-            if user:
-                return HttpResponseRedirect(reverse('order_login'))
 
         return HttpResponseRedirect(reverse('order_step_2'))
 

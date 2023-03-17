@@ -3,16 +3,13 @@ from datetime import date
 from typing import Union
 
 from django.core.cache import cache
-from django.contrib.auth.models import User, Group
-from django.contrib.auth import login, authenticate
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 
-from app_login.models import Profile
-from app_cart.models import AnonimCart, AuthShoppingCart
+from app_cart.models import AuthShoppingCart
 from app_cart.utils import delete_product_auth_user
-from market_app.models import Product, ProductImage, SellerProduct
+from market_app.models import ProductImage, SellerProduct
 from app_settings.models import SiteSettings
 from order_app.models import OrderModel
 
@@ -35,35 +32,6 @@ def delete_data_from_order_cache(*args) -> None:
     for key in args:
         order_dict.pop(key)
     cache.set('order', order_dict)
-
-
-def create_user_from_order_data(email, password) -> User:
-    """
-    Функция создания пользователя и добавления ему групп (специально для оформления заказа)
-    """
-    user = User.objects.create_user(username=email, email=email)
-    user.set_password(password)
-    group = Group.objects.get(name='customer')
-    user.groups.add(group)
-    user.save()
-    return user
-
-
-def if_user_is_not_authenticate(request, **user_data) -> Union[User, None]:
-    """
-    Функция ищет объект пользователя, если его нет - создает пользователя и профиль, авторизует его
-    """
-    users = User.objects.filter(username=user_data['mail'])
-    if not users:
-        users = User.objects.filter(email=user_data['mail'])
-    if users:
-        return users.first()
-    else:
-        user = create_user_from_order_data(email=user_data['mail'], password=user_data['password'])
-        Profile.objects.create(user=user, full_name=user_data['full_name'], phone=user_data['phone'][2:], avatar='none')
-        user = authenticate(username=user_data['mail'], password=user_data['password'])
-        if user:
-            login(request, user)
 
 
 def is_one_seller(products_id) -> bool:

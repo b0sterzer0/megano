@@ -6,12 +6,11 @@ from django.urls import reverse
 from django.utils.module_loading import import_module
 
 from order_app.models import OrderModel
-from order_app.utils import add_data_in_order_cache, delete_data_from_order_cache, calculate_delivery_cost,\
-    create_user_from_order_data, if_user_is_not_authenticate, is_one_seller,\
+from order_app.utils import add_data_in_order_cache, delete_data_from_order_cache, is_one_seller, \
     get_data_from_cart_for_auth_user, calculate_delivery_cost, create_order_object
 from app_login.models import Profile
 from market_app.models import Product, Seller, SellerProduct, Category, ProductImage
-from app_cart.models import AnonimCart, AuthShoppingCart
+from app_cart.models import AuthShoppingCart
 
 
 class AddDataInOrderCacheFuncTest(TestCase):
@@ -40,68 +39,6 @@ class DeleteDataFromOrderCacheFuncTest(TestCase):
         cache.clear()
 
         self.assertNotIn('test_2', order_dict.keys())
-
-
-class CreateUserFromOrderDataFuncTest(TestCase):
-    EMAIL = 'testtesttest@test.com'
-    PASSWORD = 'Asdfg54321'
-
-    def test_ordinary_situation(self):
-        created_user = create_user_from_order_data(email=self.EMAIL, password=self.PASSWORD)
-        user_from_db = User.objects.filter(username=self.EMAIL).first()
-
-        self.assertTrue(created_user)
-        self.assertTrue(user_from_db)
-        self.assertEqual(created_user, user_from_db)
-        self.assertEqual(user_from_db.username, self.EMAIL)
-        self.assertEqual(user_from_db.email, self.EMAIL)
-        self.assertTrue(user_from_db.check_password(self.PASSWORD))
-
-
-class IfUserIsNotAuthenticateFuncTest(TestCase):
-    EMAIL_1 = 'testtesttest@test.com'
-    EMAIL_2 = 'new_test_email@test.com'
-    PASSWORD = 'Asdfg54321'
-    FULL_NAME = 'test test test'
-    PHONE = '1111111111'
-
-    @classmethod
-    def setUpTestData(cls):
-        user = User.objects.create_user(username=cls.EMAIL_1, email=cls.EMAIL_1)
-        user.set_password(cls.PASSWORD)
-        user.save()
-        cls.factory = RequestFactory()
-        cache.set('order', {'delivery': 'express', 'city': 'test', 'address': 'test'})
-
-    def test_user_is_exist(self):
-        req = self.factory.get('/order/step4/')
-        user_data = {'full_name': self.FULL_NAME,
-                     'phone': self.PHONE,
-                     'mail': self.EMAIL_1,
-                     'password': self.PASSWORD}
-        user = if_user_is_not_authenticate(req, **user_data)
-
-        self.assertTrue(user)
-        self.assertTrue(user.is_authenticated)
-
-    def test_user_does_not_exist(self):
-        req = self.client.get('/order/step4/')
-        engine = import_module(settings.SESSION_ENGINE)
-        session_key = None
-        req.session = engine.SessionStore(session_key)
-        req.META = {}
-        user_data = {'full_name': self.FULL_NAME,
-                     'phone': self.PHONE,
-                     'mail': self.EMAIL_2,
-                     'password': self.PASSWORD}
-        if_user_is_not_authenticate(req, **user_data)
-        user = User.objects.filter(username=user_data['mail'])
-        profiles = Profile.objects.filter(user=user.first())
-
-        self.assertTrue(user.first().is_authenticated)
-        self.assertTrue(profiles)
-        self.assertEqual(profiles.first().full_name, self.FULL_NAME)
-        self.assertEqual(profiles.first().phone, self.PHONE[2:])
 
 
 class IsOneSeller(TestCase):
@@ -194,6 +131,12 @@ class CalculateDeliveryCostFuncTest(TestCase):
 
 
 class CheckCacheFuncTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User.objects.create_user(username='test user', password='Asdfg54321')
+
+    def setUp(self) -> None:
+        self.client.login(username='test user', password='Asdfg54321')
 
     def test_cache_order_is_empty(self):
         cache.clear()
