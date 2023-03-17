@@ -7,7 +7,6 @@ urlpatterns = [
     path('account/', views.AccountView.as_view(), name='account'),
     # path('carts/', views.CartView.as_view(), name='cart'),
     path('catalog/', views.CatalogView.as_view(), name='catalog'),
-    path('catalog/filter/', views.ProductFilter.as_view(), name='filter'),
     path('comparison/', include('compare_app.urls')),
     path('contacts/', views.ContactsView.as_view(), name='contacts'),
     path('history_order/', views.HistoryOrderView.as_view(), name='historyorder'),

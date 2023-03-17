@@ -138,8 +138,8 @@ def get_catalog_product():
             {
                 'id': product_obj.id,
                 'link': product_obj.slug,
-                'image': '/static/assets/img/content/home/card.jpg',
-                'image_alt': 'card.jpg',
+                'images': {'first': {'image': {'url': product_obj.images.first().image.url}}},
+                'image_alt': {'first': {'image_alt': product_obj.images.first().image_alt}},
                 'name': product_obj.name,
                 'category': product_obj.category,
                 'price': get_price(product_obj),
@@ -156,12 +156,12 @@ def get_seller_products(queryset):
             sale = product.discount
             products_list.append(
                 {
-                    'id': product.id,
+                    'id': product.product_id,
                     'seller': product.seller.name,
                     'seller_id': product.seller.id,
                     'link': product.product.slug,
-                    'image': '/static/assets/img/content/home/card.jpg',
-                    'image_alt': 'card.jpg',
+                    'images': {'first': {'image': {'url': product.product.images.first().image.url}}},
+                    'image_alt': {'first': {'image_alt': product.product.images.first().image_alt}},
                     'name': product.product.name,
                     'category': product.product.category,
                     'price': round(float(product.price) * (1 - sale.discount / 100), 2),
@@ -175,12 +175,12 @@ def get_seller_products(queryset):
         else:
             products_list.append(
                 {
-                    'id': product.id,
+                    'id': product.product_id,
                     'seller': product.seller.name,
                     'seller_id': product.seller.id,
                     'link': product.product.slug,
-                    'image': '/static/assets/img/content/home/card.jpg',
-                    'image_alt': 'card.jpg',
+                    'images': {'first': {'image': {'url': product.product.images.first().image.url}}},
+                    'image_alt': {'first': {'image_alt': product.product.images.first().image_alt}},
                     'name': product.product.name,
                     'category': product.product.category,
                     'price': product.price,
@@ -188,3 +188,14 @@ def get_seller_products(queryset):
                 }
             )
     return products_list
+
+
+def get_min_cards(cards, cards_obj):
+    cards_list = get_seller_products(cards_obj)
+    for card in cards_list:
+        cards.append(card)
+    for card_1 in cards_list:
+        for card_2 in cards:
+            if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
+                cards.pop(cards.index(card_2))
+    return cards
