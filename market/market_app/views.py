@@ -159,24 +159,6 @@ class HistoryViewView(TemplateView):
         return context
 
 
-class OneOrderView(TemplateView):
-    """Информация о конкретном заказе"""
-    template_name = 'oneorder.html'
-    extra_context = {
-        'middle_title_left': 'Заказ №200',
-        'middle_title_right': 'Заказ №200',
-    }
-
-
-class OrderView(TemplateView):
-    """Оформление заказа"""
-    template_name = 'order.html'
-    extra_context = {
-        'middle_title_left': 'Оформление заказа',
-        'middle_title_right': 'Оформление заказа',
-    }
-
-
 class ProductView(DetailView):
     """Просмотр информации о конкретном товаре"""
     model = Product
