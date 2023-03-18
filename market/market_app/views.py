@@ -17,7 +17,8 @@ from market_app.utils import (
     get_count_product_in_cart,
     get_seller_products,
     get_catalog_product,
-    get_min_cards
+    get_min_cards,
+    sort_list
 )
 
 
@@ -87,24 +88,22 @@ class CatalogView(View):
 
     def get(self, request):
         cards = []
-        price = request.GET.get('price')
-        title = request.GET.get('title')
-        stock = request.GET.get('stock')
+        price, title, stock, sort_by = request.GET.get('price'), request.GET.get('title'), request.GET.get('stock'), request.GET.get('sort_by')
         if not price and not title:
-            middle_title_left = 'Личный кабинет'
-            middle_title_right = 'Личный кабинет'
             cards = get_catalog_product()
+            sort_list(cards, sort_by)
             context = {
-                'middle_title_left': middle_title_left,
-                'middle_title_right': middle_title_right,
-                'cards': cards
+                'cards': cards,
+                'sort_by': sort_by
             }
             return render(request, 'catalog.html', context=context)
         if not price:
             name_product = title
             cards_obj = SellerProduct.objects.filter(product__name__contains=name_product)
             get_min_cards(cards, cards_obj)
-            return render(request, 'catalog.html', context={'cards': cards})
+            sort_list(cards, sort_by)
+            add_url = f'title={title}'
+            return render(request, 'catalog.html', context={'cards': cards, 'add_url': add_url})
         price_product = price.replace(';', ' ').split()
         cards_obj = SellerProduct.objects.filter(product__name__contains=title)
         if stock:
@@ -118,9 +117,11 @@ class CatalogView(View):
                 if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
                     cards.pop(cards.index(card_2))
         add_url = f'price={price_product[0]}%3B{price_product[1]}&title={title}'
+        sort_list(cards, sort_by)
         context = {
             'cards': cards,
-            'add_url': add_url
+            'add_url': add_url,
+            'sort_by': sort_by
         }
         return render(request, 'catalog.html', context=context)
 

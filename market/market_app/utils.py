@@ -134,6 +134,11 @@ def get_catalog_product():
     products_list = []
     queryset = Product.objects.all()
     for product_obj in queryset:
+        date = 0
+        values = product_obj.values.all()
+        for value in values:
+            if value.characteristic.characteristic_name.lower() == 'год':
+                date = int(value.value)
         products_list.append(
             {
                 'id': product_obj.id,
@@ -143,7 +148,9 @@ def get_catalog_product():
                 'name': product_obj.name,
                 'category': product_obj.category,
                 'price': get_price(product_obj),
-                'description': product_obj.description
+                'description': product_obj.description,
+                'count_reviews': get_count_product_reviews(product_obj),
+                'date': date
             }
         )
     return products_list
@@ -169,7 +176,7 @@ def get_seller_products(queryset):
                     'sale': sale.discount,
                     'date': sale.start_date,
                     'date_to': sale.end_date,
-                    'description': product.product.description
+                    'description': product.product.description,
                 }
             )
         else:
@@ -184,7 +191,7 @@ def get_seller_products(queryset):
                     'name': product.product.name,
                     'category': product.product.category,
                     'price': product.price,
-                    'description': product.product.description
+                    'description': product.product.description,
                 }
             )
     return products_list
@@ -198,4 +205,14 @@ def get_min_cards(cards, cards_obj):
         for card_2 in cards:
             if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
                 cards.pop(cards.index(card_2))
+    return cards
+
+
+def sort_list(cards, sort_by):
+    if sort_by:
+        if sort_by[0] == '-':
+            cards.sort(key=lambda x: x[sort_by[1:]], reverse=True)
+        else:
+            cards.sort(key=lambda x: x[sort_by])
+        return cards
     return cards

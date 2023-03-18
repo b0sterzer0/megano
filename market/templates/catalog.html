@@ -74,10 +74,42 @@
             <div class="Sort-title">Сортировать по:
             </div>
             <div class="Sort-variants">
-                <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=rating">Популярности</a>
-                <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">Цене</a>
-                <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=reviews">Отзывам</a>
-                <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=novelty">Новизне</a>
+                {% if not sort_by %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "price" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "-price" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "count_reviews" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-price">Цене</a>
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "-count_reviews" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">Цене</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "date" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-date">Новизне</a>
+                {% elif sort_by == "-date" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% endif %}
             </div>
           </div>
           <div class="Cards">
