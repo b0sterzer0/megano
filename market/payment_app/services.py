@@ -1,27 +1,25 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseNotFound, HttpResponseBadRequest
+import json
 
 from requests import get as req_get
-from typing import Union
 
-from .models import TestBasketModel
-from market_app.models import SellerProduct
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
+
 from api_for_payment_app.models import PaymentStatusModel
+from order_app.models import OrderModel
 
 
-def get_total_price(user_from_req) -> int:
+def get_total_price(order_id) -> int:
     """
-    Функция вычисляет общую цену товаров в корзине
+    Функция находит общую цену заказа
     """
-    products_in_basket_list = TestBasketModel.objects.filter(user=user_from_req)
 
-    total_price = 0
-    for product_in_basket in products_in_basket_list:
-        try:
-            product_price = SellerProduct.objects.get(product=product_in_basket.product).price
-        except ObjectDoesNotExist:
-            return HttpResponseBadRequest('Ошибка: цена для товара не найдена')
-        total_price += product_price
+    try:
+        order_object = OrderModel.objects.get(id=order_id)
+        order_data = json.loads(order_object.json_order_data)
+        total_price = order_data['t_price']
+    except ObjectDoesNotExist:
+        return HttpResponse('Ошибка: заказ не найден')
     return int(total_price)
 
 
@@ -41,13 +39,13 @@ def get_dict_with_payment_status(base_url: str, card_number: str, total_price: i
     return status
 
 
-def post_method_for_payment_views(request) -> dict:
+def post_method_for_payment_views(request, order_id) -> dict:
     """
     В этой функции реализован POST метод для представлений PayMyCardView и PaySomeoneCardView
     """
     base_url = 'http://127.0.0.1:8000'
     card_number = request.POST.get('card_number')
     if card_number:
-        total_price = get_total_price(request.user)
+        total_price = get_total_price(order_id)
         payment_status = get_dict_with_payment_status(base_url, card_number, total_price)
         return payment_status

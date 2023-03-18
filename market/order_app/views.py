@@ -115,4 +115,6 @@ class OrderView(View):
         order_object = OrderModel.objects.get(user=request.user, id=order_id)
         order_data = json.loads(order_object.json_order_data)
         clear_user_cart(request)
-        return render(request, 'order/oneorder.html', context=order_data)
+        context = {'order_id': order_id, 'order_data': order_data,
+                   'pay_method': order_data['order_dict']['pay']}
+        return render(request, 'order/oneorder.html', context=context)

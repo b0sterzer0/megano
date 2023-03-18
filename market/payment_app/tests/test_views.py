@@ -12,9 +12,9 @@ from api_for_payment_app.models import PaymentStatusModel
 USERNAME = 'test'
 PASSWORD = 'Asdfg54321'
 
-## Перед запуском тестов, необходимо в отдельном терминале запустить сервер через py manage.py runserver, иначе
-## у функции post_method_for_payment_views не получится отправить запрос к API
-## Также, в БД должны существовать модели CardModel и PaymentStatusModel
+# Перед запуском тестов, необходимо в отдельном терминале запустить сервер через py manage.py runserver, иначе
+# у функции post_method_for_payment_views не получится отправить запрос к API
+# Также, в БД должны существовать модели CardModel и PaymentStatusModel
 
 
 class PostMethodForPaymentViewTestClass(TestCase):
