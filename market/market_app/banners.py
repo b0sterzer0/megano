@@ -8,19 +8,17 @@ import random
 from typing import List
 
 from django.core.cache import cache
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete, post_save
 
-from .models import Banner
-from app_settings.utils import get_settings
+from app_settings.utils import get_setting_from_bd
+from market_app.models import Banner
 
 
 def get_banner_cache_time() -> int:
     """
     Возвращает время кэширования баннеров на главной странице из настроек сайта
     """
-    settings_config = get_settings()
-    banner_cache_time = settings_config['banner_cache_time']
-
+    banner_cache_time = get_setting_from_bd('banner_cache_time')
     return banner_cache_time
 
 
@@ -32,8 +30,7 @@ def get_banners_list() -> List:
 
     def _get_banners_from_db() -> List:
         """ Возвращает список из случайных баннеров из БД """
-        settings_config = get_settings()
-        banner_number = settings_config['banner_number']
+        banner_number = get_setting_from_bd('banner_number')
         try:
             return random.sample(list(Banner.objects.all()), banner_number)
         except ValueError:

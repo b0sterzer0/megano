@@ -13,5 +13,7 @@
   "common_products_top_number": 8,
   "ordinary_delivery_cost": 200,
   "min_amount_for_free_delivery":  2000,
-  "express_delivery_cost": 500
+  "express_delivery_cost": 500,
+  "num_reviews_per_page": 2,
+  "num_products_per_page": 30
 }

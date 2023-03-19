@@ -113,38 +113,39 @@
             </div>
           </div>
           <div class="Cards">
-
-            {# Пока что выводим первые 8 карточек - как в исходном макете #}
-            {# T-O-D-O Разобраться с пагинацией #}
-            {% for card in cards|slice:":8" %}
-
+            {% for card in cards %}
               <div class="Card{% cycle ' ' ' ' ' ' ' ' ' hide_md' ' hide_md' ' hide_md hide_1450' ' hide_md hide_1450' %}">
                  {% include 'include/card.html' %}
               </div>
-
             {% endfor %}
-
           </div>
           <div class="Pagination">
             <div class="Pagination-ins">
-                <a class="Pagination-element Pagination-element_prev" href="#">
-                    <img src="{% static "assets/img/icons/prevPagination.svg" %}" alt="prevPagination.svg"/>
+              {% if cards.has_previous %}
+              <a class="Pagination-element Pagination-element_prev" href="?page={{ cards.previous_page_number }}#reviews">
+                <img style="margin: 0;" src="{% static "assets/img/icons/prevPagination.svg" %}" alt="prevPagination.svg"/>
+              </a>
+              {% endif %}
+              {% for page in cards.paginator.page_range %}
+                {% if cards.number == page %}
+                <a class="Pagination-element Pagination-element_current" href="?page={{ page }}#reviews">
+                  <span class="Pagination-text">{{ page }}
+                  </span>
                 </a>
-                <a class="Pagination-element Pagination-element_current" href="#">
-                    <span class="Pagination-text">1</span>
+                {% elif page >= cards.number|add:-2 and page <= cards.number|add:2 %}
+                <a class="Pagination-element" href="?page={{ page }}#reviews">
+                  <span class="Pagination-text">{{ page }}
+                  </span>
                 </a>
-                <a class="Pagination-element" href="#">
-                    <span class="Pagination-text">2</span>
-                </a>
-                <a class="Pagination-element" href="#">
-                    <span class="Pagination-text">3</span>
-                </a>
-                <a class="Pagination-element Pagination-element_prev" href="#">
-                    <img src="{% static "assets/img/icons/nextPagination.svg" %}" alt="nextPagination.svg"/>
-                </a>
+              {% endif %}
+              {% endfor %}
+              {% if cards.has_next %}
+              <a class="Pagination-element Pagination-element_prev" href="?page={{ cards.next_page_number }}#reviews">
+                <img style="margin: 0;" src="{% static "assets/img/icons/nextPagination.svg" %}" alt="nextPagination.svg"/>
+              </a>
+              {% endif %}
             </div>
           </div>
-        </div>
       </div>
     </div>
 

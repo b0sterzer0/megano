@@ -10,4 +10,3 @@ class ProductReviewForm(forms.Form):
 class ProductsForm(forms.Form):
     price = forms.IntegerField(required=False)
     title = forms.CharField(max_length=100, required=False)
-
