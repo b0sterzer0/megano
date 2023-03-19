@@ -11,7 +11,8 @@ from market_app.product_history import HistoryViewOperations
 from market_app.utils import (
     create_product_review,
     can_create_reviews,
-    get_product_review_list,
+    get_product_review_list_by_page,
+    get_product_list_by_page,
     get_seller,
     get_count_product_reviews,
     get_count_product_in_cart,
@@ -88,10 +89,12 @@ class CatalogView(View):
 
     def get(self, request):
         cards = []
-        price, title, stock, sort_by = request.GET.get('price'), request.GET.get('title'), request.GET.get('stock'), request.GET.get('sort_by')
+        price, title, stock, sort_by, page = request.GET.get('price'), request.GET.get('title'), \
+            request.GET.get('stock'), request.GET.get('sort_by'), request.GET.get('page')
         if not price and not title:
             cards = get_catalog_product()
             sort_list(cards, sort_by)
+            cards = get_product_list_by_page(cards, page)
             context = {
                 'cards': cards,
                 'sort_by': sort_by
@@ -102,6 +105,7 @@ class CatalogView(View):
             cards_obj = SellerProduct.objects.filter(product__name__contains=name_product)
             get_min_cards(cards, cards_obj)
             sort_list(cards, sort_by)
+            cards = get_product_list_by_page(cards, page)
             add_url = f'title={title}'
             return render(request, 'catalog.html', context={'cards': cards, 'add_url': add_url})
         price_product = price.replace(';', ' ').split()
@@ -117,6 +121,7 @@ class CatalogView(View):
                 if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
                     cards.pop(cards.index(card_2))
         add_url = f'price={price_product[0]}%3B{price_product[1]}&title={title}'
+        cards = get_product_list_by_page(cards, page)
         sort_list(cards, sort_by)
         context = {
             'cards': cards,
@@ -172,7 +177,7 @@ class ProductView(DetailView):
         page = self.request.GET.get('page')
         seller_products_list = SellerProduct.objects.filter(product=product).all()
         min_price = min(get_seller_products(seller_products_list), key=lambda i: int(i['price']))['price']
-        context['reviews'] = get_product_review_list(product, page)
+        context['reviews'] = get_product_review_list_by_page(product, page)
         context['can_create_reviews'] = can_create_reviews(product, self.request.user)
         context['num_review'] = get_count_product_reviews(product)
         context['images'] = product.images.all()
@@ -260,9 +265,11 @@ class SellerDetailView(DetailView):
         context['middle_title_left'] = seller.name
         context['middle_title_right'] = seller.name
         context['seller'] = seller
-        context['products'] = get_seller_products(SellerProduct.objects.filter(seller=seller).select_related('product').all())
+        context['products'] = get_seller_products(
+            SellerProduct.objects.filter(seller=seller).select_related('product').all())
 
         #   TODO Заглушка для популярных товаров. Доделать, когда появится история покупок. Добавить все товары
-        context['popular_list'] = get_seller_products(SellerProduct.objects.filter(seller=seller).select_related('product').all()[:2])  # get_popular_list_for_seller(pk)
+        context['popular_list'] = get_seller_products(
+            SellerProduct.objects.filter(seller=seller).select_related('product').all()[:2])
 
         return context

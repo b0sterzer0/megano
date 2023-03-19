@@ -1,32 +1,60 @@
 from django.core.cache import cache
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from app_cart.models import AnonimCart
 from app_login.models import Profile
-from market_app.models import ProductReview, Seller, Product, SellerProduct
-from app_settings.utils import get_settings
+from app_settings.utils import get_setting_from_bd
+from market_app.models import Product, ProductReview, Seller, SellerProduct
 
 
-def get_product_review_list(product, page):
+def make_paginator_from_list(lst, num_page, page):
     """
-    Функция получает и возвращает список отзывов определенного товара.
+    Функция получает список, разбивает на страницы и возвращает объекты с заданной страницы
+    :param lst: начальный список.
+    :param num_page: всего количество страниц.
+    :param page: номер страницы для возврата объектов.
+    :return: список отзывов определенного товара заданной страницы.
+    """
+    paginator = Paginator(lst, num_page)
+    page = page
+    try:
+        objects = paginator.page(page)
+    except PageNotAnInteger:
+        # Если страница не является целым числом, возвращаем первую страницу.
+        objects = paginator.page(1)
+    except EmptyPage:
+        # Если номер страницы больше, чем общее количество страниц, возвращаем последнюю.
+        objects = paginator.page(paginator.num_pages)
+    return objects
+
+
+def get_product_review_list_by_page(product, page):
+    """
+    Функция получает товар и номер страницы, загружает из БД список отзывов для данного товара
+    и количество отзывов на странице, отправляет данные в функцию make_paginator_from_list(),
+    возвращает список отзывов определенного товара для заданной страницы.
     :param product: товар.
-    :return: список отзывов определенного товара.
+    :param page: номер страницы для возврата отзывов.
+    :return: список отзывов определенного товара заданной страницы.
     """
 
     reviews_list = ProductReview.objects.filter(product=product).select_related('customer').order_by('-date')
-
-    paginator = Paginator(reviews_list, 2)  # По 2 отзыва на каждой странице.
-    page = page
-    try:
-        reviews = paginator.page(page)
-    except PageNotAnInteger:
-        # Если страница не является целым числом, возвращаем первую страницу.
-        reviews = paginator.page(1)
-    except EmptyPage:
-        # Если номер страницы больше, чем общее количество страниц, возвращаем последнюю.
-        reviews = paginator.page(paginator.num_pages)
+    num_reviews = get_setting_from_bd('num_reviews_per_page')
+    reviews = make_paginator_from_list(reviews_list, num_reviews, page)
     return reviews
+
+
+def get_product_list_by_page(products_list, page):
+    """
+    Функция получает полный список товаров и возвращает список товаров для определенной стриницы.
+    :param products_list: изначальный список товаров.
+    :param page: номер страницы для возврата товаров.
+    :return: список товаров для заданной страницы.
+    """
+
+    num_products_per_page = get_setting_from_bd('num_products_per_page')
+    products = make_paginator_from_list(products_list, num_products_per_page, page)
+    return products
 
 
 def can_create_reviews(product, user):
@@ -45,10 +73,10 @@ def create_product_review(product, user, description):
     """
     Функция создаёт отзыв к определенному товару.
     """
-    review = ProductReview.objects.create(product=product,
-                                          customer=user,
-                                          description=description
-                                          )
+    ProductReview.objects.create(product=product,
+                                 customer=user,
+                                 description=description
+                                 )
     # Эту часть ввести после добавления загрузки фото с отзывами
     # for img in images:
     #     ProductReviewImage.objects.create(review=review, image=img)
@@ -72,8 +100,7 @@ def get_seller(pk):
     :param pk: pk определенного продавца.
     :return: кэш объекта продавца.
     """
-    settings_config = get_settings()
-    seller_cache_time = settings_config['seller_cache_time']
+    seller_cache_time = get_setting_from_bd('seller_cache_time')
     cache_key = f"seller_detail_{pk}"
     seller = cache.get(cache_key)
     if not seller:
@@ -90,7 +117,7 @@ def get_popular_list_for_seller(pk):
     :param pk: pk определенного продавца.
     :return: список топ товаров продавца
     """
-#   TODO Доделать после создания истории покупок
+    #   TODO Доделать после создания истории покупок
     pass
     # settings_config = get_settings()
     # sellers_products_top_cache_time = settings_config['sellers_products_top_cache_time']

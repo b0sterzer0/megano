@@ -14,27 +14,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from app_login.views import (
-    UserResetPasswordView,
-    UserPasswordResetDoneView,
-    UserPasswordResetConfirmView,
-    UserPasswordResetCompleteView
-)
+from django.urls import include, path
+from app_login.views import (UserPasswordResetCompleteView,
+                             UserPasswordResetConfirmView,
+                             UserPasswordResetDoneView,
+                             UserResetPasswordView)
 
 urlpatterns = [
-    path('', include('market_app.urls')),
-    path('i18n', include('django.conf.urls.i18n')),
-    path('admin/', admin.site.urls),
-    path('settings/', include('app_settings.urls')),
-    path('comparison/', include('compare_app.urls')),
-    path('login/', include('app_login.urls')),
-    path('password-reset/', UserResetPasswordView.as_view(),name='password_reset'),
-    path('password-reset/done/', UserPasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', UserPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset/done/', UserPasswordResetCompleteView.as_view(), name='password_reset_complete'),
-    path('cart/', include('app_cart.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('', include('market_app.urls')),
+                  path('i18n', include('django.conf.urls.i18n')),
+                  path('admin/', admin.site.urls),
+                  path('settings/', include('app_settings.urls')),
+                  path('comparison/', include('compare_app.urls')),
+                  path('login/', include('app_login.urls')),
+                  path('password-reset/', UserResetPasswordView.as_view(), name='password_reset'),
+                  path('password-reset/done/', UserPasswordResetDoneView.as_view(), name='password_reset_done'),
+                  path('reset/<uidb64>/<token>/', UserPasswordResetConfirmView.as_view(),
+                       name='password_reset_confirm'),
+                  path('reset/done/', UserPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+                  path('cart/', include('app_cart.urls')),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

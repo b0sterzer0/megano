@@ -1,10 +1,10 @@
 import time
 
-from django.test import TestCase
 from django.contrib.auth.models import User
+from django.test import TestCase
 
-from market_app.models import Category, Product, HistoryView
 from market_app.product_history import HistoryViewOperations
+from market_app.models import Category, HistoryView, Product
 
 
 class HistoryViewOperationsTest(TestCase):

@@ -4,11 +4,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.views import View
 from django.utils.translation import gettext_lazy as _
+from django.views import View
 
-from .forms import SettingsForm
-from .models import SiteSettings
+from app_settings.forms import SettingsForm
+from app_settings.models import SiteSettings
 
 
 class SettingsView(View):
@@ -28,12 +28,8 @@ class SettingsView(View):
         """
         settings = SiteSettings.objects.first()
         settings_form = SettingsForm(instance=settings)
-        middle_title_left = _('настройки')
-        middle_title_right = 'settings'
         return render(request, 'app_settings/settings.html', context={'settings_forms': settings_form,
                                                                       'sections': self.sections,
-                                                                      'middle_title_left': middle_title_left,
-                                                                      'middle_title_right': middle_title_right,
                                                                       })
 
     def post(self, request):
