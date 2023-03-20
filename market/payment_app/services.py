@@ -39,6 +39,18 @@ def get_dict_with_payment_status(base_url: str, card_number: str, total_price: i
     return status
 
 
+def change_payment_status_in_order(order_id):
+    """
+    Функция обновляет статус оплаты в заказе на 'Оплачено'
+    """
+    order = OrderModel.objects.get(id=order_id)
+    deserialized_data_dict = json.loads(order.json_order_data)
+    deserialized_data_dict['order_dict']['payment_status'] = 'Оплачено'
+    serialized_data_dict = json.dumps(deserialized_data_dict)
+    order.json_order_data = serialized_data_dict
+    order.save()
+
+
 def post_method_for_payment_views(request, order_id) -> dict:
     """
     В этой функции реализован POST метод для представлений PayMyCardView и PaySomeoneCardView
@@ -48,4 +60,6 @@ def post_method_for_payment_views(request, order_id) -> dict:
     if card_number:
         total_price = get_total_price(order_id)
         payment_status = get_dict_with_payment_status(base_url, card_number, total_price)
+        if payment_status['status']['status_code'] == 'S200':
+            change_payment_status_in_order(order_id)
         return payment_status
