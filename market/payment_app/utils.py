@@ -10,7 +10,7 @@ from order_app.models import OrderModel
 from market_app.models import Product, ProductPurchases
 
 
-def get_total_price(order_id) -> str:
+def get_total_price(order_id: str) -> str:
     """
     Функция находит общую цену заказа
     """
@@ -26,7 +26,10 @@ def get_total_price(order_id) -> str:
     return total_price
 
 
-def create_payment_status_dict(s_code):
+def create_payment_status_dict(s_code: str) -> dict:
+    """
+    Функция создает словарь статуса оплаты заказа по данным, получаемым из БД
+    """
     status = PaymentStatusModel.objects.get(status_code=s_code)
     status = {'status': {'status_code': status.status_code,
                          'status_description': status.status_description}}
@@ -46,7 +49,7 @@ def get_dict_with_payment_status(base_url: str, card_number: str, total_price: i
     return status
 
 
-def change_payment_status_in_order(order_id):
+def change_payment_status_in_order(order_id: str) -> None:
     """
     Функция обновляет статус оплаты в заказе на 'Оплачено'
     """
@@ -58,21 +61,24 @@ def change_payment_status_in_order(order_id):
     order.save()
 
 
-def increase_product_purchases(order_id):
+def increase_product_purchases(order_id: str) -> None:
+    """
+    Функция увеличивает кол-во единиц проданного товара в таблице ProductPurchases
+    """
     order = OrderModel.objects.get(id=order_id)
     deserialized_data_dict = json.loads(order.json_order_data)
     for product_from_order in deserialized_data_dict['products_list']:
-        product = Product.objects.get(id=product_from_order['id'])
+        product = Product.objects.get(id=product_from_order['product_id'])
         product_purchases = ProductPurchases.objects.filter(product=product)
         if product_purchases:
             product_purchases = product_purchases.first()
-            product_purchases.num_purchases += 1
+            product_purchases.num_purchases += (1 * product_from_order['qty'])
             product_purchases.save()
         else:
             ProductPurchases.objects.create(product=product, num_purchases=1)
 
 
-def post_method_for_payment_views(request, order_id) -> dict:
+def post_method_for_payment_views(request, order_id: str) -> dict:
     """
     В этой функции реализован POST метод для представлений PayMyCardView и PaySomeoneCardView
     """

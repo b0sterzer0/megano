@@ -3,9 +3,11 @@ import json
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from payment_app.utils import create_payment_status_dict, change_payment_status_in_order, get_total_price
+from payment_app.utils import create_payment_status_dict, change_payment_status_in_order, get_total_price,\
+    increase_product_purchases
 from api_for_payment_app.models import PaymentStatusModel
 from order_app.models import OrderModel
+from market_app.models import Product, Category, ProductPurchases
 
 
 class CreatePaymentStatusDictFuncTest(TestCase):
@@ -47,3 +49,26 @@ class GetTotalPriceFuncTest(TestCase):
         t_price = get_total_price(self.order_object.id)
 
         self.assertEqual(t_price, 1000)
+
+
+class IncreaseProductPurchasesFuncTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        user = User.objects.create_user(username='test user')
+        cls.category = Category.objects.create(title='телефоны', slug='phones', parent=None, activity=True)
+        cls.product_1 = Product.objects.create(name='test_product_1', category=cls.category, slug='t_prod_1')
+        cls.product_2 = Product.objects.create(name='test_product_2', category=cls.category, slug='t_prod_2')
+        json_order_data = json.dumps({'t_price': 1000, 'products_list': [{'product_id': cls.product_1.id, 'qty': 1},
+                                                                         {'product_id': cls.product_2.id, 'qty': 1}],
+                                      'order_dict': {'payment_status': 'Не оплачено'}})
+        cls.order_object = OrderModel.objects.create(user=user, json_order_data=json_order_data)
+
+    def test_two_products_and_one_qty(self):
+        increase_product_purchases(order_id=self.order_object.id)
+        product_purchases = ProductPurchases.objects.all()
+
+        self.assertEqual(len(product_purchases), 2)
+        self.assertEqual(product_purchases[0].product, self.product_1)
+        self.assertEqual(product_purchases[0].num_purchases, 1)
+        self.assertEqual(product_purchases[1].product, self.product_2)
+        self.assertEqual(product_purchases[1].num_purchases, 1)
