@@ -34,5 +34,5 @@ class SiteSettings(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = _('настройка сайта')
-        verbose_name_plural = _('настройки сайта')
+        verbose_name = _('Настройка сайта')
+        verbose_name_plural = _('Настройки сайта')

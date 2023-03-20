@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 
-from .services import post_method_for_payment_views
+from .utils import post_method_for_payment_views
 
 
 class PayMyCardView(View):

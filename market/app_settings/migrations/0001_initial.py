@@ -30,6 +30,8 @@ class Migration(migrations.Migration):
                 ('ordinary_delivery_cost', models.PositiveIntegerField(verbose_name='стоимость обычной доставки')),
                 ('min_amount_for_free_delivery', models.PositiveIntegerField(verbose_name='минимальная сумма для бесплатной обычной доставки')),
                 ('express_delivery_cost', models.PositiveIntegerField(verbose_name='стоимость экспресс доставки')),
+                ('num_reviews_per_page', models.PositiveIntegerField(verbose_name='количество отзывов на странице')),
+                ('num_products_per_page', models.PositiveIntegerField(verbose_name='количество товаров на странице')),
             ],
             options={
                 'verbose_name': 'Настройка сайта',
