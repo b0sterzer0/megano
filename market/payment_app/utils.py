@@ -1,6 +1,5 @@
 import json
-
-from requests import get
+import requests
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
@@ -40,7 +39,7 @@ def get_dict_with_payment_status(base_url: str, card_number: str, total_price: i
     """
     Функция получает от API, симулирующего работу банка, статус оплаты
     """
-    data_from_api = get(url=f'{base_url}/APIPayment/{card_number}/{total_price}/')
+    data_from_api = requests.get(url=f'{base_url}/APIPayment/{card_number}/{total_price}/')
 
     if data_from_api.status_code != 200:
         return create_payment_status_dict('S204')
