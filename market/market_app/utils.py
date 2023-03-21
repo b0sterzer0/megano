@@ -133,7 +133,6 @@ def get_count_product_in_cart(request):
     """
     Функция для вычисления количества товаров в корзине пользователя
     """
-
     if request.user.is_authenticated:
         count_in_cart = [count.product_in_cart for count in
                          Profile.objects.filter(user_id=request.user.id).only('product_in_cart')]
@@ -144,6 +143,9 @@ def get_count_product_in_cart(request):
 
 
 def get_price(product_obj):
+    """
+    Функция принимает товар и просчитывает цену с учётом скидки
+    """
     products_obj = []
     for product_form_seller_product in SellerProduct.objects.all():
         if product_form_seller_product.product.name == product_obj.name:
@@ -158,6 +160,9 @@ def get_price(product_obj):
 
 
 def get_catalog_product():
+    """
+    Функция формирует удобный список с информацией для товаров на основе class Product
+    """
     products_list = []
     queryset = Product.objects.all()
     for product_obj in queryset:
@@ -184,6 +189,9 @@ def get_catalog_product():
 
 
 def get_seller_products(queryset):
+    """
+    Функция формирует удобный список с информацией для товаров на основе class SellerProduct
+    """
     products_list = []
     for product in queryset:
         if product.discount:
@@ -225,6 +233,11 @@ def get_seller_products(queryset):
 
 
 def get_min_cards(cards, cards_obj):
+    """
+    :param cards: пустой список
+    :param cards_obj: отфильтрованный список товаров по имени
+    :return: список товаров с наименьшей ценой
+    """
     cards_list = get_seller_products(cards_obj)
     for card in cards_list:
         cards.append(card)
@@ -236,6 +249,11 @@ def get_min_cards(cards, cards_obj):
 
 
 def sort_list(cards, sort_by):
+    """
+    :param cards: список всех товаров
+    :param sort_by: имя по которому будет сортировать
+    :return: отсортированный список
+    """
     if sort_by:
         if sort_by[0] == '-':
             cards.sort(key=lambda x: x[sort_by[1:]], reverse=True)

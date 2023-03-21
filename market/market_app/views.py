@@ -5,7 +5,7 @@ from django.views.generic import TemplateView, DetailView
 
 from compare_app.services import create_characteristics_dict
 from market_app.banners import get_banners_list
-from market_app.forms import ProductReviewForm, ProductsForm
+from market_app.forms import ProductReviewForm
 from market_app.models import Seller, Product, SellerProduct
 from market_app.product_history import HistoryViewOperations
 from market_app.utils import (
