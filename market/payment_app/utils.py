@@ -2,11 +2,20 @@ import json
 import requests
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
 
 from api_for_payment_app.models import PaymentStatusModel
 from order_app.models import OrderModel
 from market_app.models import Product, ProductPurchases
+
+
+def create_payment_status_dict(s_code: str) -> dict:
+    """
+    Функция создает словарь статуса оплаты заказа по данным, получаемым из БД
+    """
+    status = PaymentStatusModel.objects.get(status_code=s_code)
+    status = {'status': {'status_code': status.status_code,
+                         'status_description': status.status_description}}
+    return status
 
 
 def get_total_price(order_id: str) -> str:
@@ -19,20 +28,10 @@ def get_total_price(order_id: str) -> str:
         order_data = json.loads(order_object.json_order_data)
         total_price = order_data['t_price']
         if not order_data['products_list']:
-            total_price = None
+            total_price = create_payment_status_dict('S000')
     except ObjectDoesNotExist:
-        return HttpResponse('Ошибка: заказ не найден')
+        return create_payment_status_dict('S001')
     return total_price
-
-
-def create_payment_status_dict(s_code: str) -> dict:
-    """
-    Функция создает словарь статуса оплаты заказа по данным, получаемым из БД
-    """
-    status = PaymentStatusModel.objects.get(status_code=s_code)
-    status = {'status': {'status_code': status.status_code,
-                         'status_description': status.status_description}}
-    return status
 
 
 def get_dict_with_payment_status(base_url: str, card_number: str, total_price: int) -> dict:
@@ -85,8 +84,8 @@ def post_method_for_payment_views(request, order_id: str) -> dict:
     card_number = request.POST.get('card_number')
     if card_number:
         total_price = get_total_price(order_id)
-        if total_price is None:
-            return create_payment_status_dict('S000')
+        if type(total_price) is dict:
+            return total_price
         payment_status = get_dict_with_payment_status(base_url, card_number, int(total_price))
         if payment_status['status']['status_code'] == 'S200':
             change_payment_status_in_order(order_id)
