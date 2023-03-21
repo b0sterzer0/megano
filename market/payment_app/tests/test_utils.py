@@ -3,7 +3,7 @@ import json
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from payment_app.utils import create_payment_status_dict, change_payment_status_in_order, get_total_price,\
+from payment_app.utils import create_payment_status_dict, change_payment_status_in_order, check_order,\
     increase_product_purchases
 from api_for_payment_app.models import PaymentStatusModel
 from order_app.models import OrderModel
@@ -37,18 +37,36 @@ class ChangePaymentStatusInOrderFuncTest(TestCase):
         self.assertTrue(order_data['order_dict']['payment_status'], 'Оплачено')
 
 
-class GetTotalPriceFuncTest(TestCase):
+class CheckOrderFuncTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        user = User.objects.create_user(username='test user')
+        PaymentStatusModel.objects.create(status_code='S000', status_description='test desc')
+        PaymentStatusModel.objects.create(status_code='S001', status_description='test desc')
+        cls.user = User.objects.create_user(username='test user')
         json_order_data = json.dumps({'t_price': 1000, 'products_list': [{'test': 'test'}, {'test_2': 'test'}],
                                       'order_dict': {'payment_status': 'Не оплачено'}})
-        cls.order_object = OrderModel.objects.create(user=user, json_order_data=json_order_data)
+        cls.order_object = OrderModel.objects.create(user=cls.user, json_order_data=json_order_data)
 
     def test_ordinary_situation(self):
-        t_price = get_total_price(self.order_object.id)
+        problems_with_order, order_data = check_order(self.order_object.id)
 
-        self.assertEqual(t_price, 1000)
+        self.assertIsNone(problems_with_order)
+        self.assertTrue(order_data)
+
+    def test_no_products_in_order(self):
+        json_order_data = json.dumps({'t_price': 1000, 'products_list': [],
+                                      'order_dict': {'payment_status': 'Не оплачено'}})
+        self.order_object = OrderModel.objects.create(user=self.user, json_order_data=json_order_data)
+        problems_with_order, order_data = check_order(self.order_object.id)
+
+        self.assertIsNotNone(problems_with_order)
+        self.assertEqual(problems_with_order['status']['status_code'], 'S000')
+
+    def test_order_does_not_exist(self):
+        problems_with_order, order_data = check_order(10)
+
+        self.assertIsNotNone(problems_with_order)
+        self.assertEqual(problems_with_order['status']['status_code'], 'S001')
 
 
 class IncreaseProductPurchasesFuncTest(TestCase):

@@ -114,6 +114,6 @@ class PostMethodForPaymentViewTestClass(TestCase):
         total_price = 40
         status_dict = get_dict_with_payment_status(base_url=wrong_base_url,
                                                    card_number=card_number,
-                                                   total_price=total_price)
+                                                   order_id=self.order_object.id)
 
         self.assertEqual(status_dict['status']['status_code'], 'S204')

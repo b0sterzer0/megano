@@ -18,26 +18,30 @@ def create_payment_status_dict(s_code: str) -> dict:
     return status
 
 
-def get_total_price(order_id: str) -> str:
+def check_order(order_id: int):
     """
-    Функция находит общую цену заказа
+    Функция проверяет существует ли заказ и есть ли в нем товары
     """
-
     try:
         order_object = OrderModel.objects.get(id=order_id)
         order_data = json.loads(order_object.json_order_data)
-        total_price = order_data['t_price']
         if not order_data['products_list']:
-            total_price = create_payment_status_dict('S000')
+            return create_payment_status_dict('S000'), None
     except ObjectDoesNotExist:
-        return create_payment_status_dict('S001')
-    return total_price
+        return create_payment_status_dict('S001'), None
+
+    return None, order_data
 
 
-def get_dict_with_payment_status(base_url: str, card_number: str, total_price: int) -> dict:
+def get_dict_with_payment_status(base_url: str, card_number: str, order_id: int) -> dict:
     """
     Функция получает от API, симулирующего работу банка, статус оплаты
     """
+    problem_with_order, order_data = check_order(order_id)
+    if problem_with_order:
+        return problem_with_order
+
+    total_price = int(order_data['t_price'])
     data_from_api = requests.get(url=f'{base_url}/APIPayment/{card_number}/{total_price}/')
 
     if data_from_api.status_code != 200:
@@ -83,10 +87,7 @@ def post_method_for_payment_views(request, order_id: str) -> dict:
     base_url = 'http://127.0.0.1:8000'
     card_number = request.POST.get('card_number')
     if card_number:
-        total_price = get_total_price(order_id)
-        if type(total_price) is dict:
-            return total_price
-        payment_status = get_dict_with_payment_status(base_url, card_number, int(total_price))
+        payment_status = get_dict_with_payment_status(base_url, card_number, order_id)
         if payment_status['status']['status_code'] == 'S200':
             change_payment_status_in_order(order_id)
             increase_product_purchases(order_id)

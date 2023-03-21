@@ -16,7 +16,7 @@ class PaymentTemplateTest(TestCase):
                                       'order_dict': {'payment_status': 'Не оплачено'}})
         cls.order_object = OrderModel.objects.create(user=user, json_order_data=json_order_data)
         PaymentStatusModel.objects.create(status_code='S200', status_description='test desc')
-        PaymentStatusModel.objects.create(status_code='S000', status_description='test desc')
+        PaymentStatusModel.objects.create(status_code='S001', status_description='test desc')
 
     def test_correct_template_in_payment(self):
         pay_my_card_get = self.client.get(reverse('pay_my_card', kwargs={'order_id': self.order_object.id}))
