@@ -59,6 +59,7 @@ def get_data_from_cart_for_auth_user(request) -> HttpResponseRedirect or [int, l
     for product in products_in_cart:
         product_dict = {}
         try:
+            product_dict['product_id'] = product.products.id
             product_dict['image'] = ProductImage.objects.filter(product=product.products.id).first().image.url
             product_dict['category'] = product.products.category.title
             product_dict['description'] = product.products.description

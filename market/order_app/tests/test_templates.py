@@ -19,7 +19,7 @@ class OrderTemplateTest(TestCase):
         user.save()
         Profile.objects.create(user=user, full_name='test test test', phone='888888')
         json_order_data = json.dumps({'test': 'test', 'products': [{'test': 'test'}, {'test_2': 'test'}],
-                                      'o': {'test': 'test'}})
+                                      'order_dict': {'pay': 'online'}})
         cls.order_object = OrderModel.objects.create(user=user, json_order_data=json_order_data)
 
     def test_correct_template_in_order(self):

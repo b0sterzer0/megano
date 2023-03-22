@@ -221,3 +221,19 @@ class ProductReviewImage(models.Model):
                                verbose_name=_('отзыв'))
     image = models.ImageField(upload_to='images/product_reviews/%Y/%m/%d', verbose_name=_('картинка'))
     image_alt = models.CharField(max_length=100, default='Фото к отзыву', verbose_name=_('подсказка'))
+
+
+class ProductPurchases(models.Model):
+    """
+    Модель товаров к кол-ву раз, сколько их покупали
+    """
+
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, unique=True, verbose_name='продукт')
+    num_purchases = models.PositiveIntegerField(verbose_name='кол-во покупок с данным товаром')
+
+    def __str__(self):
+        return self.product.name
+
+    class Meta:
+        verbose_name = 'товар-покупки'
+        verbose_name_plural = 'товары-покупки'

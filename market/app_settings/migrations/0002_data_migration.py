@@ -30,7 +30,7 @@ def create_settings_data(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('app_settings', '0003_auto_20230318_0617'),
+        ('app_settings', '0001_initial'),
     ]
 
     operations = [
