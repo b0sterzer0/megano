@@ -48,7 +48,7 @@ msgstr "payment status"
 msgid "статусы оплаты"
 msgstr "payment statuses"
 
-#: .\app_settings\apps.py:9 .\app_settings\models.py:38
+#: .\app_settings\apps.py:9
 msgid "настройки сайта"
 msgstr "site settings"
 
@@ -97,12 +97,16 @@ msgid "количество популярных товаров главной �
 msgstr "number of popular homepage products"
 
 #: .\app_settings\models.py:21
+#, fuzzy
+#| msgid "количество популярных товаров главной страницы"
 msgid "количество отзывов на странице"
-msgstr ""
+msgstr "number of popular homepage products"
 
 #: .\app_settings\models.py:22
+#, fuzzy
+#| msgid "количество популярных товаров главной страницы"
 msgid "количество товаров на странице"
-msgstr ""
+msgstr "number of popular homepage products"
 
 #: .\app_settings\models.py:23
 msgid "стоимость обычной доставки"
@@ -153,10 +157,6 @@ msgstr "Seller top products cache"
 #: .\app_settings\views.py:20
 msgid "Общий кэш"
 msgstr "Shared cache"
-
-#: .\app_settings\views.py:31
-msgid "настройки"
-msgstr "settings"
 
 #: .\compare_app\services.py:34
 msgid "Ошибка: не удалось удалить товар из списка товаров для сравнения"
@@ -221,40 +221,6 @@ msgstr "seller"
 msgid "продавцы"
 msgstr "sellers"
 
-#: .\market_app\models.py:53 .\templates\catalog.html:43
-#, fuzzy
-#| msgid "Описание"
-msgid "Название"
-msgstr "Description"
-
-#: .\market_app\models.py:54
-msgid "Картинка категории товаров"
-msgstr "Product category picture"
-
-#: .\market_app\models.py:55
-msgid "Название картинки категории"
-msgstr "Category image title"
-
-#: .\market_app\models.py:56
-msgid "Название ссылки"
-msgstr "Link name"
-
-#: .\market_app\models.py:58
-msgid "Родительская категория"
-msgstr "Parent category"
-
-#: .\market_app\models.py:59
-msgid "флаг активности"
-msgstr "Activity flag"
-
-#: .\market_app\models.py:66
-msgid "Категория"
-msgstr "Category"
-
-#: .\market_app\models.py:67
-msgid "Категории"
-msgstr "Categories"
-
 #: .\market_app\models.py:79
 msgid "дата начала"
 msgstr "start date"
@@ -288,62 +254,6 @@ msgstr "product"
 #: .\market_app\models.py:106
 msgid "товары"
 msgstr "products"
-
-#: .\market_app\models.py:110
-msgid "название группы характеристик"
-msgstr ""
-
-#: .\market_app\models.py:114 .\market_app\models.py:123
-#, fuzzy
-#| msgid "Характеристики"
-msgid "группа характеристик"
-msgstr "Additional info"
-
-#: .\market_app\models.py:115
-#, fuzzy
-#| msgid "Характеристики"
-msgid "группы характеристик"
-msgstr "Additional info"
-
-#: .\market_app\models.py:122
-#, fuzzy
-#| msgid "Характеристики"
-msgid "название характеристики"
-msgstr "Additional info"
-
-#: .\market_app\models.py:127 .\market_app\models.py:136
-#, fuzzy
-#| msgid "Характеристики"
-msgid "характеристика"
-msgstr "Additional info"
-
-#: .\market_app\models.py:128
-#, fuzzy
-#| msgid "Характеристики"
-msgid "характеристики"
-msgstr "Additional info"
-
-#: .\market_app\models.py:135
-#, fuzzy
-#| msgid "Характеристики"
-msgid "значение характеристики"
-msgstr "Additional info"
-
-#: .\market_app\models.py:139
-msgid "продукт"
-msgstr ""
-
-#: .\market_app\models.py:142
-#, fuzzy
-#| msgid "Характеристики"
-msgid "значение характеристик"
-msgstr "Additional info"
-
-#: .\market_app\models.py:143
-#, fuzzy
-#| msgid "Характеристики"
-msgid "значения характеристик"
-msgstr "Additional info"
 
 #: .\market_app\models.py:152 .\market_app\models.py:222
 msgid "картинка"
@@ -487,8 +397,8 @@ msgstr "Step 3. Payment method"
 msgid "Шаг 4. Подтверждение заказа"
 msgstr "Step 4. Confirmation of an order"
 
-#: .\templates\base\payment_base.html:19 .\templates\order\oneorder.html:167
-#: .\templates\order\order_step_4.html:144
+#: .\templates\base\payment_base.html:19 .\templates\order\oneorder.html:179
+#: .\templates\order\oneorder.html:181 .\templates\order\order_step_4.html:144
 msgid "Оплатить"
 msgstr "Pay"
 
@@ -502,46 +412,46 @@ msgstr "All products"
 msgid "История заказов"
 msgstr "History of orders"
 
-#: .\templates\order\oneorder.html:27
+#: .\templates\order\oneorder.html:29
 msgid "Дата заказа:"
 msgstr "Order date"
 
-#: .\templates\order\oneorder.html:37 .\templates\order\order_step_4.html:20
+#: .\templates\order\oneorder.html:39 .\templates\order\order_step_4.html:20
 msgid "ФИО:"
 msgstr "Full name:"
 
-#: .\templates\order\oneorder.html:47 .\templates\order\order_step_4.html:30
+#: .\templates\order\oneorder.html:49 .\templates\order\order_step_4.html:30
 msgid "Телефон:"
 msgstr "Phone number:"
 
-#: .\templates\order\oneorder.html:69 .\templates\order\order_step_4.html:52
+#: .\templates\order\oneorder.html:71 .\templates\order\order_step_4.html:52
 msgid "Тип доставки:"
 msgstr "Delivery method:"
 
-#: .\templates\order\oneorder.html:79 .\templates\order\order_step_4.html:62
+#: .\templates\order\oneorder.html:81 .\templates\order\order_step_4.html:62
 msgid "Город:"
 msgstr "City:"
 
-#: .\templates\order\oneorder.html:89 .\templates\order\order_step_4.html:72
+#: .\templates\order\oneorder.html:91 .\templates\order\order_step_4.html:72
 msgid "Адрес:"
 msgstr "Address:"
 
-#: .\templates\order\oneorder.html:99 .\templates\order\order_step_4.html:82
+#: .\templates\order\oneorder.html:101 .\templates\order\order_step_4.html:82
 msgid "Оплата:"
 msgstr "Payment:"
 
-#: .\templates\order\oneorder.html:109
+#: .\templates\order\oneorder.html:111
 msgid "Статус:"
 msgstr "Status:"
 
-#: .\templates\order\oneorder.html:145 .\templates\order\oneorder.html:164
+#: .\templates\order\oneorder.html:152 .\templates\order\oneorder.html:175
 #: .\templates\order\order_step_4.html:117
 #: .\templates\order\order_step_4.html:137
 #: .\templates\order\order_step_4.html:141
 msgid "руб."
 msgstr "rub."
 
-#: .\templates\order\oneorder.html:154 .\templates\order\order_step_4.html:126
+#: .\templates\order\oneorder.html:161 .\templates\order\order_step_4.html:126
 msgid "шт."
 msgstr "items"
 
@@ -599,7 +509,7 @@ msgstr "Delivery:"
 msgid "Итого:"
 msgstr "Total:"
 
-#: .\templates\payment.html:7 .\templates\paymentsomeone.html:7
+#: .\templates\payment\payment.html:7 .\templates\payment\paymentsomeone.html:7
 #, fuzzy
 #| msgid "номер карты"
 msgid "Номер карты"
