@@ -27,6 +27,7 @@ class AccountView(TemplateView):
         return context
 
 
+
 class ProfileView(View):
 
     """Профиль пользователя"""
