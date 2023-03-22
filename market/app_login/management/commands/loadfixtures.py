@@ -1,5 +1,5 @@
-from django.core.management.base import BaseCommand
 from django.core import management
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -18,5 +18,6 @@ class Command(BaseCommand):
         management.call_command('loaddata', 'market_app/fixtures/characteristicsgroups.json')
         management.call_command('loaddata', 'market_app/fixtures/characteristics.json')
         management.call_command('loaddata', 'market_app/fixtures/characteristicvalues.json')
-        management.call_command('loaddata', 'api_for_payment_app/fixtures/ CardModel.json')
-        management.call_command('loaddata', 'api_for_payment_app/fixtures/PaymentStatusModel.json')
+        management.call_command('loaddata', 'order_app/fixtures/order_model.json')
+        management.call_command('loaddata', 'api_for_payment_app/fixtures/card_model.json')
+        management.call_command('loaddata', 'perms_app/fixtures/auth_groups.json')

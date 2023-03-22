@@ -46,6 +46,17 @@
         <script src="{% static "assets/plg/CountDown/countdown.js" %}"></script>
         <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+        <script
+                src="https://code.jquery.com/jquery-3.6.4.min.js"
+                integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+                crossorigin="anonymous">
+        </script>
+        <script src="{% static "assets/plg/form/jquery.maskedinput.min.js" %}"></script>
+        <script>
+              jQuery (function ($) {
+                $("#phone").mask("+7 (999) 999-9999");
+              });
+        </script>
     </head>
 {% endblock head %}
 
@@ -121,26 +132,31 @@
                                 </ul>
                             </div>
                         </nav>
-                        {% if request.user.is_authenticated %}
-                            <div class="row-block">
-                                <div class="CartBlock">
-                                    <div class="dropdown">
-                                        <button class="dropbtn">
-                                            <img class="CartBlock-img" src="{% static "assets/img/icons/loon-icon.svg" %}" alt="loon-icon.svg" />
-                                        </button>
-                                        <div class="dropdown-content">
-                                            <a class="dropdown-content-a" href="{% url 'account' %}">{% trans "Личный кабинет" %}</a>
-                                            <a class="dropdown-content-a" href="/admin/">{% trans "Административный раздел" %}</a>
-                                            <a class="dropdown-content-a" href="{% url 'logout' %}">{% trans "Выход" %}</a>
-                                        </div>
-                                    </div>
-                                    <a class="CartBlock-block" href="{% url 'cart' %}"><img class="CartBlock-img" src="{% static "assets/img/icons/cart.svg" %}" alt="cart.svg" /><span class="CartBlock-amount">0</span></a>
-                                    <div class="CartBlock-block"><span class="CartBlock-price">0.00$</span>
-
+                        <div class="row-block">
+                            <div class="CartBlock">
+                                {% if request.user.is_authenticated %}
+                                <div class="dropdown">
+                                    <button class="dropbtn">
+                                        <img class="CartBlock-img" src="{% static "assets/img/icons/loon-icon.svg" %}" alt="loon-icon.svg" />
+                                    </button>
+                                    <div class="dropdown-content">
+                                        <a class="dropdown-content-a" href="{% url 'account' %}">{% trans "Личный кабинет" %}</a>
+                                        <a class="dropdown-content-a" href="/admin/">{% trans "Административный раздел" %}</a>
+                                        <a class="dropdown-content-a" href="{% url 'logout' %}">{% trans "Выход" %}</a>
                                     </div>
                                 </div>
+                                {% endif %}
+
+                                <a class="CartBlock-block" href="{% url 'compare-goods' %}"><img class="CartBlock-img" src="{% static "assets/img/icons/exchange.svg" alt="exchange.svg" %}" alt="exchange.svg" /><span class="CartBlock-amount">{{ amount_products_for_compare }}</span>
+                                </a>
+
+                                <a class="CartBlock-block" href="{% url 'cart' %}"><img class="CartBlock-img" src="{% static "assets/img/icons/cart.svg" %}" alt="cart.svg" /><span class="CartBlock-amount">{{ num_products_in_cart }}</span>
+                                </a>
+                                <div class="CartBlock-block"><span class="CartBlock-price">0.00$</span>
+                                </div>
+
                             </div>
-                        {% endif %}
+                        </div>
                         <div class="row-block Header-trigger"><a class="menuTrigger" href="#navigate">
                                 <div class="menuTrigger-content">{% trans "Показать навигацию" %}
                                 </div><span></span><span></span><span></span>
@@ -189,8 +205,8 @@
                         </div>
                         <div class="Header-search">
                             <div class="search">
-                                <form class="form form_search" action="#" method="post">
-                                    <input class="search-input" id="query" name="query" type="text" placeholder="NVIDIA GeForce RTX 3060" />
+                                <form class="form form_search" action="{% url 'catalog' %}" method="get">
+                                    <input class="search-input" id="title" name="title" type="text" placeholder="NVIDIA GeForce RTX 3060" />
                                     <button class="search-button" type="submit" name="search" id="search"><img src="{% static "assets/img/icons/search.svg" %}" alt="search.svg" />{% trans "Поиск" %}
                                     </button>
                                 </form>
@@ -261,9 +277,6 @@
         <!---->
 
         {% block scripts %}
-            <script src="{% static "assets/plg/jQuery/jquery-3.5.0.slim.min.js" %}"></script>
-            <script src="{% static "assets/plg/form/jquery.form.js" %}"></script>
-            <script src="{% static "assets/plg/form/jquery.maskedinput.min.js" %}"></script>
             <script src="{% static "assets/plg/range/ion.rangeSlider.min.js" %}"></script>
             <script src="{% static "assets/plg/Slider/slick.min.js" %}"></script>
             <script src="{% static "assets/js/scripts.js" %}"></script>

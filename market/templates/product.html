@@ -149,7 +149,7 @@
                   <div class="Pagination">
                     <div class="Pagination-ins">
                       {% if reviews.has_previous %}
-                      <a class="Pagination-element Pagination-element_prev" href="?page={{ page.previous_page_number }}#reviews">
+                      <a class="Pagination-element Pagination-element_prev" href="?page={{ reviews.previous_page_number }}#reviews">
                         <img style="margin: 0;" src="{% static "assets/img/icons/prevPagination.svg" %}" alt="prevPagination.svg"/>
                       </a>
                       {% endif %}
@@ -159,7 +159,7 @@
                           <span class="Pagination-text">{{ page }}
                           </span>
                         </a>
-                        {% else %}
+                        {% elif page >= reviews.number|add:-2 and page <= reviews.number|add:2 %}
                         <a class="Pagination-element" href="?page={{ page }}#reviews">
                           <span class="Pagination-text">{{ page }}
                           </span>

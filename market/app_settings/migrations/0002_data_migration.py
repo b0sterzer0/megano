@@ -1,10 +1,10 @@
 from django.db import migrations
 
-from app_settings.utils import get_settings
+from app_settings.utils import get_settings_from_json
 
 
 def create_settings_data(apps, schema_editor):
-    settings_config = get_settings()
+    settings_config = get_settings_from_json()
 
     SiteSettings = apps.get_model('app_settings', 'SiteSettings')
     SiteSettings.objects.get_or_create(site_name=settings_config['site_name'],
@@ -22,8 +22,9 @@ def create_settings_data(apps, schema_editor):
                                        common_products_top_number=settings_config['common_products_top_number'],
                                        ordinary_delivery_cost=settings_config['ordinary_delivery_cost'],
                                        min_amount_for_free_delivery=settings_config['min_amount_for_free_delivery'],
-                                       express_delivery_cost=settings_config['express_delivery_cost']
-
+                                       express_delivery_cost=settings_config['express_delivery_cost'],
+                                       num_reviews_per_page=settings_config['num_reviews_per_page'],
+                                       num_products_per_page=settings_config['num_products_per_page']
                                        )
 
 

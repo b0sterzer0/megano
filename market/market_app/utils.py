@@ -1,32 +1,60 @@
 from django.core.cache import cache
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from app_cart.models import AnonimCart
 from app_login.models import Profile
-from market_app.models import ProductReview, Seller, Product, SellerProduct
-from app_settings.utils import get_settings
+from app_settings.utils import get_setting_from_bd
+from market_app.models import Product, ProductReview, Seller, SellerProduct
 
 
-def get_product_review_list(product, page):
+def make_paginator_from_list(lst, num_page, page):
     """
-    Функция получает и возвращает список отзывов определенного товара.
+    Функция получает список, разбивает на страницы и возвращает объекты с заданной страницы
+    :param lst: начальный список.
+    :param num_page: всего количество страниц.
+    :param page: номер страницы для возврата объектов.
+    :return: список отзывов определенного товара заданной страницы.
+    """
+    paginator = Paginator(lst, num_page)
+    page = page
+    try:
+        objects = paginator.page(page)
+    except PageNotAnInteger:
+        # Если страница не является целым числом, возвращаем первую страницу.
+        objects = paginator.page(1)
+    except EmptyPage:
+        # Если номер страницы больше, чем общее количество страниц, возвращаем последнюю.
+        objects = paginator.page(paginator.num_pages)
+    return objects
+
+
+def get_product_review_list_by_page(product, page):
+    """
+    Функция получает товар и номер страницы, загружает из БД список отзывов для данного товара
+    и количество отзывов на странице, отправляет данные в функцию make_paginator_from_list(),
+    возвращает список отзывов определенного товара для заданной страницы.
     :param product: товар.
-    :return: список отзывов определенного товара.
+    :param page: номер страницы для возврата отзывов.
+    :return: список отзывов определенного товара заданной страницы.
     """
 
     reviews_list = ProductReview.objects.filter(product=product).select_related('customer').order_by('-date')
-
-    paginator = Paginator(reviews_list, 2)  # По 2 отзыва на каждой странице.
-    page = page
-    try:
-        reviews = paginator.page(page)
-    except PageNotAnInteger:
-        # Если страница не является целым числом, возвращаем первую страницу.
-        reviews = paginator.page(1)
-    except EmptyPage:
-        # Если номер страницы больше, чем общее количество страниц, возвращаем последнюю.
-        reviews = paginator.page(paginator.num_pages)
+    num_reviews = get_setting_from_bd('num_reviews_per_page')
+    reviews = make_paginator_from_list(reviews_list, num_reviews, page)
     return reviews
+
+
+def get_product_list_by_page(products_list, page):
+    """
+    Функция получает полный список товаров и возвращает список товаров для определенной стриницы.
+    :param products_list: изначальный список товаров.
+    :param page: номер страницы для возврата товаров.
+    :return: список товаров для заданной страницы.
+    """
+
+    num_products_per_page = get_setting_from_bd('num_products_per_page')
+    products = make_paginator_from_list(products_list, num_products_per_page, page)
+    return products
 
 
 def can_create_reviews(product, user):
@@ -45,10 +73,10 @@ def create_product_review(product, user, description):
     """
     Функция создаёт отзыв к определенному товару.
     """
-    review = ProductReview.objects.create(product=product,
-                                          customer=user,
-                                          description=description
-                                          )
+    ProductReview.objects.create(product=product,
+                                 customer=user,
+                                 description=description
+                                 )
     # Эту часть ввести после добавления загрузки фото с отзывами
     # for img in images:
     #     ProductReviewImage.objects.create(review=review, image=img)
@@ -72,8 +100,7 @@ def get_seller(pk):
     :param pk: pk определенного продавца.
     :return: кэш объекта продавца.
     """
-    settings_config = get_settings()
-    seller_cache_time = settings_config['seller_cache_time']
+    seller_cache_time = get_setting_from_bd('seller_cache_time')
     cache_key = f"seller_detail_{pk}"
     seller = cache.get(cache_key)
     if not seller:
@@ -90,7 +117,7 @@ def get_popular_list_for_seller(pk):
     :param pk: pk определенного продавца.
     :return: список топ товаров продавца
     """
-#   TODO Доделать после создания истории покупок
+    #   TODO Доделать после создания истории покупок
     pass
     # settings_config = get_settings()
     # sellers_products_top_cache_time = settings_config['sellers_products_top_cache_time']
@@ -106,7 +133,6 @@ def get_count_product_in_cart(request):
     """
     Функция для вычисления количества товаров в корзине пользователя
     """
-
     if request.user.is_authenticated:
         count_in_cart = [count.product_in_cart for count in
                          Profile.objects.filter(user_id=request.user.id).only('product_in_cart')]
@@ -117,6 +143,9 @@ def get_count_product_in_cart(request):
 
 
 def get_price(product_obj):
+    """
+    Функция принимает товар и просчитывает цену с учётом скидки
+    """
     products_obj = []
     for product_form_seller_product in SellerProduct.objects.all():
         if product_form_seller_product.product.name == product_obj.name:
@@ -131,37 +160,50 @@ def get_price(product_obj):
 
 
 def get_catalog_product():
+    """
+    Функция формирует удобный список с информацией для товаров на основе class Product
+    """
     products_list = []
     queryset = Product.objects.all()
     for product_obj in queryset:
+        date = 0
+        values = product_obj.values.all()
+        for value in values:
+            if value.characteristic.characteristic_name.lower() == 'год':
+                date = int(value.value)
         products_list.append(
             {
                 'id': product_obj.id,
                 'link': product_obj.slug,
-                'image': '/static/assets/img/content/home/card.jpg',
-                'image_alt': 'card.jpg',
+                'images': {'first': {'image': {'url': product_obj.images.first().image.url}}},
+                'image_alt': {'first': {'image_alt': product_obj.images.first().image_alt}},
                 'name': product_obj.name,
                 'category': product_obj.category,
                 'price': get_price(product_obj),
-                'description': product_obj.description
+                'description': product_obj.description,
+                'count_reviews': get_count_product_reviews(product_obj),
+                'date': date
             }
         )
     return products_list
 
 
 def get_seller_products(queryset):
+    """
+    Функция формирует удобный список с информацией для товаров на основе class SellerProduct
+    """
     products_list = []
     for product in queryset:
         if product.discount:
             sale = product.discount
             products_list.append(
                 {
-                    'id': product.id,
+                    'id': product.product_id,
                     'seller': product.seller.name,
                     'seller_id': product.seller.id,
                     'link': product.product.slug,
-                    'image': '/static/assets/img/content/home/card.jpg',
-                    'image_alt': 'card.jpg',
+                    'images': {'first': {'image': {'url': product.product.images.first().image.url}}},
+                    'image_alt': {'first': {'image_alt': product.product.images.first().image_alt}},
                     'name': product.product.name,
                     'category': product.product.category,
                     'price': round(float(product.price) * (1 - sale.discount / 100), 2),
@@ -169,22 +211,53 @@ def get_seller_products(queryset):
                     'sale': sale.discount,
                     'date': sale.start_date,
                     'date_to': sale.end_date,
-                    'description': product.product.description
+                    'description': product.product.description,
                 }
             )
         else:
             products_list.append(
                 {
-                    'id': product.id,
+                    'id': product.product_id,
                     'seller': product.seller.name,
                     'seller_id': product.seller.id,
                     'link': product.product.slug,
-                    'image': '/static/assets/img/content/home/card.jpg',
-                    'image_alt': 'card.jpg',
+                    'images': {'first': {'image': {'url': product.product.images.first().image.url}}},
+                    'image_alt': {'first': {'image_alt': product.product.images.first().image_alt}},
                     'name': product.product.name,
                     'category': product.product.category,
                     'price': product.price,
-                    'description': product.product.description
+                    'description': product.product.description,
                 }
             )
     return products_list
+
+
+def get_min_cards(cards, cards_obj):
+    """
+    :param cards: пустой список
+    :param cards_obj: отфильтрованный список товаров по имени
+    :return: список товаров с наименьшей ценой
+    """
+    cards_list = get_seller_products(cards_obj)
+    for card in cards_list:
+        cards.append(card)
+    for card_1 in cards_list:
+        for card_2 in cards:
+            if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
+                cards.pop(cards.index(card_2))
+    return cards
+
+
+def sort_list(cards, sort_by):
+    """
+    :param cards: список всех товаров
+    :param sort_by: имя по которому будет сортировать
+    :return: отсортированный список
+    """
+    if sort_by:
+        if sort_by[0] == '-':
+            cards.sort(key=lambda x: x[sort_by[1:]], reverse=True)
+        else:
+            cards.sort(key=lambda x: x[sort_by])
+        return cards
+    return cards

@@ -1,11 +1,13 @@
 from decimal import Decimal
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views import View
+from django.views import *
+
 from app_login.models import Profile
 from market_app.models import ProductImage, Product
 from .models import AuthShoppingCart, AnonimCart
 from market_app.utils import get_count_product_in_cart
+from app_cart.utils import delete_product_auth_user
 
 
 class ShoppingCartView(View):
@@ -18,7 +20,7 @@ class ShoppingCartView(View):
 
         if request.user.is_authenticated:
 
-            cart = AuthShoppingCart.objects.filter(user_id=request.user.id).select_related('products').all()
+            cart = AuthShoppingCart.objects.filter(user_id=request.user.id).select_related('products').all()  # QuerySet
 
             if len(cart) != 0:
                 total = sum([item.price*item.count for item in cart])
@@ -47,8 +49,7 @@ class ShoppingCartView(View):
 
                 products = [cart_product for cart_product in Product.objects.filter(id=int(cart_item))]
                 product_price = Decimal(anonim_cart[cart_item]['price'])
-                item_image = [cart_item_image for cart_item_image in ProductImage.objects.filter(
-                    product_id=int(cart_item))]
+                item_image = [cart_item_image for cart_item_image in ProductImage.objects.filter(product_id=int(cart_item))]
                 shopping_carts = {
                     'id': products[0].id,
                     'name': products[0].name,
@@ -73,29 +74,25 @@ class AddToCartView(View):
 
         if request.user.is_authenticated:
 
-            current_product = AuthShoppingCart.objects.filter(user_id=request.user.id, products_id=product_id)
+            product_price = Decimal(product_price)
 
-            if len(current_product) == 0:
-
-                product_price = Decimal(product_price)
-
-                AuthShoppingCart.objects.create(
-                    user_id=request.user.id,
-                    products_id=product_id,
-                    count=1,
-                    price=product_price
-                )
-                user = Profile.objects.filter(user_id=request.user.id)
-                user_count = [count.product_in_cart for count in user.only('product_in_cart')]
-                new_user_count = user_count[0] + 1
-                user.update(
-                    product_in_cart=new_user_count
-                )
+            AuthShoppingCart.objects.create(
+                user_id=request.user.id,
+                products_id=product_id,
+                count=1,
+                price=product_price
+            )
+            user = Profile.objects.filter(user_id=request.user.id)
+            user_count = [count.product_in_cart for count in user.only('product_in_cart')]
+            new_user_count = user_count[0] + 1
+            user.update(
+                product_in_cart=new_user_count
+            )
 
         else:
 
             cart = AnonimCart(request)
-            cart.add_product(product_id, product_price)
+            cart.add_product(product_id,product_price)
 
         return HttpResponseRedirect(f'/product/{product_id}')
 
@@ -156,15 +153,7 @@ class DelProductView(View):
 
         if request.user.is_authenticated:
 
-            current_product = AuthShoppingCart.objects.filter(user_id=request.user.id, products_id=product_id)
-            current_product.delete()
-
-            user = Profile.objects.filter(user_id=request.user.id)
-            user_count = [count.product_in_cart for count in user.only('product_in_cart')]
-            new_user_count = user_count[0] - 1
-            user.update(
-                product_in_cart=new_user_count
-            )
+            delete_product_auth_user(request, product_id)
 
         else:
 

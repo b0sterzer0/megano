@@ -12,8 +12,7 @@
               </strong>
             </header>
             <div class="Section-columnContent">
-              <form class="form" action="{% url 'filter' %}" method="post">
-                  {% csrf_token %}
+              <form class="form" action="{% url 'catalog' %}" method="get">
                 <div class="form-group">
                   <div class="range Section-columnRange">
                     <input class="range-line" id="price" name="price" type="text" data-type="double" data-min="7" data-max="1000000" data-from="7" data-to="1000000"/>
@@ -38,7 +37,7 @@
                 </div>
                 <div class="form-group">
                   <label class="toggle">
-                    <input type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>
+                    <input name="stock" type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>
                   </label>
                 </div>
                 <div class="form-group">
@@ -75,45 +74,78 @@
             <div class="Sort-title">Сортировать по:
             </div>
             <div class="Sort-variants">
-                <a class="Sort-sortBy Sort-sortBy_dec" href="#">Популярности</a>
-                <a class="Sort-sortBy" href="#">Цене</a>
-                <a class="Sort-sortBy" href="#">Отзывам</a>
-                <a class="Sort-sortBy Sort-sortBy_inc" href="#">Новизне</a>
+                {% if not sort_by %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "price" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "-price" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "count_reviews" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-price">Цене</a>
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "-count_reviews" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">Цене</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% elif sort_by == "date" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-date">Новизне</a>
+                {% elif sort_by == "-date" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">Цене</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                {% endif %}
             </div>
           </div>
           <div class="Cards">
-
-            {# Пока что выводим первые 8 карточек - как в исходном макете #}
-            {# T-O-D-O Разобраться с пагинацией #}
-            {% for card in cards|slice:":8" %}
-
+            {% for card in cards %}
               <div class="Card{% cycle ' ' ' ' ' ' ' ' ' hide_md' ' hide_md' ' hide_md hide_1450' ' hide_md hide_1450' %}">
                  {% include 'include/card.html' %}
               </div>
-
             {% endfor %}
-
           </div>
           <div class="Pagination">
             <div class="Pagination-ins">
-                <a class="Pagination-element Pagination-element_prev" href="#">
-                    <img src="{% static "assets/img/icons/prevPagination.svg" %}" alt="prevPagination.svg"/>
+              {% if cards.has_previous %}
+              <a class="Pagination-element Pagination-element_prev" href="?page={{ cards.previous_page_number }}#reviews">
+                <img style="margin: 0;" src="{% static "assets/img/icons/prevPagination.svg" %}" alt="prevPagination.svg"/>
+              </a>
+              {% endif %}
+              {% for page in cards.paginator.page_range %}
+                {% if cards.number == page %}
+                <a class="Pagination-element Pagination-element_current" href="?page={{ page }}#reviews">
+                  <span class="Pagination-text">{{ page }}
+                  </span>
                 </a>
-                <a class="Pagination-element Pagination-element_current" href="#">
-                    <span class="Pagination-text">1</span>
+                {% elif page >= cards.number|add:-2 and page <= cards.number|add:2 %}
+                <a class="Pagination-element" href="?page={{ page }}#reviews">
+                  <span class="Pagination-text">{{ page }}
+                  </span>
                 </a>
-                <a class="Pagination-element" href="#">
-                    <span class="Pagination-text">2</span>
-                </a>
-                <a class="Pagination-element" href="#">
-                    <span class="Pagination-text">3</span>
-                </a>
-                <a class="Pagination-element Pagination-element_prev" href="#">
-                    <img src="{% static "assets/img/icons/nextPagination.svg" %}" alt="nextPagination.svg"/>
-                </a>
+              {% endif %}
+              {% endfor %}
+              {% if cards.has_next %}
+              <a class="Pagination-element Pagination-element_prev" href="?page={{ cards.next_page_number }}#reviews">
+                <img style="margin: 0;" src="{% static "assets/img/icons/nextPagination.svg" %}" alt="nextPagination.svg"/>
+              </a>
+              {% endif %}
             </div>
           </div>
-        </div>
       </div>
     </div>
 

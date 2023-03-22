@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 from dotenv import dotenv_values
 
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'api_for_payment_app',
     'payment_app',
     'app_cart',
-    'app_profile',
+    'order_app',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +83,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'context_processors.categories_context_processor.get_categories',
                 'context_processors.compare_context_processor.get_amount_products_for_compare',
+                'context_processors.cart_context_processor.get_products_in_cart',
             ],
         },
     },

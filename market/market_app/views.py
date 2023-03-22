@@ -5,18 +5,21 @@ from django.views.generic import TemplateView, DetailView
 
 from compare_app.services import create_characteristics_dict
 from market_app.banners import get_banners_list
-from market_app.forms import ProductReviewForm, ProductsForm
+from market_app.forms import ProductReviewForm
 from market_app.models import Seller, Product, SellerProduct
 from market_app.product_history import HistoryViewOperations
 from market_app.utils import (
     create_product_review,
     can_create_reviews,
-    get_product_review_list,
+    get_product_review_list_by_page,
+    get_product_list_by_page,
     get_seller,
     get_count_product_reviews,
     get_count_product_in_cart,
     get_seller_products,
-    get_catalog_product
+    get_catalog_product,
+    get_min_cards,
+    sort_list
 )
 
 
@@ -66,16 +69,66 @@ class AboutView(TemplateView):
     }
 
 
-class CatalogView(TemplateView):
-    """Каталог товаров"""
-    template_name = 'catalog.html'
+class AccountView(TemplateView):
+    """Личный кабинет"""
+    template_name = 'account.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        with HistoryViewOperations(self.request.user) as history:
+            history_view_list = history.products()[:3]
         context['middle_title_left'] = 'Личный кабинет'
         context['middle_title_right'] = 'Личный кабинет'
-        context['cards'] = get_catalog_product()
+        context['active_menu'] = 'account'
+        context['history_view_list'] = history_view_list
         return context
+
+
+class CatalogView(View):
+    """Каталог товаров"""
+
+    def get(self, request):
+        cards = []
+        price, title, stock, sort_by, page = request.GET.get('price'), request.GET.get('title'), \
+            request.GET.get('stock'), request.GET.get('sort_by'), request.GET.get('page')
+        if not price and not title:
+            cards = get_catalog_product()
+            sort_list(cards, sort_by)
+            cards = get_product_list_by_page(cards, page)
+            context = {
+                'cards': cards,
+                'sort_by': sort_by
+            }
+            return render(request, 'catalog.html', context=context)
+        if not price:
+            name_product = title
+            cards_obj = SellerProduct.objects.filter(product__name__contains=name_product)
+            get_min_cards(cards, cards_obj)
+            sort_list(cards, sort_by)
+            cards = get_product_list_by_page(cards, page)
+            add_url = f'title={title}'
+            return render(request, 'catalog.html', context={'cards': cards, 'add_url': add_url})
+        price_product = price.replace(';', ' ').split()
+        cards_obj = SellerProduct.objects.filter(product__name__contains=title)
+        if stock:
+            cards_obj = SellerProduct.objects.filter(product__name__contains=title).filter(qty__gt=0)
+        cards_list = get_seller_products(cards_obj)
+        for card in cards_list:
+            if int(price_product[0]) <= card['price'] <= int(price_product[1]):
+                cards.append(card)
+        for card_1 in cards_list:
+            for card_2 in cards:
+                if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
+                    cards.pop(cards.index(card_2))
+        add_url = f'price={price_product[0]}%3B{price_product[1]}&title={title}'
+        cards = get_product_list_by_page(cards, page)
+        sort_list(cards, sort_by)
+        context = {
+            'cards': cards,
+            'add_url': add_url,
+            'sort_by': sort_by
+        }
+        return render(request, 'catalog.html', context=context)
 
 
 class ContactsView(TemplateView):
@@ -87,22 +140,29 @@ class ContactsView(TemplateView):
     }
 
 
-class OneOrderView(TemplateView):
-    """Информация о конкретном заказе"""
-    template_name = 'oneorder.html'
+class HistoryOrderView(TemplateView):
+    """История заказов пользователя"""
+    template_name = 'historyorder.html'
     extra_context = {
-        'middle_title_left': 'Заказ №200',
-        'middle_title_right': 'Заказ №200',
+        'middle_title_left': 'История заказов',
+        'middle_title_right': 'История заказов',
+        'active_menu': 'historyorder',
     }
 
 
-class OrderView(TemplateView):
-    """Оформление заказа"""
-    template_name = 'order.html'
-    extra_context = {
-        'middle_title_left': 'Оформление заказа',
-        'middle_title_right': 'Оформление заказа',
-    }
+class HistoryViewView(TemplateView):
+    """История просмотров пользователя"""
+    template_name = 'historyview.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        with HistoryViewOperations(self.request.user) as history:
+            history_view_list = history.products()
+        context['middle_title_left'] = 'История просмотра'
+        context['middle_title_right'] = 'История просмотра'
+        context['active_menu'] = 'historyview'
+        context['history_view_list'] = history_view_list
+        return context
 
 
 class ProductView(DetailView):
@@ -117,7 +177,7 @@ class ProductView(DetailView):
         page = self.request.GET.get('page')
         seller_products_list = SellerProduct.objects.filter(product=product).all()
         min_price = min(get_seller_products(seller_products_list), key=lambda i: int(i['price']))['price']
-        context['reviews'] = get_product_review_list(product, page)
+        context['reviews'] = get_product_review_list_by_page(product, page)
         context['can_create_reviews'] = can_create_reviews(product, self.request.user)
         context['num_review'] = get_count_product_reviews(product)
         context['images'] = product.images.all()
@@ -146,6 +206,16 @@ class ProductView(DetailView):
 
             return redirect('product', pk=product.id)
         return render(request, 'product.html', context=self.get_context_data(**kwargs))
+
+
+class ProfileView(TemplateView):
+    """Профиль пользователя"""
+    template_name = 'profile.html'
+    extra_context = {
+        'middle_title_left': 'Профиль',
+        'middle_title_right': 'Профиль',
+        'active_menu': 'profile',
+    }
 
 
 class ProfileAvatarView(TemplateView):
@@ -182,11 +252,6 @@ class ShopView(TemplateView):
         return context
 
 
-class LoginOrRegisterView(View):
-    """Вход или регистрация"""
-    pass
-
-
 class SellerDetailView(DetailView):
     """Страница продавца"""
     model = Seller
@@ -200,32 +265,11 @@ class SellerDetailView(DetailView):
         context['middle_title_left'] = seller.name
         context['middle_title_right'] = seller.name
         context['seller'] = seller
-        context['products'] = get_seller_products(SellerProduct.objects.filter(seller=seller).select_related('product').all())
+        context['products'] = get_seller_products(
+            SellerProduct.objects.filter(seller=seller).select_related('product').all())
 
         #   TODO Заглушка для популярных товаров. Доделать, когда появится история покупок. Добавить все товары
-        context['popular_list'] = get_seller_products(SellerProduct.objects.filter(seller=seller).select_related('product').all()[:2])  # get_popular_list_for_seller(pk)
+        context['popular_list'] = get_seller_products(
+            SellerProduct.objects.filter(seller=seller).select_related('product').all()[:2])
 
         return context
-
-
-class ProductFilter(View):
-
-    def post(self, request):
-        """Фильтр товаров"""
-        cards = []
-        products_form = ProductsForm(request.POST)
-        if 'price' not in products_form.data:
-            name_product = products_form.data['title']
-            card = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
-            return render(request, 'catalog.html', context={'cards': get_seller_products(card)})
-        price_product = products_form.data['price'].replace(';', ' ').split()
-        name_product = products_form.data['title']
-        cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
-        cards_list = get_seller_products(cards_obj)
-        for card in cards_list:
-            if int(price_product[0]) <= card['price'] <= int(price_product[1]):
-                cards.append(card)
-        context = {
-            'cards': cards
-        }
-        return render(request, 'catalog.html', context=context)
