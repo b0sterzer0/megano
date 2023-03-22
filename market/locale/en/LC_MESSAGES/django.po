@@ -18,53 +18,83 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\app_settings\apps.py:9
+#: .\api_for_payment_app\models.py:6 .\api_for_payment_app\models.py:10
+msgid "номер карты"
+msgstr "card number"
+
+#: .\api_for_payment_app\models.py:7
+msgid "баланс карты"
+msgstr "card balance"
+
+#: .\api_for_payment_app\models.py:11
+msgid "номера карт"
+msgstr "card numbers"
+
+#: .\api_for_payment_app\models.py:18
+msgid "код статуса"
+msgstr "status code"
+
+#: .\api_for_payment_app\models.py:19
+#, fuzzy
+#| msgid "Описание"
+msgid "описание статуса"
+msgstr "Description"
+
+#: .\api_for_payment_app\models.py:22
+msgid "статус оплаты"
+msgstr "payment status"
+
+#: .\api_for_payment_app\models.py:23
+msgid "статусы оплаты"
+msgstr "payment statuses"
+
+#: .\app_settings\apps.py:9 .\app_settings\models.py:38
 msgid "настройки сайта"
-msgstr ""
+msgstr "site settings"
 
 #: .\app_settings\models.py:7
 msgid "название сайта"
-msgstr ""
+msgstr "name of the site"
 
 #: .\app_settings\models.py:8
 msgid "номер телефона 1"
-msgstr ""
+msgstr "phone number 1"
 
 #: .\app_settings\models.py:9
 msgid "номер телефона 2"
-msgstr ""
+msgstr "phone number 2"
 
 #: .\app_settings\models.py:10
 msgid "адрес"
-msgstr ""
+msgstr "address"
 
 #: .\app_settings\models.py:11
 msgid "количество баннеров"
-msgstr ""
+msgstr "number of banners"
 
 #: .\app_settings\models.py:12
 msgid "остановка продаж"
-msgstr ""
+msgstr "stop sales"
 
 #: .\app_settings\models.py:13
 msgid "кэш баннеров"
-msgstr ""
+msgstr "banner cache"
 
 #: .\app_settings\models.py:14
 msgid "общий кэш"
-msgstr ""
+msgstr "shared cache"
 
 #: .\app_settings\models.py:15 .\app_settings\models.py:16
 msgid "время кэша продавцов"
-msgstr ""
+msgstr "seller cache time"
 
 #: .\app_settings\models.py:18
 msgid "количество популярных товаров продавца"
-msgstr ""
+msgstr "number of seller's popular products"
 
 #: .\app_settings\models.py:20
 msgid "количество популярных товаров главной страницы"
-msgstr ""
+msgstr "number of popular homepage products"
 
 #: .\app_settings\models.py:21
 msgid "количество отзывов на странице"
@@ -76,57 +106,77 @@ msgstr ""
 
 #: .\app_settings\models.py:23
 msgid "стоимость обычной доставки"
-msgstr ""
+msgstr "normal shipping cost"
 
 #: .\app_settings\models.py:25
 msgid "минимальная сумма для бесплатной обычной доставки"
-msgstr ""
+msgstr "minimum amount for free ordinary delivery"
 
 #: .\app_settings\models.py:26
 msgid "стоимость экспресс доставки"
-msgstr ""
+msgstr "express delivery cost"
 
 #: .\app_settings\models.py:37
-msgid "Настройка сайта"
-msgstr ""
+msgid "настройка сайта"
+msgstr "site settings"
 
 #: .\app_settings\models.py:38
 #: .\app_settings\templates\app_settings\settings.html:26
 msgid "Настройки сайта"
-msgstr ""
+msgstr "Site settings"
 
 #: .\app_settings\templates\app_settings\settings.html:30
 msgid "Сохранить"
-msgstr ""
+msgstr "Save"
 
 #: .\app_settings\templates\app_settings\settings.html:34
 msgid "Сброс кэша"
-msgstr ""
+msgstr "Drop cache"
 
 #: .\app_settings\templates\app_settings\settings.html:39
 msgid "Сбросить кэш раздела:"
-msgstr ""
+msgstr "Drop section cache:"
 
 #. Translators: разделы кэша на странице настроек
 #: .\app_settings\views.py:17
 msgid "Баннеры"
-msgstr ""
+msgstr "Banners"
 
 #: .\app_settings\views.py:18
 msgid "Кэш страницы продавца"
-msgstr ""
+msgstr "Seller page cache"
 
 #: .\app_settings\views.py:19
 msgid "Кэш топ товаров продавца"
-msgstr ""
+msgstr "Seller top products cache"
 
 #: .\app_settings\views.py:20
 msgid "Общий кэш"
-msgstr ""
+msgstr "Shared cache"
+
+#: .\app_settings\views.py:31
+msgid "настройки"
+msgstr "settings"
+
+#: .\compare_app\services.py:34
+msgid "Ошибка: не удалось удалить товар из списка товаров для сравнения"
+msgstr "Error: Failed to remove item from compare list"
+
+#: .\compare_app\services.py:48
+msgid "Ошибка: не удалось сформировать словарь для сравнения товаров"
+msgstr "Error: Failed to generate a dictionary for product comparison"
+
+#: .\compare_app\views.py:19
+msgid "Продукт не найден"
+msgstr "Product not found"
+
+#: .\compare_app\views.py:50
+msgid "Ошибка: данной записи в кэше не существует"
+msgstr "Error: This cache entry does not exist"
 
 #: .\market_app\models.py:11
 msgid "заголовок"
-msgstr ""
+msgstr "header"
 
 #: .\market_app\models.py:13 .\market_app\models.py:165
 msgid "цена"
@@ -134,33 +184,33 @@ msgstr "price"
 
 #: .\market_app\models.py:14
 msgid "изображение"
-msgstr ""
+msgstr "image"
 
 #: .\market_app\models.py:15 .\market_app\models.py:153
 #: .\market_app\models.py:223
 msgid "подсказка"
-msgstr ""
+msgstr "help"
 
 #: .\market_app\models.py:22
 msgid "баннер"
-msgstr ""
+msgstr "banner"
 
 #: .\market_app\models.py:23
 msgid "баннеры"
-msgstr ""
+msgstr "banners"
 
 #: .\market_app\models.py:30
 msgid "профиль"
-msgstr ""
+msgstr "profile"
 
 #: .\market_app\models.py:32 .\market_app\models.py:98
 #: .\market_app\models.py:197
 msgid "описание"
-msgstr ""
+msgstr "description"
 
 #: .\market_app\models.py:33
 msgid "название магазина"
-msgstr ""
+msgstr "name of shop"
 
 #: .\market_app\models.py:37 .\market_app\models.py:96
 #: .\market_app\models.py:161
@@ -169,7 +219,7 @@ msgstr "seller"
 
 #: .\market_app\models.py:38
 msgid "продавцы"
-msgstr ""
+msgstr "sellers"
 
 #: .\market_app\models.py:53 .\templates\catalog.html:43
 #, fuzzy
@@ -227,17 +277,17 @@ msgstr "name"
 
 #: .\market_app\models.py:94 .\market_app\models.py:111
 msgid "категория"
-msgstr ""
+msgstr "category"
 
 #: .\market_app\models.py:105 .\market_app\models.py:151
 #: .\market_app\models.py:159 .\market_app\models.py:179
 #: .\market_app\models.py:193
 msgid "товар"
-msgstr ""
+msgstr "product"
 
 #: .\market_app\models.py:106
 msgid "товары"
-msgstr ""
+msgstr "products"
 
 #: .\market_app\models.py:110
 msgid "название группы характеристик"
@@ -297,75 +347,99 @@ msgstr "Additional info"
 
 #: .\market_app\models.py:152 .\market_app\models.py:222
 msgid "картинка"
-msgstr ""
+msgstr "image"
 
 #: .\market_app\models.py:163
 msgid "количество"
-msgstr ""
+msgstr "quantity"
 
 #: .\market_app\models.py:172 .\market_app\models.py:173
 msgid "товар-продавец"
-msgstr ""
+msgstr "product-seller"
 
 #: .\market_app\models.py:178
 msgid "пользователь"
-msgstr ""
+msgstr "user"
 
 #: .\market_app\models.py:180
 msgid "время просмотра"
-msgstr ""
+msgstr "viewing time"
 
 #: .\market_app\models.py:186 .\market_app\models.py:187
 msgid "история просмотров"
-msgstr ""
+msgstr "browsing history"
 
 #: .\market_app\models.py:196
 msgid "покупатель"
-msgstr ""
+msgstr "buyer"
 
 #: .\market_app\models.py:198
 msgid "дата"
-msgstr ""
+msgstr "date"
 
 #: .\market_app\models.py:214 .\market_app\models.py:221
 msgid "отзыв"
-msgstr ""
+msgstr "review"
 
 #: .\market_app\models.py:215
 msgid "отзывы"
-msgstr ""
+msgstr "reviews"
+
+#: .\order_app\models.py:7
+msgid "заказчик"
+msgstr "customer"
+
+#: .\order_app\models.py:8
+msgid "данные заказа в формате JSON"
+msgstr "order data in JSON format"
+
+#: .\order_app\models.py:9
+msgid "статус активности"
+msgstr "activity status"
+
+#: .\order_app\models.py:12
+msgid "заказ"
+msgstr "order"
+
+#: .\order_app\models.py:13
+msgid "заказы"
+msgstr "orders"
+
+#: .\order_app\views.py:35
+msgid "Не удалось получить данные пользователя"
+msgstr "Failed to get user data"
 
 #: .\templates\base\base.html:126 .\templates\base\base.html:240
 msgid "Главная"
-msgstr ""
+msgstr "Main"
 
 #: .\templates\base\base.html:128
 msgid "Скидки"
-msgstr ""
+msgstr "Discounts"
 
 #: .\templates\base\base.html:128 .\templates\base\base.html:242
 msgid "Каталог"
-msgstr ""
+msgstr "Catalog"
 
 #: .\templates\base\base.html:130 .\templates\base\base.html:244
 msgid "Сравнение"
-msgstr ""
+msgstr "Compare"
 
 #: .\templates\base\base.html:143
 msgid "Личный кабинет"
-msgstr ""
+msgstr "Personal Area"
 
 #: .\templates\base\base.html:144
 msgid "Административный раздел"
-msgstr ""
+msgstr "Administrative section"
 
 #: .\templates\base\base.html:145
 msgid "Выход"
-msgstr ""
+msgstr "Log out"
 
 #: .\templates\base\base.html:161
 msgid "Показать навигацию"
-msgstr ""
+msgstr "Show navigation"
 
 #: .\templates\base\base.html:173
 #, fuzzy
@@ -375,109 +449,161 @@ msgstr "All products"
 
 #: .\templates\base\base.html:199
 msgid "Категории не добавлены"
-msgstr ""
+msgstr "Categories not added"
 
 #: .\templates\base\base.html:210
 msgid "Поиск"
-msgstr ""
+msgstr "Search"
 
 #: .\templates\base\base.html:237
 msgid "Навигация"
-msgstr ""
+msgstr "Navigation"
 
 #: .\templates\base\base.html:246
 msgid "Профиль"
-msgstr ""
+msgstr "Profile"
 
 #: .\templates\base\base.html:252
 msgid "Контакты"
-msgstr ""
+msgstr "Contacts"
 
-#: .\templates\catalog.html:20
-msgid "перевести"
-msgstr ""
+#: .\templates\base\order_base.html:13
+msgid "Прогресс заполнения"
+msgstr "Fill progress"
 
-#: .\templates\catalog.html:28 .\templates\catalog.html:66
-msgid "Фильтр"
-msgstr "Filter"
+#: .\templates\base\order_base.html:19 .\templates\order\order_step_1.html:9
+msgid "Шаг 1. Параметры пользователя"
+msgstr "Step 1: User Options"
 
-#: .\templates\catalog.html:36
-msgid "Цена"
-msgstr "Price"
+#: .\templates\base\order_base.html:21 .\templates\order\order_step_2.html:9
+msgid "Шаг 2. Способ доставки"
+msgstr "Step 2. Delivery method"
 
-#: .\templates\catalog.html:47
-msgid "Продавец"
-msgstr "Seller"
+#: .\templates\base\order_base.html:23 .\templates\order\order_step_3.html:9
+msgid "Шаг 3. Способ оплаты"
+msgstr "Step 3. Payment method"
 
-#: .\templates\catalog.html:57
-msgid "Только товары в наличии"
-msgstr "Only items in stock"
+#: .\templates\base\order_base.html:25 .\templates\order\order_step_4.html:9
+msgid "Шаг 4. Подтверждение заказа"
+msgstr "Step 4. Confirmation of an order"
 
-#: .\templates\catalog.html:62
-msgid "С бесплатной доставкой"
-msgstr "With some delivery"
-
-#: .\templates\catalog.html:74
-msgid "Популярные теги"
-msgstr "Popular tags"
-
-#: .\templates\catalog.html:79 .\templates\catalog.html:84
-msgid "Видео"
-msgstr "Video"
-
-#: .\templates\catalog.html:80 .\templates\catalog.html:83
-msgid "Разработка"
-msgstr "Development"
-
-#: .\templates\catalog.html:81
-msgid "Игры"
-msgstr "Games"
-
-#: .\templates\catalog.html:82
-msgid "Асус"
-msgstr "Asus"
-
-#: .\templates\catalog.html:91
-msgid "Сортировать по:"
-msgstr "Sort by"
-
-#: .\templates\catalog.html:95 .\templates\catalog.html:100
-#: .\templates\catalog.html:105 .\templates\catalog.html:110
-#: .\templates\catalog.html:115 .\templates\catalog.html:120
-#: .\templates\catalog.html:125 .\templates\catalog.html:130
-#: .\templates\catalog.html:135
-msgid "Популярности"
-msgstr "Popularity"
-
-#: .\templates\catalog.html:96 .\templates\catalog.html:101
-#: .\templates\catalog.html:106 .\templates\catalog.html:111
-#: .\templates\catalog.html:116 .\templates\catalog.html:121
-#: .\templates\catalog.html:126 .\templates\catalog.html:131
-#: .\templates\catalog.html:136
-msgid "Цене"
-msgstr "Price"
-
-#: .\templates\catalog.html:97 .\templates\catalog.html:102
-#: .\templates\catalog.html:107 .\templates\catalog.html:112
-#: .\templates\catalog.html:117 .\templates\catalog.html:122
-#: .\templates\catalog.html:127 .\templates\catalog.html:132
-#: .\templates\catalog.html:137
-msgid "Отзывам"
-msgstr "Reviews"
-
-#: .\templates\catalog.html:98 .\templates\catalog.html:103
-#: .\templates\catalog.html:108 .\templates\catalog.html:113
-#: .\templates\catalog.html:118 .\templates\catalog.html:123
-#: .\templates\catalog.html:128 .\templates\catalog.html:133
-#: .\templates\catalog.html:138
-msgid "Новизне"
-msgstr "Novelty"
+#: .\templates\base\payment_base.html:19 .\templates\order\oneorder.html:167
+#: .\templates\order\order_step_4.html:144
+msgid "Оплатить"
+msgstr "Pay"
 
 #: .\templates\include\popular_products.html:7
 #, fuzzy
 #| msgid "Все товары"
 msgid "Популярные товары"
 msgstr "All products"
+
+#: .\templates\order\oneorder.html:8
+msgid "История заказов"
+msgstr "History of orders"
+
+#: .\templates\order\oneorder.html:27
+msgid "Дата заказа:"
+msgstr "Order date"
+
+#: .\templates\order\oneorder.html:37 .\templates\order\order_step_4.html:20
+msgid "ФИО:"
+msgstr "Full name:"
+
+#: .\templates\order\oneorder.html:47 .\templates\order\order_step_4.html:30
+msgid "Телефон:"
+msgstr "Phone number:"
+
+#: .\templates\order\oneorder.html:69 .\templates\order\order_step_4.html:52
+msgid "Тип доставки:"
+msgstr "Delivery method:"
+
+#: .\templates\order\oneorder.html:79 .\templates\order\order_step_4.html:62
+msgid "Город:"
+msgstr "City:"
+
+#: .\templates\order\oneorder.html:89 .\templates\order\order_step_4.html:72
+msgid "Адрес:"
+msgstr "Address:"
+
+#: .\templates\order\oneorder.html:99 .\templates\order\order_step_4.html:82
+msgid "Оплата:"
+msgstr "Payment:"
+
+#: .\templates\order\oneorder.html:109
+msgid "Статус:"
+msgstr "Status:"
+
+#: .\templates\order\oneorder.html:145 .\templates\order\oneorder.html:164
+#: .\templates\order\order_step_4.html:117
+#: .\templates\order\order_step_4.html:137
+#: .\templates\order\order_step_4.html:141
+msgid "руб."
+msgstr "rub."
+
+#: .\templates\order\oneorder.html:154 .\templates\order\order_step_4.html:126
+msgid "шт."
+msgstr "items"
+
+#: .\templates\order\order_step_1.html:15
+msgid "ФИО"
+msgstr "Full name"
+
+#: .\templates\order\order_step_1.html:17
+msgid "Иванов Иван Иванович"
+msgstr "Joe Brown"
+
+#: .\templates\order\order_step_1.html:20
+msgid "Телефон"
+msgstr "Phone number"
+
+#: .\templates\order\order_step_1.html:31
+#: .\templates\order\order_step_2.html:47
+#: .\templates\order\order_step_3.html:37
+msgid "Дальше"
+msgstr "Next"
+
+#: .\templates\order\order_step_2.html:16
+#: .\templates\order\order_step_2.html:27
+msgid "Обычная доставка"
+msgstr "Ordinary delivery"
+
+#: .\templates\order\order_step_2.html:21
+#: .\templates\order\order_step_2.html:32
+msgid "Экспресс доставка"
+msgstr "Express delivery"
+
+#: .\templates\order\order_step_2.html:38
+msgid "Город"
+msgstr "City"
+
+#: .\templates\order\order_step_2.html:43
+msgid "Адрес"
+msgstr "Address"
+
+#: .\templates\order\order_step_3.html:16
+#: .\templates\order\order_step_3.html:27
+msgid "Онлайн картой"
+msgstr "Online card"
+
+#: .\templates\order\order_step_3.html:21
+#: .\templates\order\order_step_3.html:32
+msgid "Онлайн со случайного чужого счета"
+msgstr "Online from a random someone else's account"
+
+#: .\templates\order\order_step_4.html:136
+msgid "Доставка:"
+msgstr "Delivery:"
+
+#: .\templates\order\order_step_4.html:140
+msgid "Итого:"
+msgstr "Total:"
+
+#: .\templates\payment.html:7 .\templates\paymentsomeone.html:7
+#, fuzzy
+#| msgid "номер карты"
+msgid "Номер карты"
+msgstr "card number"
 
 #: .\templates\product.html:54
 msgid "Описание"
@@ -517,7 +643,7 @@ msgstr "You've already left a review"
 
 #: .\templates\product.html:202
 msgid "Чтобы оставить отзыв, вам нужно"
-msgstr "If ypu want to auth you need"
+msgstr "If you want to auth you need"
 
 #: .\templates\product.html:203
 msgid "авторизоваться"
