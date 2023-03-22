@@ -18,7 +18,7 @@
                       </label>
                       <div class="Profile-avatar Profile-avatar_noimg">
                           <div class="Profile-img">
-                              <img src="{% static "assets/img/#.png" %}" alt="#.png"/>
+                              <img src="../../media/{{ profile.avatar.avatar }}" alt="#.png"/>
                           </div>
 {#                          <label class="Profile-fileLabel" for="avatar">Выберите аватар#}
 {#                          </label>#}
@@ -38,8 +38,8 @@
                   <div class="form-group">
                       <label class="form-label" for="phone">Телефон
                       </label>
-                      {{ profile_form.phone }}
-{#                      <input class="form-input" id="phone" name="phone" type="text" value="+70000000000"/>#}
+{#                      {{ profile_form.phone }}#}
+                      <input class="form-input" id="phone" name="phone" type="text" value='{{ profile_form.phone }}'>
                   </div>
                   <div class="form-group">
                       <label class="form-label" for="mail">E-mail

@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from app_login.models import Profile, ProfileAvatar
 from app_profile.forms import ProfileForm
 from market_app.product_history import HistoryViewOperations
+import re
 
 
 class AccountView(TemplateView):
@@ -44,6 +45,13 @@ class ProfileView(View):
     def post(self, request):
 
         profile_form = ProfileForm(request.POST, request.FILES)
+
+        pattern = r"\d+"
+
+        new_phone = request.POST.get('phone')
+        result = re.findall(pattern, new_phone[2:])
+        new_result = ''.join(result)
+
 
         if profile_form.is_valid():
 
