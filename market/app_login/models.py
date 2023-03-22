@@ -14,8 +14,8 @@ class Profile(models.Model):
         verbose_name='ФИО пользователя'
     )
     phone = models.CharField(
-        max_length=12,
-        default='+70000000000',
+        max_length=10,
+        default='1111111111',
         verbose_name='Номер телелфона'
     )
     avatar = models.ForeignKey(

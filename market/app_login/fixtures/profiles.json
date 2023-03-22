@@ -5,7 +5,7 @@
     "fields": {
       "user": 1,
       "full_name": "ADMIN",
-      "phone": "+70000000000",
+      "phone": 1111111111,
       "avatar": 1,
       "product_in_cart": 0
     }
@@ -16,7 +16,7 @@
     "fields": {
       "user": 2,
       "full_name": "Иванов Иван Иванович",
-      "phone": "+70000000000",
+      "phone": 1111111111,
       "avatar": 1,
       "product_in_cart": 0
     }
@@ -27,7 +27,7 @@
     "fields": {
       "user": 3,
       "full_name": "Сидоров Тихон",
-      "phone": "+70000000000",
+      "phone": 1111111111,
       "avatar": 1,
       "product_in_cart": 0
     }
@@ -38,7 +38,7 @@
     "fields": {
       "user": 4,
       "full_name": "Барсик",
-      "phone": "+70000000000",
+      "phone": 1111111111,
       "avatar": 1,
       "product_in_cart": 0
     }
