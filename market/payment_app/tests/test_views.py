@@ -111,7 +111,6 @@ class PostMethodForPaymentViewTestClass(TestCase):
     def test_couldnt_get_data_from_api(self, mocked):
         wrong_base_url = 'http://127.0.0.1:8000/test'
         card_number = '1111 1112'
-        total_price = 40
         status_dict = get_dict_with_payment_status(base_url=wrong_base_url,
                                                    card_number=card_number,
                                                    order_id=self.order_object.id)
