@@ -50,21 +50,21 @@ class Category(MPTTModel):
     activity - флаг активности новости;
     """
 
-    title = models.CharField(max_length=50, unique=True, verbose_name='Название')
-    image = models.FileField(verbose_name='Картинка категории товаров', default=None, null=True, blank=True)
-    image_alt = models.CharField(max_length=20, default=None, null=True, verbose_name='Название картинки категории')
-    slug = models.SlugField()
+    title = models.CharField(max_length=50, unique=True, verbose_name=_('Название'))
+    image = models.FileField(verbose_name=_('Картинка категории товаров'), default=None, null=True, blank=True)
+    image_alt = models.CharField(max_length=20, default=None, null=True, verbose_name=_('Название картинки категории'))
+    slug = models.SlugField(_('Название ссылки'))
     parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
-                            db_index=True, verbose_name='Родительская категория')
-    activity = models.BooleanField(default=False, blank=True, null=True)
+                            db_index=True, verbose_name=_('Родительская категория'))
+    activity = models.BooleanField(default=False, blank=True, null=True, verbose_name=_('флаг активности'))
 
     class MPTTMeta:
         order_insertion_by = ['title']
 
     class Meta:
         unique_together = [['parent', 'slug']]
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        verbose_name = _('Категория')
+        verbose_name_plural = _('Категории')
 
     def __str__(self):
         return self.title
@@ -107,40 +107,40 @@ class Product(models.Model):
 
 
 class CharacteristicsGroup(models.Model):
-    group_name = models.CharField(max_length=30, verbose_name='название группы характеристик')
-    category = models.ManyToManyField(Category, verbose_name='категория', related_name='characteristicsgroups')
+    group_name = models.CharField(max_length=30, verbose_name=_('название группы характеристик'))
+    category = models.ManyToManyField(Category, verbose_name=_('категория'), related_name='characteristicsgroups')
 
     class Meta:
-        verbose_name = 'группа характеристик'
-        verbose_name_plural = 'группы характеристик'
+        verbose_name = _('группа характеристик')
+        verbose_name_plural = _('группы характеристик')
 
     def __str__(self):
         return self.group_name
 
 
 class Characteristic(models.Model):
-    characteristic_name = models.CharField(max_length=30, verbose_name='название характеристики')
-    group = models.ForeignKey(CharacteristicsGroup, on_delete=models.CASCADE, verbose_name='группа характеристик',
+    characteristic_name = models.CharField(max_length=30, verbose_name=_('название характеристики'))
+    group = models.ForeignKey(CharacteristicsGroup, on_delete=models.CASCADE, verbose_name=_('группа характеристик'),
                               related_name='characteristics')
 
     class Meta:
-        verbose_name = 'характеристика'
-        verbose_name_plural = 'характеристики'
+        verbose_name = _('характеристика')
+        verbose_name_plural = _('характеристики')
 
     def __str__(self):
         return self.characteristic_name
 
 
 class CharacteristicValue(models.Model):
-    value = models.CharField(max_length=200, verbose_name='значение характеристики')
-    characteristic = models.ForeignKey(Characteristic, verbose_name='характеристика',
+    value = models.CharField(max_length=200, verbose_name=_('значение характеристики'))
+    characteristic = models.ForeignKey(Characteristic, verbose_name=_('характеристика'),
                                        on_delete=models.CASCADE, related_name='values')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True,
-                                verbose_name='продукт', related_name='values')
+                                verbose_name=_('продукт'), related_name='values')
 
     class Meta:
-        verbose_name = 'значение характеристик'
-        verbose_name_plural = 'значения характеристик'
+        verbose_name = _('значение характеристик')
+        verbose_name_plural = _('значения характеристик')
 
     def __str__(self):
         return f'{self.characteristic.characteristic_name} {self.product.name}'

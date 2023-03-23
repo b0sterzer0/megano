@@ -86,7 +86,6 @@ class AccountView(TemplateView):
 
 class CatalogView(View):
     """Каталог товаров"""
-
     def get(self, request):
         cards = []
         price, title, stock, sort_by, page = request.GET.get('price'), request.GET.get('title'), \
@@ -102,16 +101,17 @@ class CatalogView(View):
             return render(request, 'catalog.html', context=context)
         if not price:
             name_product = title
-            cards_obj = SellerProduct.objects.filter(product__name__contains=name_product)
+            cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=name_product)
             get_min_cards(cards, cards_obj)
             sort_list(cards, sort_by)
             cards = get_product_list_by_page(cards, page)
             add_url = f'title={title}'
-            return render(request, 'catalog.html', context={'cards': cards, 'add_url': add_url})
+            return render(request, 'catalog.html', context={'cards': cards, 'add_url': add_url, 'sort_by': sort_by})
         price_product = price.replace(';', ' ').split()
-        cards_obj = SellerProduct.objects.filter(product__name__contains=title)
+        cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=title)
         if stock:
-            cards_obj = SellerProduct.objects.filter(product__name__contains=title).filter(qty__gt=0)
+            cards_obj = SellerProduct.objects.select_related('product').filter(product__name__contains=title).filter(
+                qty__gt=0)
         cards_list = get_seller_products(cards_obj)
         for card in cards_list:
             if int(price_product[0]) <= card['price'] <= int(price_product[1]):
