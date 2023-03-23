@@ -40,8 +40,8 @@ class CharacteristicAdmin(admin.ModelAdmin):
 
 
 @admin.register(Banner)
-class ShopAdmin(admin.ModelAdmin):
-    list_display = ['title', 'price', 'image_alt']
+class BannerAdmin(admin.ModelAdmin):
+    list_display = ['title1', 'price', 'image_alt', 'link']
 
 
 class ProductImageInline(admin.TabularInline):

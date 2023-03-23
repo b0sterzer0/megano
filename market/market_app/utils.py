@@ -1,10 +1,13 @@
+import random
+
 from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator, Page
+from django.db.models import Min
 
 from app_cart.models import AnonimCart
 from app_login.models import Profile
-from app_settings.utils import get_setting_from_bd
-from market_app.models import Product, ProductReview, Seller, SellerProduct
+from app_settings.utils import get_setting_from_db
+from market_app.models import Category, Product, ProductReview, Seller, SellerProduct
 
 
 def make_paginator_from_list(lst, num_page, page):
@@ -39,7 +42,7 @@ def get_product_review_list_by_page(product, page):
     """
 
     reviews_list = ProductReview.objects.filter(product=product).select_related('customer').order_by('-date')
-    num_reviews = get_setting_from_bd('num_reviews_per_page')
+    num_reviews = get_setting_from_db('num_reviews_per_page')
     reviews = make_paginator_from_list(reviews_list, num_reviews, page)
     return reviews
 
@@ -52,7 +55,7 @@ def get_product_list_by_page(products_list, page):
     :return: список товаров для заданной страницы.
     """
 
-    num_products_per_page = get_setting_from_bd('num_products_per_page')
+    num_products_per_page = get_setting_from_db('num_products_per_page')
     products = make_paginator_from_list(products_list, num_products_per_page, page)
     return products
 
@@ -77,9 +80,6 @@ def create_product_review(product, user, description):
                                  customer=user,
                                  description=description
                                  )
-    # Эту часть ввести после добавления загрузки фото с отзывами
-    # for img in images:
-    #     ProductReviewImage.objects.create(review=review, image=img)
 
 
 def get_count_product_reviews(product):
@@ -100,7 +100,7 @@ def get_seller(pk):
     :param pk: pk определенного продавца.
     :return: кэш объекта продавца.
     """
-    seller_cache_time = get_setting_from_bd('seller_cache_time')
+    seller_cache_time = get_setting_from_db('seller_cache_time')
     cache_key = f"seller_detail_{pk}"
     seller = cache.get(cache_key)
     if not seller:
@@ -258,6 +258,20 @@ def get_min_cards(cards, cards_obj):
             if card_1['name'] == card_2['name'] and card_1['price'] < card_2['price']:
                 cards.pop(cards.index(card_2))
     return cards
+
+
+def get_selected_categories():
+    """
+    Функция берет из БД категории, аннотирует минимальной ценой по товарам каждой категории,
+    создаёт список из категорий, у которых нет дочерних,
+    возвращает 3 случайных категории, либо все, если категорий меньше 3.
+    """
+    categories = Category.objects.annotate(min_price=Min('products__sellers_products__price'))
+    children_categories = [category for category in categories if category.is_leaf_node()]
+    try:
+        return random.sample(children_categories, 3)
+    except ValueError:
+        return children_categories
 
 
 def sort_list(cards, sort_by):
