@@ -28,30 +28,24 @@ class AccountView(TemplateView):
         return context
 
 
-
 class ProfileView(View):
 
     """Профиль пользователя"""
 
     def get(self, request):
 
-        profile_form = ProfileForm()
 
+        profile_form = ProfileForm()
         return render(request, 'profile.html', context={'profile_form': profile_form,
                                                         'middle_title_left': 'Профиль',
                                                         'middle_title_right': 'Профиль',
                                                         'active_menu': 'profile'})
+    # else:
+    #     return HttpResponseRedirect('/login/')
 
     def post(self, request):
 
         profile_form = ProfileForm(request.POST, request.FILES)
-
-        pattern = r"\d+"
-
-        new_phone = request.POST.get('phone')
-        result = re.findall(pattern, new_phone[2:])
-        new_result = ''.join(result)
-
 
         if profile_form.is_valid():
 
@@ -65,24 +59,26 @@ class ProfileView(View):
                 Profile.objects.filter(user_id=request.user.id).update(
                     avatar=profile_avatar
                 )
-            elif new_password1:
-                if new_password1 == new_password2:
-                    # user = User.objects.get(id=request.user.id)
-                    # user.set_password(new_password1)
-                    print('Password change')
-                else:
-                    raise Exception('Password not correct')
+            elif new_password1 and new_password2:
+                # user = User.objects.get(id=request.user.id)
+                # user.set_password(new_password1)
+                print('Password change')
 
             for key in profile_form.cleaned_data.keys():
 
-                if key == 'full_name' and profile_form.cleaned_data.get(key):
-                    Profile.objects.filter(id=request.user.id).update(full_name=profile_form.cleaned_data[key])
+                if key == 'full_name' and len(profile_form.cleaned_data[key]) != 0:
+                    print(profile_form.cleaned_data.get(key))
+                    # Profile.objects.filter(id=request.user.id).update(full_name=profile_form.cleaned_data[key])
 
-                elif key == 'email' and profile_form.cleaned_data.get(key):
+                elif key == 'email' and len(profile_form.cleaned_data[key]) != 0:
                     User.objects.filter(id=request.user.id).update(email=profile_form.cleaned_data[key])
 
-                elif key == 'phone' and profile_form.cleaned_data.get(key):
-                    Profile.objects.filter(id=request.user.id).update(phone=profile_form.cleaned_data[key])
+                elif key == 'phone' and len(profile_form.cleaned_data[key]) != 0:
+                    pattern = r"\d+"
+                    result = re.findall(pattern, profile_form.cleaned_data[key][2:])
+                    new_phone = ''.join(result)
+                    print(new_phone)
+                    # Profile.objects.filter(id=request.user.id).update(phone=new_phone)
 
             return HttpResponseRedirect('/account/')
 
@@ -90,11 +86,6 @@ class ProfileView(View):
                                                         'middle_title_left': 'Профиль',
                                                         'middle_title_right': 'Профиль',
                                                         'active_menu': 'profile'})
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['middle_title_left'] = 'Профиль'
-    #     context['middle_title_right'] = 'Профиль'
-    #     context['active_menu'] = 'profile'
 
 
 class HistoryOrderView(TemplateView):
