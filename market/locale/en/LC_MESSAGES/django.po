@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-12 14:10+0000\n"
+"POT-Creation-Date: 2023-03-22 20:54+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,272 +18,515 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app_settings/apps.py:9 app_settings/models.py:38
+#: .\app_settings\apps.py:9
 msgid "настройки сайта"
 msgstr ""
 
-#: app_settings/models.py:7
+#: .\app_settings\models.py:7
 msgid "название сайта"
 msgstr ""
 
-#: app_settings/models.py:8
+#: .\app_settings\models.py:8
 msgid "номер телефона 1"
 msgstr ""
 
-#: app_settings/models.py:9
+#: .\app_settings\models.py:9
 msgid "номер телефона 2"
 msgstr ""
 
-#: app_settings/models.py:10
+#: .\app_settings\models.py:10
 msgid "адрес"
 msgstr ""
 
-#: app_settings/models.py:11
+#: .\app_settings\models.py:11
 msgid "количество баннеров"
 msgstr ""
 
-#: app_settings/models.py:12
+#: .\app_settings\models.py:12
 msgid "остановка продаж"
 msgstr ""
 
-#: app_settings/models.py:13
+#: .\app_settings\models.py:13
 msgid "кэш баннеров"
 msgstr ""
 
-#: app_settings/models.py:14
+#: .\app_settings\models.py:14
 msgid "общий кэш"
 msgstr ""
 
-#: app_settings/models.py:15 app_settings/models.py:16
+#: .\app_settings\models.py:15 .\app_settings\models.py:16
 msgid "время кэша продавцов"
 msgstr ""
 
-#: app_settings/models.py:19
+#: .\app_settings\models.py:18
 msgid "количество популярных товаров продавца"
 msgstr ""
 
-#: app_settings/models.py:22
+#: .\app_settings\models.py:20
 msgid "количество популярных товаров главной страницы"
 msgstr ""
 
-#: app_settings/models.py:23
+#: .\app_settings\models.py:21
+msgid "количество отзывов на странице"
+msgstr ""
+
+#: .\app_settings\models.py:22
+msgid "количество товаров на странице"
+msgstr ""
+
+#: .\app_settings\models.py:23
 msgid "стоимость обычной доставки"
 msgstr ""
 
-#: app_settings/models.py:25
+#: .\app_settings\models.py:25
 msgid "минимальная сумма для бесплатной обычной доставки"
 msgstr ""
 
-#: app_settings/models.py:26
+#: .\app_settings\models.py:26
 msgid "стоимость экспресс доставки"
 msgstr ""
 
-#: app_settings/models.py:37
-msgid "настройка сайта"
+#: .\app_settings\models.py:37
+msgid "Настройка сайта"
 msgstr ""
 
-#: app_settings/templates/app_settings/settings.html:26
+#: .\app_settings\models.py:38
+#: .\app_settings\templates\app_settings\settings.html:26
 msgid "Настройки сайта"
 msgstr ""
 
-#: app_settings/templates/app_settings/settings.html:30
+#: .\app_settings\templates\app_settings\settings.html:30
 msgid "Сохранить"
 msgstr ""
 
-#: app_settings/templates/app_settings/settings.html:34
+#: .\app_settings\templates\app_settings\settings.html:34
 msgid "Сброс кэша"
 msgstr ""
 
-#: app_settings/templates/app_settings/settings.html:39
+#: .\app_settings\templates\app_settings\settings.html:39
 msgid "Сбросить кэш раздела:"
 msgstr ""
 
 #. Translators: разделы кэша на странице настроек
-#: app_settings/views.py:17
+#: .\app_settings\views.py:17
 msgid "Баннеры"
 msgstr ""
 
-#: app_settings/views.py:18
+#: .\app_settings\views.py:18
 msgid "Кэш страницы продавца"
 msgstr ""
 
-#: app_settings/views.py:19
+#: .\app_settings\views.py:19
 msgid "Кэш топ товаров продавца"
 msgstr ""
 
-#: app_settings/views.py:20
+#: .\app_settings\views.py:20
 msgid "Общий кэш"
 msgstr ""
 
-#: app_settings/views.py:31
-msgid "настройки"
-msgstr ""
-
-#: market_app/models.py:11
+#: .\market_app\models.py:11
 msgid "заголовок"
 msgstr ""
 
-#: market_app/models.py:13 market_app/models.py:165
+#: .\market_app\models.py:13 .\market_app\models.py:165
 msgid "цена"
-msgstr ""
+msgstr "price"
 
-#: market_app/models.py:14
+#: .\market_app\models.py:14
 msgid "изображение"
 msgstr ""
 
-#: market_app/models.py:15 market_app/models.py:153 market_app/models.py:223
+#: .\market_app\models.py:15 .\market_app\models.py:153
+#: .\market_app\models.py:223
 msgid "подсказка"
 msgstr ""
 
-#: market_app/models.py:22
+#: .\market_app\models.py:22
 msgid "баннер"
 msgstr ""
 
-#: market_app/models.py:23
+#: .\market_app\models.py:23
 msgid "баннеры"
 msgstr ""
 
-#: market_app/models.py:30
+#: .\market_app\models.py:30
 msgid "профиль"
 msgstr ""
 
-#: market_app/models.py:32 market_app/models.py:98 market_app/models.py:197
+#: .\market_app\models.py:32 .\market_app\models.py:98
+#: .\market_app\models.py:197
 msgid "описание"
 msgstr ""
 
-#: market_app/models.py:33
+#: .\market_app\models.py:33
 msgid "название магазина"
 msgstr ""
 
-#: market_app/models.py:37 market_app/models.py:96 market_app/models.py:161
+#: .\market_app\models.py:37 .\market_app\models.py:96
+#: .\market_app\models.py:161
 msgid "продавец"
-msgstr ""
+msgstr "seller"
 
-#: market_app/models.py:38
+#: .\market_app\models.py:38
 msgid "продавцы"
 msgstr ""
 
-#: market_app/models.py:79
+#: .\market_app\models.py:53 .\templates\catalog.html:43
+#, fuzzy
+#| msgid "Описание"
+msgid "Название"
+msgstr "Description"
+
+#: .\market_app\models.py:54
+msgid "Картинка категории товаров"
+msgstr "Product category picture"
+
+#: .\market_app\models.py:55
+msgid "Название картинки категории"
+msgstr "Category image title"
+
+#: .\market_app\models.py:56
+msgid "Название ссылки"
+msgstr "Link name"
+
+#: .\market_app\models.py:58
+msgid "Родительская категория"
+msgstr "Parent category"
+
+#: .\market_app\models.py:59
+msgid "флаг активности"
+msgstr "Activity flag"
+
+#: .\market_app\models.py:66
+msgid "Категория"
+msgstr "Category"
+
+#: .\market_app\models.py:67
+msgid "Категории"
+msgstr "Categories"
+
+#: .\market_app\models.py:79
 msgid "дата начала"
-msgstr ""
+msgstr "start date"
 
-#: market_app/models.py:80
+#: .\market_app\models.py:80
 msgid "Дата окончания"
-msgstr ""
+msgstr "expiration date"
 
-#: market_app/models.py:86 market_app/models.py:164
+#: .\market_app\models.py:86 .\market_app\models.py:164
 msgid "скидка"
-msgstr ""
+msgstr "discount"
 
-#: market_app/models.py:87
+#: .\market_app\models.py:87
 msgid "скидки"
-msgstr ""
+msgstr "discounts"
 
-#: market_app/models.py:92
+#: .\market_app\models.py:92
 msgid "название"
-msgstr ""
+msgstr "name"
 
-#: market_app/models.py:94
+#: .\market_app\models.py:94 .\market_app\models.py:111
 msgid "категория"
 msgstr ""
 
-#: market_app/models.py:105 market_app/models.py:151 market_app/models.py:159
-#: market_app/models.py:179 market_app/models.py:193
+#: .\market_app\models.py:105 .\market_app\models.py:151
+#: .\market_app\models.py:159 .\market_app\models.py:179
+#: .\market_app\models.py:193
 msgid "товар"
 msgstr ""
 
-#: market_app/models.py:106
+#: .\market_app\models.py:106
 msgid "товары"
 msgstr ""
 
-#: market_app/models.py:152 market_app/models.py:222
+#: .\market_app\models.py:110
+msgid "название группы характеристик"
+msgstr ""
+
+#: .\market_app\models.py:114 .\market_app\models.py:123
+#, fuzzy
+#| msgid "Характеристики"
+msgid "группа характеристик"
+msgstr "Additional info"
+
+#: .\market_app\models.py:115
+#, fuzzy
+#| msgid "Характеристики"
+msgid "группы характеристик"
+msgstr "Additional info"
+
+#: .\market_app\models.py:122
+#, fuzzy
+#| msgid "Характеристики"
+msgid "название характеристики"
+msgstr "Additional info"
+
+#: .\market_app\models.py:127 .\market_app\models.py:136
+#, fuzzy
+#| msgid "Характеристики"
+msgid "характеристика"
+msgstr "Additional info"
+
+#: .\market_app\models.py:128
+#, fuzzy
+#| msgid "Характеристики"
+msgid "характеристики"
+msgstr "Additional info"
+
+#: .\market_app\models.py:135
+#, fuzzy
+#| msgid "Характеристики"
+msgid "значение характеристики"
+msgstr "Additional info"
+
+#: .\market_app\models.py:139
+msgid "продукт"
+msgstr ""
+
+#: .\market_app\models.py:142
+#, fuzzy
+#| msgid "Характеристики"
+msgid "значение характеристик"
+msgstr "Additional info"
+
+#: .\market_app\models.py:143
+#, fuzzy
+#| msgid "Характеристики"
+msgid "значения характеристик"
+msgstr "Additional info"
+
+#: .\market_app\models.py:152 .\market_app\models.py:222
 msgid "картинка"
 msgstr ""
 
-#: market_app/models.py:163
+#: .\market_app\models.py:163
 msgid "количество"
 msgstr ""
 
-#: market_app/models.py:172 market_app/models.py:173
+#: .\market_app\models.py:172 .\market_app\models.py:173
 msgid "товар-продавец"
 msgstr ""
 
-#: market_app/models.py:178
+#: .\market_app\models.py:178
 msgid "пользователь"
 msgstr ""
 
-#: market_app/models.py:180
+#: .\market_app\models.py:180
 msgid "время просмотра"
 msgstr ""
 
-#: market_app/models.py:186 market_app/models.py:187
+#: .\market_app\models.py:186 .\market_app\models.py:187
 msgid "история просмотров"
 msgstr ""
 
-#: market_app/models.py:196
+#: .\market_app\models.py:196
 msgid "покупатель"
 msgstr ""
 
-#: market_app/models.py:198
+#: .\market_app\models.py:198
 msgid "дата"
 msgstr ""
 
-#: market_app/models.py:214 market_app/models.py:221
+#: .\market_app\models.py:214 .\market_app\models.py:221
 msgid "отзыв"
 msgstr ""
 
-#: market_app/models.py:215
+#: .\market_app\models.py:215
 msgid "отзывы"
 msgstr ""
 
-#: templates/product.html:54
+#: .\templates\base\base.html:126 .\templates\base\base.html:240
+msgid "Главная"
+msgstr ""
+
+#: .\templates\base\base.html:128
+msgid "Скидки"
+msgstr ""
+
+#: .\templates\base\base.html:128 .\templates\base\base.html:242
+msgid "Каталог"
+msgstr ""
+
+#: .\templates\base\base.html:130 .\templates\base\base.html:244
+msgid "Сравнение"
+msgstr ""
+
+#: .\templates\base\base.html:143
+msgid "Личный кабинет"
+msgstr ""
+
+#: .\templates\base\base.html:144
+msgid "Административный раздел"
+msgstr ""
+
+#: .\templates\base\base.html:145
+msgid "Выход"
+msgstr ""
+
+#: .\templates\base\base.html:161
+msgid "Показать навигацию"
+msgstr ""
+
+#: .\templates\base\base.html:173
+#, fuzzy
+#| msgid "Все товары"
+msgid "Все категории"
+msgstr "All products"
+
+#: .\templates\base\base.html:199
+msgid "Категории не добавлены"
+msgstr ""
+
+#: .\templates\base\base.html:210
+msgid "Поиск"
+msgstr ""
+
+#: .\templates\base\base.html:237
+msgid "Навигация"
+msgstr ""
+
+#: .\templates\base\base.html:246
+msgid "Профиль"
+msgstr ""
+
+#: .\templates\base\base.html:252
+msgid "Контакты"
+msgstr ""
+
+#: .\templates\catalog.html:20
+msgid "перевести"
+msgstr ""
+
+#: .\templates\catalog.html:28 .\templates\catalog.html:66
+msgid "Фильтр"
+msgstr "Filter"
+
+#: .\templates\catalog.html:36
+msgid "Цена"
+msgstr "Price"
+
+#: .\templates\catalog.html:47
+msgid "Продавец"
+msgstr "Seller"
+
+#: .\templates\catalog.html:57
+msgid "Только товары в наличии"
+msgstr "Only items in stock"
+
+#: .\templates\catalog.html:62
+msgid "С бесплатной доставкой"
+msgstr "With some delivery"
+
+#: .\templates\catalog.html:74
+msgid "Популярные теги"
+msgstr "Popular tags"
+
+#: .\templates\catalog.html:79 .\templates\catalog.html:84
+msgid "Видео"
+msgstr "Video"
+
+#: .\templates\catalog.html:80 .\templates\catalog.html:83
+msgid "Разработка"
+msgstr "Development"
+
+#: .\templates\catalog.html:81
+msgid "Игры"
+msgstr "Games"
+
+#: .\templates\catalog.html:82
+msgid "Асус"
+msgstr "Asus"
+
+#: .\templates\catalog.html:91
+msgid "Сортировать по:"
+msgstr "Sort by"
+
+#: .\templates\catalog.html:95 .\templates\catalog.html:100
+#: .\templates\catalog.html:105 .\templates\catalog.html:110
+#: .\templates\catalog.html:115 .\templates\catalog.html:120
+#: .\templates\catalog.html:125 .\templates\catalog.html:130
+#: .\templates\catalog.html:135
+msgid "Популярности"
+msgstr "Popularity"
+
+#: .\templates\catalog.html:96 .\templates\catalog.html:101
+#: .\templates\catalog.html:106 .\templates\catalog.html:111
+#: .\templates\catalog.html:116 .\templates\catalog.html:121
+#: .\templates\catalog.html:126 .\templates\catalog.html:131
+#: .\templates\catalog.html:136
+msgid "Цене"
+msgstr "Price"
+
+#: .\templates\catalog.html:97 .\templates\catalog.html:102
+#: .\templates\catalog.html:107 .\templates\catalog.html:112
+#: .\templates\catalog.html:117 .\templates\catalog.html:122
+#: .\templates\catalog.html:127 .\templates\catalog.html:132
+#: .\templates\catalog.html:137
+msgid "Отзывам"
+msgstr "Reviews"
+
+#: .\templates\catalog.html:98 .\templates\catalog.html:103
+#: .\templates\catalog.html:108 .\templates\catalog.html:113
+#: .\templates\catalog.html:118 .\templates\catalog.html:123
+#: .\templates\catalog.html:128 .\templates\catalog.html:133
+#: .\templates\catalog.html:138
+msgid "Новизне"
+msgstr "Novelty"
+
+#: .\templates\include\popular_products.html:7
+#, fuzzy
+#| msgid "Все товары"
+msgid "Популярные товары"
+msgstr "All products"
+
+#: .\templates\product.html:54
 msgid "Описание"
 msgstr "Description"
 
-#: templates/product.html:57
+#: .\templates\product.html:57
 msgid "Продавцы"
 msgstr "Sellers"
 
-#: templates/product.html:60
+#: .\templates\product.html:60
 msgid "Характеристики"
 msgstr "Additional info"
 
-#: templates/product.html:63
+#: .\templates\product.html:63
 msgid "Отзывы"
 msgstr "Reviews"
 
-#: templates/product.html:102
+#: .\templates\product.html:102
 msgid "Добавить в корзину"
 msgstr "Add yo cart"
 
-#: templates/product.html:179
+#: .\templates\product.html:179
 msgid "Написать отзыв"
 msgstr "Make review"
 
-#: templates/product.html:186
+#: .\templates\product.html:186
 msgid "Ваш отзыв"
 msgstr "Your review"
 
-#: templates/product.html:190
+#: .\templates\product.html:190
 msgid "Отправить отзыв"
 msgstr "Send a review"
 
-#: templates/product.html:197
+#: .\templates\product.html:197
 msgid "Вы уже оставляли отзыв на данный товар"
 msgstr "You've already left a review"
 
-#: templates/product.html:202
+#: .\templates\product.html:202
 msgid "Чтобы оставить отзыв, вам нужно"
 msgstr "If ypu want to auth you need"
 
-#: templates/product.html:203
+#: .\templates\product.html:203
 msgid "авторизоваться"
 msgstr "auth"
 
-#: templates/seller.html:14
+#: .\templates\seller.html:14
 msgid "О магазине"
 msgstr "About"
 
-#: templates/seller.html:29
+#: .\templates\seller.html:29
 msgid "Все товары"
 msgstr "All products"

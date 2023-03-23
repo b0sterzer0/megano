@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 
@@ -8,7 +9,7 @@
         <div class="Section-column">
           <div class="Section-columnSection">
             <header class="Section-header">
-              <strong class="Section-title">Filter
+              <strong class="Section-title">{% trans 'Фильтр' %}
               </strong>
             </header>
             <div class="Section-columnContent">
@@ -16,18 +17,18 @@
                 <div class="form-group">
                   <div class="range Section-columnRange">
                     <input class="range-line" id="price" name="price" type="text" data-type="double" data-min="7" data-max="1000000" data-from="7" data-to="1000000"/>
-                    <div class="range-price">Price:&#32;
+                    <div class="range-price">{% trans 'Цена' %}:&#32;
                       <div class="rangePrice">
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="form-group">
-                  <input class="form-input form-input_full" id="title" name="title" type="text" placeholder="Название"/>
+                  <input class="form-input form-input_full" id="title" name="title" type="text" placeholder="{% trans 'Название' %}"/>
                 </div>
                 <div class="form-group">
                   <select class="form-select">
-                    <option value="seller" selected="selected" disabled="disabled">Продавец
+                    <option value="seller" selected="selected" disabled="disabled">{% trans 'Продавец' %}
                     </option>
                     <option value="kkk">Kkkk
                     </option>
@@ -37,16 +38,16 @@
                 </div>
                 <div class="form-group">
                   <label class="toggle">
-                    <input name="stock" type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>
+                    <input name="stock" type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">{% trans 'Только товары в наличии' %}</span>
                   </label>
                 </div>
                 <div class="form-group">
                   <label class="toggle">
-                    <input type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">С бесплатной доставкой</span>
+                    <input type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">{% trans 'С бесплатной доставкой' %}</span>
                   </label>
                 </div>
                 <div class="form-group">
-                  <div class="buttons"><input class="btn btn_square btn_dark btn_narrow" type="submit" value="Filter">
+                  <div class="buttons"><input class="btn btn_square btn_dark btn_narrow" type="submit" value="{% trans 'Фильтр' %}">
                   </div>
                 </div>
               </form>
@@ -54,61 +55,71 @@
           </div>
           <div class="Section-columnSection">
             <header class="Section-header">
-              <strong class="Section-title">Popular tags
+              <strong class="Section-title">{% trans 'Популярные теги' %}
               </strong>
             </header>
             <div class="Section-columnContent">
               <div class="buttons">
-                  <a class="btn btn_default btn_sm" href="#">Video</a>
-                  <a class="btn btn_default btn_sm" href="#">Development</a>
-                  <a class="btn btn_default btn_sm" href="#">Gaming</a>
-                  <a class="btn btn_default btn_sm" href="#">Asus</a>
-                  <a class="btn btn_default btn_sm" href="#">Development</a>
-                  <a class="btn btn_default btn_sm" href="#">Video</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Видео' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Разработка' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Игры' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Асус' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Разработка' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Видео' %}</a>
               </div>
             </div>
           </div>
         </div>
         <div class="Section-content">
           <div class="Sort">
-            <div class="Sort-title">Сортировать по:
+            <div class="Sort-title">{% trans 'Сортировать по:' %}
             </div>
             <div class="Sort-variants">
                 {% if not sort_by %}
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
-                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=price">Цене</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">{% trans 'Популярности' %}</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=price">{% trans 'Цене' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">{% trans 'Отзывам' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=year">{% trans 'Новизне' %}</a>
                 {% elif sort_by == "price" %}
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
-                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-price">Цене</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">{% trans 'Популярности' %}</a>
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-price">{% trans 'Цене' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">{% trans 'Отзывам' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=year">{% trans 'Новизне' %}</a>
                 {% elif sort_by == "-price" %}
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
-                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=price">Цене</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">{% trans 'Популярности' %}</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=price">{% trans 'Цене' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">{% trans 'Отзывам' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=year">{% trans 'Новизне' %}</a>
                 {% elif sort_by == "count_reviews" %}
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-price">Цене</a>
-                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-count_reviews">Отзывам</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">{% trans 'Популярности' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-price">{% trans 'Цене' %}</a>
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-count_reviews">{% trans 'Отзывам' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=year">{% trans 'Новизне' %}</a>
                 {% elif sort_by == "-count_reviews" %}
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">Цене</a>
-                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=date">Новизне</a>
-                {% elif sort_by == "date" %}
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-price">Цене</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-count_reviews">Отзывам</a>
-                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-date">Новизне</a>
-                {% elif sort_by == "-date" %}
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">Популярности</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">Цене</a>
-                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">Отзывам</a>
-                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=date">Новизне</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">{% trans 'Популярности' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">{% trans 'Цене' %}</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=count_reviews">{% trans 'Отзывам' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=year">{% trans 'Новизне' %}</a>
+                {% elif sort_by == "year" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">{% trans 'Популярности' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-price">{% trans 'Цене' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-count_reviews">{% trans 'Отзывам' %}</a>
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-year">{% trans 'Новизне' %}</a>
+                {% elif sort_by == "-year" %}
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=rating">{% trans 'Популярности' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">{% trans 'Цене' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">{% trans 'Отзывам' %}</a>
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=year">{% trans 'Новизне' %}</a>
+                {% elif sort_by == "rating" %}
+                    <a class="Sort-sortBy Sort-sortBy_dec" href="?{{ add_url }}&sort_by=-rating">{% trans 'Популярности' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-price">{% trans 'Цене' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-count_reviews">{% trans 'Отзывам' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=-year">{% trans 'Новизне' %}</a>
+                {% elif sort_by == "-rating" %}
+                    <a class="Sort-sortBy Sort-sortBy_inc" href="?{{ add_url }}&sort_by=rating">{% trans 'Популярности' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=price">{% trans 'Цене' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=count_reviews">{% trans 'Отзывам' %}</a>
+                    <a class="Sort-sortBy" href="?{{ add_url }}&sort_by=year">{% trans 'Новизне' %}</a>
                 {% endif %}
             </div>
           </div>

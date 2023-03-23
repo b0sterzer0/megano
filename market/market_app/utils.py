@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator, Page
 
 from app_cart.models import AnonimCart
 from app_login.models import Profile
@@ -166,11 +166,11 @@ def get_catalog_product():
     products_list = []
     queryset = Product.objects.all()
     for product_obj in queryset:
-        date = 0
+        year = 0
         values = product_obj.values.all()
         for value in values:
-            if value.characteristic.characteristic_name.lower() == 'год':
-                date = int(value.value)
+            if value.characteristic.characteristic_name.lower() == 'год выпуска':
+                year = int(value.value)
         products_list.append(
             {
                 'id': product_obj.id,
@@ -182,7 +182,8 @@ def get_catalog_product():
                 'price': get_price(product_obj),
                 'description': product_obj.description,
                 'count_reviews': get_count_product_reviews(product_obj),
-                'date': date
+                'year': year,
+                'rating': product_obj.productpurchases.num_purchases,
             }
         )
     return products_list
@@ -193,7 +194,12 @@ def get_seller_products(queryset):
     Функция формирует удобный список с информацией для товаров на основе class SellerProduct
     """
     products_list = []
+    year = 0
     for product in queryset:
+        values = product.product.values.all()
+        for value in values:
+            if value.characteristic.characteristic_name.lower() == 'год':
+                year = int(value.value)
         if product.discount:
             sale = product.discount
             products_list.append(
@@ -212,6 +218,9 @@ def get_seller_products(queryset):
                     'date': sale.start_date,
                     'date_to': sale.end_date,
                     'description': product.product.description,
+                    'count_reviews': get_count_product_reviews(product.product),
+                    'year': year,
+                    'rating': product.product.productpurchases.num_purchases,
                 }
             )
         else:
@@ -227,6 +236,9 @@ def get_seller_products(queryset):
                     'category': product.product.category,
                     'price': product.price,
                     'description': product.product.description,
+                    'count_reviews': get_count_product_reviews(product.product),
+                    'year': year,
+                    'rating': product.product.productpurchases.num_purchases,
                 }
             )
     return products_list
@@ -255,9 +267,15 @@ def sort_list(cards, sort_by):
     :return: отсортированный список
     """
     if sort_by:
-        if sort_by[0] == '-':
-            cards.sort(key=lambda x: x[sort_by[1:]], reverse=True)
+        if type(cards) == Page:
+            if sort_by[0] == '-':
+                cards.object_list.sort(key=lambda x: x[sort_by[1:]], reverse=True)
+            else:
+                cards.object_list.sort(key=lambda x: x[sort_by])
         else:
-            cards.sort(key=lambda x: x[sort_by])
+            if sort_by[0] == '-':
+                cards.sort(key=lambda x: x[sort_by[1:]], reverse=True)
+            else:
+                cards.sort(key=lambda x: x[sort_by])
         return cards
     return cards
