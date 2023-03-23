@@ -34,7 +34,6 @@ class ProfileView(View):
 
     def get(self, request):
 
-
         profile_form = ProfileForm()
         return render(request, 'profile.html', context={'profile_form': profile_form,
                                                         'middle_title_left': 'Профиль',
