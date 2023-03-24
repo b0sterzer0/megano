@@ -34,13 +34,15 @@ class ProfileView(View):
 
     def get(self, request):
 
-        profile_form = ProfileForm()
-        return render(request, 'profile.html', context={'profile_form': profile_form,
-                                                        'middle_title_left': 'Профиль',
-                                                        'middle_title_right': 'Профиль',
-                                                        'active_menu': 'profile'})
-    # else:
-    #     return HttpResponseRedirect('/login/')
+        if request.user.is_authenticated:
+
+            profile_form = ProfileForm()
+            return render(request, 'profile.html', context={'profile_form': profile_form,
+                                                            'middle_title_left': 'Профиль',
+                                                            'middle_title_right': 'Профиль',
+                                                            'active_menu': 'profile'})
+        else:
+            return HttpResponseRedirect('/login/')
 
     def post(self, request):
 
@@ -79,7 +81,64 @@ class ProfileView(View):
                     print(new_phone)
                     # Profile.objects.filter(id=request.user.id).update(phone=new_phone)
 
-            return HttpResponseRedirect('/account/')
+            return HttpResponseRedirect('success')
+
+        return render(request, 'profile.html', context={'profile_form': profile_form,
+                                                        'middle_title_left': 'Профиль',
+                                                        'middle_title_right': 'Профиль',
+                                                        'active_menu': 'profile'})
+
+
+class ProfileSuccessView(View):
+    """Профиль пользователя при успешном изменении"""
+
+    def get(self, request):
+
+        profile_form = ProfileForm()
+        return render(request, 'profileSuccess.html', context={'profile_form': profile_form,
+                                                        'middle_title_left': 'Профиль',
+                                                        'middle_title_right': 'Профиль',
+                                                        'active_menu': 'profile'})
+
+
+    def post(self, request):
+
+        profile_form = ProfileForm(request.POST, request.FILES)
+
+        if profile_form.is_valid():
+
+            avatar = profile_form.cleaned_data.pop('avatar')
+            new_password1 = profile_form.cleaned_data.pop('new_password1')
+            new_password2 = profile_form.cleaned_data.pop('new_password2')
+
+            if avatar:
+                ProfileAvatar.objects.create(avatar=avatar, img_name=f'{avatar}')
+                profile_avatar = ProfileAvatar.objects.get(img_name=f'{avatar}')
+                Profile.objects.filter(user_id=request.user.id).update(
+                    avatar=profile_avatar
+                )
+            elif new_password1 and new_password2:
+                # user = User.objects.get(id=request.user.id)
+                # user.set_password(new_password1)
+                print('Password change')
+
+            for key in profile_form.cleaned_data.keys():
+
+                if key == 'full_name' and len(profile_form.cleaned_data[key]) != 0:
+                    print(profile_form.cleaned_data.get(key))
+                    # Profile.objects.filter(id=request.user.id).update(full_name=profile_form.cleaned_data[key])
+
+                elif key == 'email' and len(profile_form.cleaned_data[key]) != 0:
+                    User.objects.filter(id=request.user.id).update(email=profile_form.cleaned_data[key])
+
+                elif key == 'phone' and len(profile_form.cleaned_data[key]) != 0:
+                    pattern = r"\d+"
+                    result = re.findall(pattern, profile_form.cleaned_data[key][2:])
+                    new_phone = ''.join(result)
+                    print(new_phone)
+                    # Profile.objects.filter(id=request.user.id).update(phone=new_phone)
+
+            return HttpResponseRedirect('success/')
 
         return render(request, 'profile.html', context={'profile_form': profile_form,
                                                         'middle_title_left': 'Профиль',

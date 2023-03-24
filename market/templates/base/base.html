@@ -141,7 +141,9 @@
                                     </button>
                                     <div class="dropdown-content">
                                         <a class="dropdown-content-a" href="{% url 'account' %}">{% trans "Личный кабинет" %}</a>
-                                        <a class="dropdown-content-a" href="/admin/">{% trans "Административный раздел" %}</a>
+                                        {% if perms.auth_user.is_staff %}
+                                            <a class="dropdown-content-a" href="/admin/">{% trans "Административный раздел" %}</a>
+                                        {% endif %}
                                         <a class="dropdown-content-a" href="{% url 'logout' %}">{% trans "Выход" %}</a>
                                     </div>
                                 </div>
