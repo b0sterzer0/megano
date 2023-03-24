@@ -8,15 +8,18 @@ from django.utils.translation import gettext_lazy as _
 
 class Banner(models.Model):
     """ Модель рекламного баннера на главной странице сайта """
-    title = models.CharField(max_length=50, verbose_name=_('заголовок'))
-    # Цены в рублях (без копеек)
-    price = models.IntegerField(verbose_name=_('цена'))
+    title1 = models.CharField(max_length=50, verbose_name=_('заголовок 1'))
+    title2 = models.CharField(max_length=100, blank=True, verbose_name=_('заголовок 2'))
+    title3 = models.CharField(max_length=100, blank=True, verbose_name=_('заголовок 3'))
+    text1 = models.CharField(max_length=100, blank=True, verbose_name=_('текст 1'))
+    text_link = models.CharField(max_length=100, blank=True, verbose_name=_('текст кнопки со ссылкой'))
+    price = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2, verbose_name=_('цена'))
     image = models.ImageField(upload_to='images/banners', verbose_name=_('изображение'))
     image_alt = models.CharField(max_length=100, verbose_name=_('подсказка'))
-    link = models.CharField(max_length=300, verbose_name='url')
+    link = models.CharField(default='#', max_length=300, verbose_name='url')
 
     def __str__(self):
-        return self.title
+        return f"{self.id} - {self.title1}"
 
     class Meta:
         verbose_name = _('баннер')
@@ -52,8 +55,9 @@ class Category(MPTTModel):
 
     title = models.CharField(max_length=50, unique=True, verbose_name=_('Название'))
     image = models.FileField(verbose_name=_('Картинка категории товаров'), default=None, null=True, blank=True)
+    image_big = models.FileField(verbose_name=_('Большая картинка категории товаров'), default=None, null=True, blank=True)
     image_alt = models.CharField(max_length=20, default=None, null=True, verbose_name=_('Название картинки категории'))
-    slug = models.SlugField(_('Название ссылки'))
+    slug = models.SlugField(verbose_name=_('Название ссылки'))
     parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
                             db_index=True, verbose_name=_('Родительская категория'))
     activity = models.BooleanField(default=False, blank=True, null=True, verbose_name=_('флаг активности'))
