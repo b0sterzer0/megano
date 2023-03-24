@@ -172,14 +172,22 @@
                     {% if key == 't_price' %}
                         <div class="Cart-total">
                           <div class="Cart-block Cart-block_total">
-                            <strong class="Cart-title">Итого:<span class="Cart-price">{{ value }} {% trans 'руб.' %}</span>
+                            <strong class="Cart-title">{% trans 'Итого:' %}<span class="Cart-price">{{ value }} {% trans 'руб.' %}</span>
                             </strong>
                           </div>
-                            {% if pay_method == 'online' %}
-                                <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay_my_card' order_id %}">{% trans 'Оплатить' %}</a>
-                            {% elif pay_method == 'someone' %}
-                                <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay_someone_card' order_id %}">{% trans 'Оплатить' %}</a>
-                            {% endif %}
+                    {% endif %}
+                    {% if key == 'order_dict' %}
+                            {% for key, value in value.items %}
+                                {% if key == 'payment_status' %}
+                                    {% if value == 'Не оплачено' %}
+                                        {% if pay_method == 'online' %}
+                                            <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay_my_card' order_id %}">{% trans 'Оплатить' %}</a>
+                                        {% elif pay_method == 'someone' %}
+                                            <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay_someone_card' order_id %}">{% trans 'Оплатить' %}</a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                           </div>
                         </div>
                     {% endif %}

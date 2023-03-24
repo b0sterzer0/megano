@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django_mptt_admin',
     'mptt',
     'market_app.apps.MarketAppConfig',
-    'perms_app',
     'app_settings.apps.AppSettingsConfig',
     'compare_app',
     'app_login',
@@ -135,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
