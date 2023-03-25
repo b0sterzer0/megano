@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django_mptt_admin',
     'mptt',
     'market_app.apps.MarketAppConfig',
-    'perms_app',
     'app_settings.apps.AppSettingsConfig',
     'compare_app',
     'app_login',

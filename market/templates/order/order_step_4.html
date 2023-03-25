@@ -1,11 +1,12 @@
 {% extends "base/order_base.html" %}
+{% load i18n %}
 
 {% block order_step %}
     <form class="form" action="#" method="post">
         {% csrf_token %}
         <div class="Order-block Order-block_OPEN" id="step4">
             <header class="Section-header Section-header_sm">
-                <h2 class="Section-title">Шаг 4. Подтверждение заказа
+                <h2 class="Section-title">{% trans 'Шаг 4. Подтверждение заказа' %}
                 </h2>
             </header>
             <!--+div.Order.-confirmation-->
@@ -16,7 +17,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == "full_name" %}
                                     <div class="Order-info">
-                                        <div class="Order-infoType">ФИО:
+                                        <div class="Order-infoType">{% trans 'ФИО:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -26,7 +27,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == "phone" %}
                                     <div class="Order-info">
-                                        <div class="Order-infoType">Телефон:
+                                        <div class="Order-infoType">{% trans 'Телефон:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -48,7 +49,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == "delivery" %}
                                     <div class="Order-info Order-info_delivery">
-                                        <div class="Order-infoType">Тип доставки:
+                                        <div class="Order-infoType">{% trans 'Тип доставки:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -58,7 +59,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == "city" %}
                                     <div class="Order-info">
-                                        <div class="Order-infoType">Город:
+                                        <div class="Order-infoType">{% trans 'Город:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -68,7 +69,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == "address" %}
                                     <div class="Order-info">
-                                        <div class="Order-infoType">Адрес:
+                                        <div class="Order-infoType">{% trans 'Адрес:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -78,7 +79,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == "pay" %}
                                     <div class="Order-info Order-info_pay">
-                                        <div class="Order-infoType">Оплата:
+                                        <div class="Order-infoType">{% trans 'Оплата:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -113,7 +114,7 @@
                                 {% for key, value in product.items %}
                                     {% if key == "price" %}
                                         <div class="Cart-block Cart-block_price">
-                                            <div class="Cart-price">{{value}} руб.
+                                            <div class="Cart-price">{{value}} {% trans 'руб.' %}
                                             </div>
                                         </div>
                                     {% endif %}
@@ -122,7 +123,7 @@
                             {% for key, value in product.items %}
                                 {% if key == "qty" %}
                                     <div class="Cart-block Cart-block_row">
-                                        <div class="Cart-block Cart-block_amount">{{value}} шт.
+                                        <div class="Cart-block Cart-block_amount">{{value}} {% trans 'шт.' %}
                                         </div>
                                     </div>
                                 {% endif %}
@@ -132,15 +133,15 @@
 
                     <div class="Cart-total">
                         <div class="Cart-block Cart-block_total">
-                            <strong class="Cart-title">Доставка:
-                            </strong><span class="Cart-price">{{delivery_cost}} руб.</span>
+                            <strong class="Cart-title">{% trans 'Доставка:' %}
+                            </strong><span class="Cart-price">{{delivery_cost}} {% trans 'руб.' %}</span>
                         </div>
                         <div class="Cart-block Cart-block_total">
-                            <strong class="Cart-title">Итого:
-                            </strong><span class="Cart-price">{{t_price}} руб.</span>
+                            <strong class="Cart-title">{% trans 'Итого:' %}
+                            </strong><span class="Cart-price">{{t_price}} {% trans 'руб.' %}</span>
                         </div>
                         <div class="Cart-block">
-                            <button class="btn btn_primary btn_lg" type="submit">Оплатить
+                            <button class="btn btn_primary btn_lg" type="submit">{% trans 'Оплатить' %}
                             </button>
                         </div>
                     </div>

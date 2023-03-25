@@ -5220,6 +5220,7 @@ input[type="radio"] {
     align-items: center;
     margin-bottom: 54px;
     margin-top: 23px;
+    background: url("../img/bg/lineHeaderSection.png") 0 center repeat-x;
 }
 
 .Section-header .Section-title {
@@ -5425,9 +5426,12 @@ input[type="radio"] {
     margin-right: -304px;
 }
 
-.Section_columnRight .Section-content {}
+.Section_columnRight .Section-content {
+    padding-right: 354px;
+}
 
 .Section_columnRight .Section-column {
+    order: 10;
     margin-left: -304px;
 }
 

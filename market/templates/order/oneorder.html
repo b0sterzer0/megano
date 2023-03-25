@@ -1,10 +1,11 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block sub_link %}
 
     <li class="breadcrumbs-item">
-    <a href="{% url 'historyorder' %}">История заказов</a>
+    <a href="{% url 'historyorder' %}">{% trans 'История заказов' %}</a>
 
 {% endblock sub_link %}
 
@@ -25,7 +26,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == 'added_date' %}
                                     <div class="Order-info Order-info_date">
-                                        <div class="Order-infoType">Дата заказа:
+                                        <div class="Order-infoType">{% trans 'Дата заказа:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -35,7 +36,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == 'full_name' %}
                                     <div class="Order-info">
-                                        <div class="Order-infoType">ФИО:
+                                        <div class="Order-infoType">{% trans 'ФИО:' %}:
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -45,7 +46,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == 'phone' %}
                                     <div class="Order-info">
-                                        <div class="Order-infoType">Телефон:
+                                        <div class="Order-infoType">{% trans 'Телефон:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -67,7 +68,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == 'delivery' %}
                                     <div class="Order-info Order-info_delivery">
-                                        <div class="Order-infoType">Тип доставки:
+                                        <div class="Order-infoType">{% trans 'Тип доставки:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -77,7 +78,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == 'city' %}
                                     <div class="Order-info">
-                                        <div class="Order-infoType">Город:
+                                        <div class="Order-infoType">{% trans 'Город:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -87,7 +88,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == 'address' %}
                                     <div class="Order-info">
-                                        <div class="Order-infoType">Адрес:
+                                        <div class="Order-infoType">{% trans 'Адрес:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -97,7 +98,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == 'pay' %}
                                     <div class="Order-info Order-info_pay">
-                                        <div class="Order-infoType">Оплата:
+                                        <div class="Order-infoType">{% trans 'Оплата:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -107,7 +108,7 @@
                             {% for key, value in order_dict.items %}
                                 {% if key == 'payment_status' %}
                                     <div class="Order-info Order-info_status">
-                                        <div class="Order-infoType">Статус:
+                                        <div class="Order-infoType">{% trans 'Статус:' %}
                                         </div>
                                         <div class="Order-infoContent">{{ value }}
                                         </div>
@@ -148,7 +149,7 @@
                                     {% for key, value in product.items %}
                                         {% if key == "price" %}
                                             <div class="Cart-block Cart-block_price">
-                                                <div class="Cart-price">{{value}} руб.
+                                                <div class="Cart-price">{{value}} {% trans 'руб.' %}
                                                 </div>
                                             </div>
                                         {% endif %}
@@ -157,7 +158,7 @@
                                 {% for key, value in product.items %}
                                     {% if key == "qty" %}
                                         <div class="Cart-block Cart-block_row">
-                                            <div class="Cart-block Cart-block_amount">{{value}} шт.
+                                            <div class="Cart-block Cart-block_amount">{{value}} {% trans 'шт.' %}
                                             </div>
                                         </div>
                                     {% endif %}
@@ -171,14 +172,22 @@
                     {% if key == 't_price' %}
                         <div class="Cart-total">
                           <div class="Cart-block Cart-block_total">
-                            <strong class="Cart-title">Итого:<span class="Cart-price">{{ value }} руб.</span>
+                            <strong class="Cart-title">{% trans 'Итого:' %}<span class="Cart-price">{{ value }} {% trans 'руб.' %}</span>
                             </strong>
                           </div>
-                            {% if pay_method == 'online' %}
-                                <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay_my_card' order_id %}">Оплатить</a>
-                            {% elif pay_method == 'someone' %}
-                                <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay_someone_card' order_id %}">Оплатить</a>
-                            {% endif %}
+                    {% endif %}
+                    {% if key == 'order_dict' %}
+                            {% for key, value in value.items %}
+                                {% if key == 'payment_status' %}
+                                    {% if value == 'Не оплачено' %}
+                                        {% if pay_method == 'online' %}
+                                            <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay_my_card' order_id %}">{% trans 'Оплатить' %}</a>
+                                        {% elif pay_method == 'someone' %}
+                                            <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'pay_someone_card' order_id %}">{% trans 'Оплатить' %}</a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                           </div>
                         </div>
                     {% endif %}

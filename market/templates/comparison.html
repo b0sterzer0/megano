@@ -1,6 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 {% load compare_app_templatetags %}
+{% load i18n %}
 
 
 {% block content %}
@@ -17,7 +18,7 @@
                                 {% if elem_key == "image_path" %}
                                     <div class="ProductCard-look">
                                         <div class="ProductCard-photo">
-                                            <img src="/media/{{elem_value}}" alt="Не удалось загрузить изображение" />
+                                            <img src="/media/{{elem_value}}" alt="{% trans 'Не удалось загрузить изображение' %}" />
                                         </div>
                                     </div>
                                 {% endif %}
@@ -31,8 +32,8 @@
                                                 <div class="table">
                                                     <table>
                                                         <tr>
-                                                            <th class="hed">Характеристика</th>
-                                                            <th class="hed">Значение</th>
+                                                            <th class="hed">{% trans 'Характеристика' %}</th>
+                                                            <th class="hed">{% trans 'Значение' %}</th>
                                                         </tr>
                                                         {% for group_name, characteristics_lists in elem_value.items %}
                                                             <tr>
@@ -62,7 +63,7 @@
                                     {% if key == "product_id" %}
                                         <a class="btn btn_primary" href={% url "remove good for compare" product_id=value %}>
                                             <img class="btn-icon" src={% static "assets/img/icons/card/cart_white.svg" %} alt="cart_white.svg" />
-                                            <span class="btn-content">Удалить из сравнения</span>
+                                            <span class="btn-content">{% trans 'Удалить из сравнения' %}</span>
                                         </a>
                                     {% endif %}
                                 {% endfor %}
@@ -75,9 +76,9 @@
 
             </div>
         {% elif isFalseCategory %}
-            <p>Для сравнения необходимы товары из одной категории</p>
+            <p>{% trans 'Для сравнения необходимы товары из одной категории' %}</p>
         {% else %}
-            <p>Товары для сравнения не выбраны</p>
+            <p>{% trans 'Товары для сравнения не выбраны' %}</p>
         {% endif %}
     </div>
 {% endblock %}

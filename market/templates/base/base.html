@@ -181,16 +181,16 @@
                                         {% recursetree categories %}
                                             {# Меню категорий товара #}
                                             <div class="CategoriesButton-link">
-                                                <a href="{{ node.get_absolute_url }}">
+                                                <a href="{% url 'catalog' %}?category={{ node.id }}">
                                                     {% if node.image %}
                                                         <div class="CategoriesButton-icon">
-                                                            <img src="{% static node.image|add_path %}" alt="{{node.image_alt}}"/>
+                                                            <img src="{{ MEDIA_ROOT }}{{ node.image.url }}" alt="{{ node.image_alt }}"/>
                                                         </div>
                                                     {% endif %}
                                                     <span class="CategoriesButton-text">{{ node.title }}</span>
                                                 </a>
                                                 {% if not node.is_leaf_node %}
-                                                    <a class="CategoriesButton-arrow" href="#"></a>
+
                                                     <div class="CategoriesButton-submenu">
                                                         {{ children }}
                                                     </div>
@@ -218,6 +218,9 @@
                 </div>
             </header>
         {% endblock header %}
+
+        {% block header_slider %}
+        {% endblock header_slider%}
 
         {% block middle %}
             <div class="Middle">

@@ -17,7 +17,7 @@ def get_settings_from_json():
         return settings_config
 
 
-def get_setting_from_bd(field_name):
+def get_setting_from_db(field_name):
     """Функция получает значение заданного поля из модели настроек"""
     setting = SiteSettings.objects.first()
     field_value = getattr(setting, field_name)
