@@ -1,10 +1,11 @@
+from typing import Union
+
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.utils.translation import gettext_lazy as _
 
-from typing import Union
-
-from market_app.models import Product, CharacteristicsGroup, Characteristic, CharacteristicValue, ProductImage
+from market_app.models import Product, CharacteristicValue, ProductImage
 
 
 def add_product_in_cache(compare_object: dict, product) -> None:
@@ -30,7 +31,7 @@ def remove_product_from_cache(compare_object: dict, product_id: str) -> Union[No
         if len(cache.get('compare_object')['products_list']) < 1:
             cache.delete('compare_object')
     except ValueError:
-        return HttpResponseBadRequest('Ошибка: не удалось удалить товар из списка товаров для сравнения')
+        return HttpResponseBadRequest(_('Ошибка: не удалось удалить товар из списка товаров для сравнения'))
 
 
 def formation_initial_dict_for_product(product_id: str, compare_dict: dict) -> Union[dict, HttpResponse]:
@@ -44,7 +45,7 @@ def formation_initial_dict_for_product(product_id: str, compare_dict: dict) -> U
                                       'product_id': product.id,
                                       'characteristics': dict()}
     except ObjectDoesNotExist:
-        return HttpResponse('Ошибка: не удалось сформировать словарь для сравнения товаров')
+        return HttpResponse(_('Ошибка: не удалось сформировать словарь для сравнения товаров'))
     return product, compare_dict
 
 

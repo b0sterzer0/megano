@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views import View
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.utils.translation import gettext_lazy as _
 
 from app_login.models import Profile
 from order_app.utils import add_data_in_order_cache, check_cache, prepare_order_data, create_order_object,\
@@ -31,7 +32,7 @@ class OrderStepOneView(LoginRequiredMixin, View):
                        'email': user_email}
 
         except ObjectDoesNotExist:
-            return HttpResponse('Не удалось получить данные пользователя')
+            return HttpResponse(_('Не удалось получить данные пользователя'))
 
         return render(request, 'order/order_step_1.html', context=context)
 

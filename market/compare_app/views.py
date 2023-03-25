@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.cache import cache
+from django.utils.translation import gettext_lazy as _
 
 from market_app.models import Product
 from .services import add_product_in_cache, get_products_for_compare, remove_product_from_cache
@@ -15,7 +16,7 @@ def add_product_for_compare_view(request, product_id: int) -> HttpResponseRedire
         try:
             product = Product.objects.select_related('category').get(id=product_id)
         except ObjectDoesNotExist:
-            return HttpResponseBadRequest('Продукт не найден')
+            return HttpResponseBadRequest(_('Продукт не найден'))
 
         compare_object = cache.get('compare_object')
         if compare_object:
@@ -46,7 +47,7 @@ def remove_good_for_compare_view(request, product_id: int) -> HttpResponseRedire
         remove_product_from_cache(compare_object, product_id)
         return HttpResponseRedirect('/comparison/')
     else:
-        return HttpResponseBadRequest('Ошибка: данной записи в кэше не существует')
+        return HttpResponseBadRequest(_('Ошибка: данной записи в кэше не существует'))
 
 
 def get_products_list_for_compare_view(request) -> render:
@@ -59,6 +60,4 @@ def get_products_list_for_compare_view(request) -> render:
     else:
         products_for_compare_dict = get_products_for_compare(compare_object)
     return render(request, 'comparison.html', context={'products_for_compare_dict': products_for_compare_dict,
-                                                       'isFalseCategory': False,
-                                                       'middle_title_left': 'Сравнение',
-                                                       'middle_title_right': 'Сравнение'})
+                                                       'isFalseCategory': False})
