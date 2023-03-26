@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import RegisterForm, AuthForm
@@ -61,10 +60,8 @@ def register_view(request):
             Profile.objects.create(user=user)
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            group = Group.objects.get(name='customer')
-            user.groups.add(group)
-            transfer_to_auth_cart(request, user)
             user = authenticate(username=username, password=raw_password)
+            transfer_to_auth_cart(request, user)
             login(request, user)
             return HttpResponseRedirect('/')
     else:

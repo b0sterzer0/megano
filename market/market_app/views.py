@@ -47,19 +47,6 @@ class AboutView(TemplateView):
     template_name = 'about.html'
 
 
-class AccountView(TemplateView):
-    """Личный кабинет"""
-    template_name = 'account.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        with HistoryViewOperations(self.request.user) as history:
-            history_view_list = history.products()[:3]
-        context['active_menu'] = 'account'
-        context['history_view_list'] = history_view_list
-        return context
-
-
 class CatalogView(View):
     """Каталог товаров"""
     def get(self, request):
@@ -143,27 +130,6 @@ class ContactsView(TemplateView):
     template_name = 'contacts.html'
 
 
-class HistoryOrderView(TemplateView):
-    """История заказов пользователя"""
-    template_name = 'historyorder.html'
-    extra_context = {
-        'active_menu': 'historyorder',
-    }
-
-
-class HistoryViewView(TemplateView):
-    """История просмотров пользователя"""
-    template_name = 'historyview.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        with HistoryViewOperations(self.request.user) as history:
-            history_view_list = history.products()
-        context['active_menu'] = 'historyview'
-        context['history_view_list'] = history_view_list
-        return context
-
-
 class ProductView(DetailView):
     """Просмотр информации о конкретном товаре"""
     model = Product
@@ -201,22 +167,6 @@ class ProductView(DetailView):
 
             return redirect('product', pk=product.id)
         return render(request, 'product.html', context=self.get_context_data(**kwargs))
-
-
-class ProfileView(TemplateView):
-    """Профиль пользователя"""
-    template_name = 'profile.html'
-    extra_context = {
-        'active_menu': 'profile',
-    }
-
-
-class ProfileAvatarView(TemplateView):
-    """Профиль пользователя с аватаром"""
-    template_name = 'profileAvatar.html'
-    extra_context = {
-        'active_menu': 'profile',
-    }
 
 
 class SaleView(TemplateView):

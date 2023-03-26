@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import TemplateView
+from .utils import active_order, all_user_order
 from app_login.models import Profile, ProfileAvatar
 from app_profile.forms import ProfileForm
 from market_app.product_history import HistoryViewOperations
@@ -11,7 +12,9 @@ import re
 
 class AccountView(TemplateView):
 
-    """Личный кабинет"""
+    """
+    Личный кабинет
+    """
 
     template_name = 'account.html'
 
@@ -19,18 +22,18 @@ class AccountView(TemplateView):
         context = super().get_context_data(**kwargs)
         with HistoryViewOperations(self.request.user) as history:
             history_view_list = history.products()[:3]
-        context['middle_title_left'] = 'Личный кабинет'
-        context['middle_title_right'] = 'Личный кабинет'
         context['active_menu'] = 'account'
         context['history_view_list'] = history_view_list
         context['profile'] = Profile.objects.get(user_id=self.request.user.id)
-
+        context['oneorder'] = active_order(self.request)
         return context
 
 
 class ProfileView(View):
 
-    """Профиль пользователя"""
+    """
+    Профиль пользователя
+    """
 
     def get(self, request):
 
@@ -38,8 +41,6 @@ class ProfileView(View):
 
             profile_form = ProfileForm()
             return render(request, 'profile.html', context={'profile_form': profile_form,
-                                                            'middle_title_left': 'Профиль',
-                                                            'middle_title_right': 'Профиль',
                                                             'active_menu': 'profile'})
         else:
             return HttpResponseRedirect('/login/')
@@ -61,15 +62,13 @@ class ProfileView(View):
                     avatar=profile_avatar
                 )
             elif new_password1 and new_password2:
-                # user = User.objects.get(id=request.user.id)
-                # user.set_password(new_password1)
-                print('Password change')
+                user = User.objects.get(id=request.user.id)
+                user.set_password(new_password1)
 
             for key in profile_form.cleaned_data.keys():
 
                 if key == 'full_name' and len(profile_form.cleaned_data[key]) != 0:
-                    print(profile_form.cleaned_data.get(key))
-                    # Profile.objects.filter(id=request.user.id).update(full_name=profile_form.cleaned_data[key])
+                    Profile.objects.filter(id=request.user.id).update(full_name=profile_form.cleaned_data[key])
 
                 elif key == 'email' and len(profile_form.cleaned_data[key]) != 0:
                     User.objects.filter(id=request.user.id).update(email=profile_form.cleaned_data[key])
@@ -79,27 +78,25 @@ class ProfileView(View):
                     result = re.findall(pattern, profile_form.cleaned_data[key][2:])
                     new_phone = ''.join(result)
                     print(new_phone)
-                    # Profile.objects.filter(id=request.user.id).update(phone=new_phone)
+                    Profile.objects.filter(id=request.user.id).update(phone=new_phone)
 
-            return HttpResponseRedirect('success')
+            return HttpResponseRedirect('success/')
 
         return render(request, 'profile.html', context={'profile_form': profile_form,
-                                                        'middle_title_left': 'Профиль',
-                                                        'middle_title_right': 'Профиль',
                                                         'active_menu': 'profile'})
 
 
 class ProfileSuccessView(View):
-    """Профиль пользователя при успешном изменении"""
+
+    """
+    Профиль пользователя при успешном изменении
+    """
 
     def get(self, request):
 
         profile_form = ProfileForm()
         return render(request, 'profileSuccess.html', context={'profile_form': profile_form,
-                                                        'middle_title_left': 'Профиль',
-                                                        'middle_title_right': 'Профиль',
-                                                        'active_menu': 'profile'})
-
+                                                               'active_menu': 'profile'})
 
     def post(self, request):
 
@@ -118,15 +115,13 @@ class ProfileSuccessView(View):
                     avatar=profile_avatar
                 )
             elif new_password1 and new_password2:
-                # user = User.objects.get(id=request.user.id)
-                # user.set_password(new_password1)
-                print('Password change')
+                user = User.objects.get(id=request.user.id)
+                user.set_password(new_password1)
 
             for key in profile_form.cleaned_data.keys():
 
                 if key == 'full_name' and len(profile_form.cleaned_data[key]) != 0:
-                    print(profile_form.cleaned_data.get(key))
-                    # Profile.objects.filter(id=request.user.id).update(full_name=profile_form.cleaned_data[key])
+                    Profile.objects.filter(id=request.user.id).update(full_name=profile_form.cleaned_data[key])
 
                 elif key == 'email' and len(profile_form.cleaned_data[key]) != 0:
                     User.objects.filter(id=request.user.id).update(email=profile_form.cleaned_data[key])
@@ -135,34 +130,34 @@ class ProfileSuccessView(View):
                     pattern = r"\d+"
                     result = re.findall(pattern, profile_form.cleaned_data[key][2:])
                     new_phone = ''.join(result)
-                    print(new_phone)
-                    # Profile.objects.filter(id=request.user.id).update(phone=new_phone)
+                    Profile.objects.filter(id=request.user.id).update(phone=new_phone)
 
-            return HttpResponseRedirect('success/')
+            return HttpResponseRedirect('/account/edit/success/')
 
-        return render(request, 'profile.html', context={'profile_form': profile_form,
-                                                        'middle_title_left': 'Профиль',
-                                                        'middle_title_right': 'Профиль',
-                                                        'active_menu': 'profile'})
+        return render(request, 'profileSuccess.html', context={'profile_form': profile_form,
+                                                               'active_menu': 'profile'})
 
 
 class HistoryOrderView(TemplateView):
 
-    """История заказов пользователя"""
+    """
+    История заказов пользователя
+    """
 
     template_name = 'historyorder.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['middle_title_left'] = 'История заказов'
-        context['middle_title_right'] = 'История заказов'
         context['active_menu'] = 'historyorder'
+        context['all_order'] = all_user_order(self.request)
         return context
 
 
 class HistoryViewView(TemplateView):
 
-    """История просмотров пользователя"""
+    """
+    История просмотров пользователя
+    """
 
     template_name = 'historyview.html'
 
@@ -170,8 +165,6 @@ class HistoryViewView(TemplateView):
         context = super().get_context_data(**kwargs)
         with HistoryViewOperations(self.request.user) as history:
             history_view_list = history.products()
-        context['middle_title_left'] = 'История просмотра'
-        context['middle_title_right'] = 'История просмотра'
         context['active_menu'] = 'historyview'
         context['history_view_list'] = history_view_list
         return context
