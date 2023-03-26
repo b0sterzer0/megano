@@ -6,7 +6,7 @@
   {# T-O-D-O: Взять информацию из профиля пользователя #}
 
   <div class="Profile">
-{#  #}
+{#  action="/users/{{ user_id }}/edit"#}
       <form class="form Profile-form" method="post" enctype="multipart/form-data">
 
           {% csrf_token %}
@@ -64,8 +64,8 @@
                           <button class="btn btn_success" type="submit">Сохранить
                           </button>
                       </div>
-{#                      <div class="Profile-success">Профиль успешно сохранен#}
-{#                      </div>#}
+                      <div class="Profile-success">Профиль успешно сохранен
+                      </div>
                   </div>
               </div>
           </div>

@@ -7,6 +7,7 @@ class OrderModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('заказчик'))
     json_order_data = models.JSONField(verbose_name=_('данные заказа в формате JSON'))
     activity = models.BooleanField(default=True, verbose_name=_('статус активности'))
+    objects = models.Manager()
 
     class Meta:
         verbose_name = _('заказ')

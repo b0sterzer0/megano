@@ -1,5 +1,4 @@
 import json
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
@@ -9,7 +8,6 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.utils.translation import gettext_lazy as _
-
 from app_login.models import Profile
 from order_app.utils import add_data_in_order_cache, check_cache, prepare_order_data, create_order_object,\
     clear_user_cart

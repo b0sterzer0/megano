@@ -1,29 +1,54 @@
-from decimal import Decimal
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import Group
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from app_cart.models import AnonimCart, AuthShoppingCart
-from .forms import RegisterForm
+from .forms import RegisterForm, AuthForm
 from .models import Profile
+from .utils import transfer_to_auth_cart
 from market_app.models import Category
+from django.views import View
+from django.contrib.auth.views import (LogoutView,
+                                       PasswordResetView,
+                                       PasswordResetDoneView,
+                                       PasswordResetConfirmView,
+                                       PasswordResetCompleteView)
 
 
 categories = Category.objects.all()
 
 
-class LoginUserView(LoginView):
-    template_name = 'login.html'
+class LoginUserView(View):
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['middle_title_left'] = 'Войти на сайт'
-        context['middle_title_right'] = 'Войти на сайт'
-        return context
+    """Аунтификация  пользователя"""
+
+    def get(self, request):
+
+        auth_form = AuthForm()
+        return render(request, 'login.html', context={'auth_form': auth_form,
+                                                      'middle_title_left': 'Войти на сайт',
+                                                      'middle_title_right': 'Войти на сайт'})
+
+    def post(self, request):
+
+        auth_form = AuthForm(request.POST)
+
+        if auth_form.is_valid():
+
+            username = auth_form.cleaned_data['username']
+            password = auth_form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            transfer_to_auth_cart(request, user)
+            login(request, user)
+            return HttpResponseRedirect('/')
+
+        return render(request, 'login.html', context={'auth_form': auth_form,
+                                                      'middle_title_left': 'Войти на сайт',
+                                                      'middle_title_right': 'Войти на сайт'})
 
 
 class LogoutUserView(LogoutView):
+    """
+    Завершение сессии пользователя
+    """
     next_page = '/'
 
 
@@ -35,20 +60,8 @@ def register_view(request):
             Profile.objects.create(user=user)
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            group = Group.objects.get(name='customer')
-            user.groups.add(group)
-            anonim_cart = AnonimCart(request)
-            if len(anonim_cart.get_cart()) != 0:
-                cart = anonim_cart.get_cart()
-                for item in cart.keys():
-                    product = int(item)
-                    AuthShoppingCart.objects.create(
-                        user_id=user.id,
-                        products_id=product,
-                        count=cart[item]['count'],
-                        price=Decimal(cart[item]['price'])
-                    )
             user = authenticate(username=username, password=raw_password)
+            transfer_to_auth_cart(request, user)
             login(request, user)
             return HttpResponseRedirect('/')
     else:

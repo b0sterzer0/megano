@@ -1,5 +1,4 @@
 from decimal import Decimal
-from django.conf import settings
 from django.contrib.auth.models import User
 from market_app.models import Product
 from django.db import models
