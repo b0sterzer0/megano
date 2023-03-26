@@ -86,8 +86,13 @@
                     <div class="Categories-splitProps">
                     </div>
                     <div class="Categories-block Categories-price">
-                      <strong>₽&#32;{{ product.price }}
-                      </strong>
+                      {% if product.sale %}
+                        <strong><s>₽&#32;{{ product.price_old }}</s></strong>
+                        <p><strong>₽&#32;{{ product.price }}0</strong></p>
+                      {% else %}
+                        <strong>₽&#32;{{ product.price }}
+                        </strong>
+                      {% endif %}
                     </div>
 {#                    <div class="Categories-block Amount Amount_product">#}
 {#                      <button class="Amount-remove" type="button">#}
