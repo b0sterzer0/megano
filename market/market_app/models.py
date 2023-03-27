@@ -55,7 +55,8 @@ class Category(MPTTModel):
 
     title = models.CharField(max_length=50, unique=True, verbose_name=_('Название'))
     image = models.FileField(verbose_name=_('Картинка категории товаров'), default=None, null=True, blank=True)
-    image_big = models.FileField(verbose_name=_('Большая картинка категории товаров'), default=None, null=True, blank=True)
+    image_big = models.FileField(verbose_name=_('Большая картинка категории товаров'), default=None, null=True,
+                                 blank=True)
     image_alt = models.CharField(max_length=20, default=None, null=True, verbose_name=_('Название картинки категории'))
     slug = models.SlugField(verbose_name=_('Название ссылки'))
     parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',

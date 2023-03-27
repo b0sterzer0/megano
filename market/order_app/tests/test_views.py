@@ -32,8 +32,7 @@ class OrderStepOneViewTest(TestCase):
         user.save()
         cls.profile = Profile.objects.create(user=user,
                                              full_name=cls.FULL_NAME,
-                                             phone=cls.PHONE,
-                                             avatar=cls.AVATAR)
+                                             phone=cls.PHONE)
 
     def setUp(self) -> None:
         self.client.login(username=self.USERNAME, password=self.PASSWORD)

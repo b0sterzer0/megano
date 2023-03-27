@@ -1,5 +1,4 @@
 import random
-from django.shortcuts import render
 from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator, Page
 from django.db.models import Min
@@ -228,12 +227,9 @@ def get_seller_products(queryset):
                         'seller_id': product.seller.id,
                         'link': product.product.slug,
                         'product':
-                            {'images':
-                                 {'first':
-                                      {'image': {'url': product.product.images.first().image.url},
-                                       'image_alt': product.product.images.first().image_alt
-                                       }
-                                  }
+                            {'images': {'first': {'image': {'url': product.product.images.first().image.url},
+                                                  'image_alt': product.product.images.first().image_alt}
+                                        }
                              },
                         'name': product.product.name,
                         'category': product.product.category,
@@ -256,12 +252,9 @@ def get_seller_products(queryset):
                         'seller_id': product.seller.id,
                         'link': product.product.slug,
                         'product':
-                            {'images':
-                                 {'first':
-                                      {'image': {'url': product.product.images.first().image.url},
-                                       'image_alt': product.product.images.first().image_alt
-                                       }
-                                  }
+                            {'images': {'first': {'image': {'url': product.product.images.first().image.url},
+                                                  'image_alt': product.product.images.first().image_alt}
+                                        }
                              },
                         'name': product.product.name,
                         'category': product.product.category,
@@ -282,12 +275,9 @@ def get_seller_products(queryset):
                         'seller_id': product.seller.id,
                         'link': product.product.slug,
                         'product':
-                            {'images':
-                                 {'first':
-                                      {'image': {'url': product.product.images.first().image.url},
-                                       'image_alt': product.product.images.first().image_alt
-                                       }
-                                  }
+                            {'images': {'first': {'image': {'url': product.product.images.first().image.url},
+                                                  'image_alt': product.product.images.first().image_alt}
+                                        }
                              },
                         'name': product.product.name,
                         'category': product.product.category,
@@ -310,12 +300,9 @@ def get_seller_products(queryset):
                         'seller_id': product.seller.id,
                         'link': product.product.slug,
                         'product':
-                            {'images':
-                                 {'first':
-                                      {'image': {'url': product.product.images.first().image.url},
-                                       'image_alt': product.product.images.first().image_alt
-                                       }
-                                  }
+                            {'images': {'first': {'image': {'url': product.product.images.first().image.url},
+                                                  'image_alt': product.product.images.first().image_alt}
+                                        }
                              },
                         'name': product.product.name,
                         'category': product.product.category,
@@ -380,6 +367,7 @@ def sort_list(cards, sort_by):
     return cards
 
 
+# flake8: noqa: C901
 def get_catalog_products(request):
     """
     :param request:
