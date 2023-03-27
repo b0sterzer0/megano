@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator, Page
 from django.db.models import Min
+
 from app_cart.models import AnonimCart
 from app_login.models import Profile
 from app_settings.utils import get_setting_from_db
@@ -215,7 +216,7 @@ def get_seller_products(queryset):
     for product in queryset:
         values = product.product.values.all()
         for value in values:
-            if value.characteristic.characteristic_name.lower() == 'год':
+            if value.characteristic.characteristic_name.lower() == 'год выпуска':
                 year = int(value.value)
         try:
             if product.discount:
@@ -226,8 +227,14 @@ def get_seller_products(queryset):
                         'seller': product.seller.name,
                         'seller_id': product.seller.id,
                         'link': product.product.slug,
-                        'images': {'first': {'image': {'url': product.product.images.first().image.url}}},
-                        'image_alt': {'first': {'image_alt': product.product.images.first().image_alt}},
+                        'product':
+                            {'images':
+                                 {'first':
+                                      {'image': {'url': product.product.images.first().image.url},
+                                       'image_alt': product.product.images.first().image_alt
+                                       }
+                                  }
+                             },
                         'name': product.product.name,
                         'category': product.product.category,
                         'price': round(float(product.price) * (1 - sale.discount / 100), 2),
@@ -248,8 +255,14 @@ def get_seller_products(queryset):
                         'seller': product.seller.name,
                         'seller_id': product.seller.id,
                         'link': product.product.slug,
-                        'images': {'first': {'image': {'url': product.product.images.first().image.url}}},
-                        'image_alt': {'first': {'image_alt': product.product.images.first().image_alt}},
+                        'product':
+                            {'images':
+                                 {'first':
+                                      {'image': {'url': product.product.images.first().image.url},
+                                       'image_alt': product.product.images.first().image_alt
+                                       }
+                                  }
+                             },
                         'name': product.product.name,
                         'category': product.product.category,
                         'price': product.price,
@@ -268,8 +281,14 @@ def get_seller_products(queryset):
                         'seller': product.seller.name,
                         'seller_id': product.seller.id,
                         'link': product.product.slug,
-                        'images': {'first': {'image': {'url': product.product.images.first().image.url}}},
-                        'image_alt': {'first': {'image_alt': product.product.images.first().image_alt}},
+                        'product':
+                            {'images':
+                                 {'first':
+                                      {'image': {'url': product.product.images.first().image.url},
+                                       'image_alt': product.product.images.first().image_alt
+                                       }
+                                  }
+                             },
                         'name': product.product.name,
                         'category': product.product.category,
                         'price': round(float(product.price) * (1 - sale.discount / 100), 2),
@@ -290,8 +309,14 @@ def get_seller_products(queryset):
                         'seller': product.seller.name,
                         'seller_id': product.seller.id,
                         'link': product.product.slug,
-                        'images': {'first': {'image': {'url': product.product.images.first().image.url}}},
-                        'image_alt': {'first': {'image_alt': product.product.images.first().image_alt}},
+                        'product':
+                            {'images':
+                                 {'first':
+                                      {'image': {'url': product.product.images.first().image.url},
+                                       'image_alt': product.product.images.first().image_alt
+                                       }
+                                  }
+                             },
                         'name': product.product.name,
                         'category': product.product.category,
                         'price': product.price,
