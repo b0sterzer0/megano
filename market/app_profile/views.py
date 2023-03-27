@@ -1,3 +1,4 @@
+from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -64,6 +65,8 @@ class ProfileView(View):
             elif new_password1 and new_password2:
                 user = User.objects.get(id=request.user.id)
                 user.set_password(new_password1)
+                user.save()
+                login(request, user)
 
             for key in profile_form.cleaned_data.keys():
 
@@ -77,7 +80,6 @@ class ProfileView(View):
                     pattern = r"\d+"
                     result = re.findall(pattern, profile_form.cleaned_data[key][2:])
                     new_phone = ''.join(result)
-                    print(new_phone)
                     Profile.objects.filter(id=request.user.id).update(phone=new_phone)
 
             return HttpResponseRedirect('success/')
@@ -117,6 +119,8 @@ class ProfileSuccessView(View):
             elif new_password1 and new_password2:
                 user = User.objects.get(id=request.user.id)
                 user.set_password(new_password1)
+                user.save()
+                login(request, user)
 
             for key in profile_form.cleaned_data.keys():
 
@@ -134,8 +138,8 @@ class ProfileSuccessView(View):
 
             return HttpResponseRedirect('/account/edit/success/')
 
-        return render(request, 'profileSuccess.html', context={'profile_form': profile_form,
-                                                               'active_menu': 'profile'})
+        return render(request, 'profile.html', context={'profile_form': profile_form,
+                                                        'active_menu': 'profile'})
 
 
 class HistoryOrderView(TemplateView):

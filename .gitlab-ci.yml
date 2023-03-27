@@ -29,10 +29,10 @@ flake8:
   script:
     - flake8 market
 
-#linter:
-#  stage: code quality
-#  script:
-#    - pylint --rcfile=.pylintrc market/*
+linter:
+  stage: code quality
+  script:
+    - pylint --rcfile=.pylintrc market/*
 
 test:
   stage: code quality

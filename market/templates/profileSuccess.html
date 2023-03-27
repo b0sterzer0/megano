@@ -1,12 +1,12 @@
 {% extends "base/profile_base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block profile_content %}
 
   {# T-O-D-O: Взять информацию из профиля пользователя #}
 
   <div class="Profile">
-{#  action="/users/{{ user_id }}/edit"#}
       <form class="form Profile-form" method="post" enctype="multipart/form-data">
 
           {% csrf_token %}
@@ -14,57 +14,48 @@
           <div class="row">
               <div class="row-block">
                   <div class="form-group">
-                      <label class="form-label" for="avatar">Аватар
+                      <label class="form-label" for="avatar">{% trans "Аватар" %}
                       </label>
                       <div class="Profile-avatar Profile-avatar_noimg">
                           <div class="Profile-img">
                               <img src="../../media/{{ profile.avatar.avatar }}" alt="#.png"/>
                           </div>
-{#                          <label class="Profile-fileLabel" for="avatar">Выберите аватар#}
-{#                          </label>#}
-
-{#                          <input class="Profile-file form-input" id="avatar" name="avatar" type="file" data-validate="onlyImgAvatar"/>#}
                       </div>
                       <button class="btn btn_success">{{ profile_form.avatar }}</button>
                   </div>
                   <div class="form-group">
-                      <label class="form-label" for="name">ФИО
+                      <label class="form-label" for="name">{% trans "ФИО" %}
                       </label>
-{#                      <input class="form-input" id="name" name="name" type="text" value="{{ profile_form.full_name }}" data-validate="require">#}
                       {{ profile_form.full_name }}
                   </div>
               </div>
               <div class="row-block">
                   <div class="form-group">
-                      <label class="form-label" for="phone">Телефон
+                      <label class="form-label" for="phone">{% trans "Телефон" %}
                       </label>
-{#                      {{ profile_form.phone }}#}
                       <input class="form-input" id="phone" name="phone" type="text" value='{{ profile_form.phone }}'>
                   </div>
                   <div class="form-group">
-                      <label class="form-label" for="mail">E-mail
+                      <label class="form-label" for="mail">{% trans "E-mail" %}
                       </label>
                       {{ profile_form.email }}
-{#                      <input class="form-input" id="mail" name="mail" type="text" value="send@test.test" data-validate="require"/>#}
                   </div>
                   <div class="form-group">
-                      <label class="form-label" for="password">Пароль
+                      <label class="form-label" for="password">{% trans "Пароль" %}
                       </label>
                       {{ profile_form.new_password1 }}
-{#                      <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль"/>#}
                   </div>
                   <div class="form-group">
-                      <label class="form-label" for="passwordReply">Подтверждение пароля
+                      <label class="form-label" for="passwordReply">{% trans "Подтверждение пароля" %}
                       </label>
                       {{ profile_form.new_password2 }}
-{#                      <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>#}
                   </div>
                   <div class="form-group">
                       <div class="Profile-btn">
-                          <button class="btn btn_success" type="submit">Сохранить
+                          <button class="btn btn_success" type="submit">{% trans "Сохранить" %}
                           </button>
                       </div>
-                      <div class="Profile-success">Профиль успешно сохранен
+                      <div class="Profile-success">{% trans "Профиль успешно сохранен" %}
                       </div>
                   </div>
               </div>

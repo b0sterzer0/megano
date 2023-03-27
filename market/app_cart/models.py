@@ -2,14 +2,17 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from market_app.models import Product
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class AnonimCart(object):
+
     """
     Сессионная корзина анонимного пользователя
     """
 
     def __init__(self, request):
+
         """
         Иннициализация сессионной корзины
         """
@@ -67,6 +70,7 @@ class AnonimCart(object):
 
 
 class AuthShoppingCart(models.Model):
+
     """
     Модель пользовательской корзины
     """
@@ -102,6 +106,6 @@ class AuthShoppingCart(models.Model):
     objects = models.Manager()
 
     class Meta:
-        verbose_name_plural = 'Покупательские корзины'
-        verbose_name = 'Покупательская корзина'
+        verbose_name_plural = _('Покупательские корзины')
+        verbose_name = _('Покупательская корзина')
         ordering = ['item_added']

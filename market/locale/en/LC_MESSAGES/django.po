@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-24 18:40+0300\n"
+"POT-Creation-Date: 2023-03-27 11:14+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,6 +45,14 @@ msgstr "payment status"
 #: .\api_for_payment_app\models.py:23
 msgid "статусы оплаты"
 msgstr "payment statuses"
+
+#: .\app_cart\models.py:109
+msgid "Покупательские корзины"
+msgstr "Shopping carts"
+
+#: .\app_cart\models.py:110
+msgid "Покупательская корзина"
+msgstr "Shopping cart"
 
 #: .\app_settings\apps.py:9
 msgid "настройки сайта"
@@ -115,8 +123,6 @@ msgid "стоимость экспресс доставки"
 msgstr "express delivery cost"
 
 #: .\app_settings\models.py:37
-#, fuzzy
-#| msgid "настройка сайта"
 msgid "Настройка сайта"
 msgstr "site settings"
 
@@ -126,6 +132,7 @@ msgid "Настройки сайта"
 msgstr "Site settings"
 
 #: .\app_settings\templates\app_settings\settings.html:30
+#: .\templates\profile.html:55 .\templates\profileSuccess.html:55
 msgid "Сохранить"
 msgstr "Save"
 
@@ -171,30 +178,24 @@ msgid "Ошибка: данной записи в кэше не существу
 msgstr "Error: This cache entry does not exist"
 
 #: .\market_app\models.py:11
-#, fuzzy
-#| msgid "заголовок"
 msgid "заголовок 1"
 msgstr "header"
 
 #: .\market_app\models.py:12
-#, fuzzy
-#| msgid "заголовок"
 msgid "заголовок 2"
 msgstr "header"
 
 #: .\market_app\models.py:13
-#, fuzzy
-#| msgid "заголовок"
 msgid "заголовок 3"
 msgstr "header"
 
 #: .\market_app\models.py:14
 msgid "текст 1"
-msgstr ""
+msgstr "text"
 
 #: .\market_app\models.py:15
 msgid "текст кнопки со ссылкой"
-msgstr ""
+msgstr "button text with link"
 
 #: .\market_app\models.py:16 .\market_app\models.py:169
 msgid "цена"
@@ -240,10 +241,8 @@ msgid "продавцы"
 msgstr "sellers"
 
 #: .\market_app\models.py:56 .\templates\catalog.html:27
-#, fuzzy
-#| msgid "название"
 msgid "Название"
-msgstr "name"
+msgstr "Name"
 
 #: .\market_app\models.py:57
 msgid "Картинка категории товаров"
@@ -403,19 +402,71 @@ msgstr "order data in JSON format"
 msgid "статус активности"
 msgstr "activity status"
 
-#: .\order_app\models.py:12
+#: .\order_app\models.py:13
 msgid "заказ"
 msgstr "order"
 
-#: .\order_app\models.py:13
+#: .\order_app\models.py:14
 msgid "заказы"
 msgstr "orders"
 
-#: .\order_app\views.py:35
+#: .\order_app\views.py:33
 msgid "Не удалось получить данные пользователя"
 msgstr "Failed to get user data"
 
-#: .\templates\base\base.html:126 .\templates\base\base.html:243
+#: .\templates\account.html:15
+msgid "Редактировать профиль"
+msgstr "Edit profile"
+
+#: .\templates\account.html:27 .\templates\historyorder.html:14
+msgid "Заказ"
+msgstr "Order"
+
+#: .\templates\account.html:28 .\templates\historyorder.html:14
+msgid "от"
+msgstr "from"
+
+#: .\templates\account.html:30 .\templates\order\oneorder.html:8
+msgid "История заказов"
+msgstr "History of orders"
+
+#: .\templates\account.html:35 .\templates\historyorder.html:19
+#: .\templates\order\oneorder.html:71 .\templates\order\order_step_4.html:52
+msgid "Тип доставки:"
+msgstr "Delivery method:"
+
+#: .\templates\account.html:41 .\templates\historyorder.html:25
+#: .\templates\order\oneorder.html:101 .\templates\order\order_step_4.html:82
+msgid "Оплата:"
+msgstr "Payment:"
+
+#: .\templates\account.html:47 .\templates\historyorder.html:31
+msgid "Общая стоимость:"
+msgstr "Total cost:"
+
+#: .\templates\account.html:53 .\templates\historyorder.html:37
+#: .\templates\order\oneorder.html:111
+msgid "Статус:"
+msgstr "Status:"
+
+#: .\templates\account.html:64 .\templates\historyorder.html:48
+msgid "Активных заказов пока нет"
+msgstr "There are no active orders yet"
+
+#: .\templates\account.html:71
+msgid "История просмотров"
+msgstr "Browsing history"
+
+#: .\templates\account.html:90
+msgid "Перейти на полный список"
+msgstr "Go to full list"
+
+#: .\templates\account.html:94 .\templates\historyview.html:18
+#: .\templates\historyview.html:30
+msgid "Вы пока не просмотрели ни один товар"
+msgstr "You haven't viewed any products yet"
+
+#: .\templates\base\base.html:126 .\templates\base\base.html:245
 msgid "Главная"
 msgstr "Main"
 
@@ -423,11 +474,11 @@ msgstr "Main"
 msgid "Скидки"
 msgstr "Discounts"
 
-#: .\templates\base\base.html:128 .\templates\base\base.html:245
+#: .\templates\base\base.html:128 .\templates\base\base.html:247
 msgid "Каталог"
 msgstr "Catalog"
 
-#: .\templates\base\base.html:130 .\templates\base\base.html:247
+#: .\templates\base\base.html:130 .\templates\base\base.html:249
 msgid "Сравнение"
 msgstr "Compare"
 
@@ -435,39 +486,39 @@ msgstr "Compare"
 msgid "Личный кабинет"
 msgstr "Personal Area"
 
-#: .\templates\base\base.html:144
+#: .\templates\base\base.html:145
 msgid "Административный раздел"
 msgstr "Administrative section"
 
-#: .\templates\base\base.html:145
+#: .\templates\base\base.html:147
 msgid "Выход"
 msgstr "Log out"
 
-#: .\templates\base\base.html:161
+#: .\templates\base\base.html:163
 msgid "Показать навигацию"
 msgstr "Show navigation"
 
-#: .\templates\base\base.html:173
+#: .\templates\base\base.html:175
 msgid "Все категории"
 msgstr "All categories"
 
-#: .\templates\base\base.html:199
+#: .\templates\base\base.html:201
 msgid "Категории не добавлены"
 msgstr "Categories not added"
 
-#: .\templates\base\base.html:210
+#: .\templates\base\base.html:212
 msgid "Поиск"
 msgstr "Search"
 
-#: .\templates\base\base.html:240
+#: .\templates\base\base.html:242
 msgid "Навигация"
 msgstr "Navigation"
 
-#: .\templates\base\base.html:249
+#: .\templates\base\base.html:251
 msgid "Профиль"
 msgstr "Profile"
 
-#: .\templates\base\base.html:255
+#: .\templates\base\base.html:257
 msgid "Контакты"
 msgstr "Contacts"
 
@@ -491,8 +542,8 @@ msgstr "Step 3. Payment method"
 msgid "Шаг 4. Подтверждение заказа"
 msgstr "Step 4. Confirmation of an order"
 
-#: .\templates\base\payment_base.html:19 .\templates\order\oneorder.html:179
-#: .\templates\order\oneorder.html:181 .\templates\order\order_step_4.html:144
+#: .\templates\base\payment_base.html:19 .\templates\order\oneorder.html:184
+#: .\templates\order\oneorder.html:186 .\templates\order\order_step_4.html:144
 msgid "Оплатить"
 msgstr "Pay"
 
@@ -519,7 +570,7 @@ msgstr "Price"
 
 #: .\templates\catalog.html:31
 msgid "Продавец"
-msgstr "seller"
+msgstr "Seller"
 
 #: .\templates\catalog.html:41
 msgid "Только товары в наличии"
@@ -617,13 +668,35 @@ msgstr "Popular products"
 msgid "от "
 msgstr "from "
 
-#: .\templates\order\oneorder.html:8
-msgid "История заказов"
-msgstr "History of orders"
+#: .\templates\login.html:9
+msgid "Вход"
+msgstr "Login"
+
+#: .\templates\login.html:16
+msgid "Имя пользователя"
+msgstr "Username"
+
+#: .\templates\login.html:21 .\templates\profile.html:44
+#: .\templates\profileSuccess.html:44
+msgid "Пароль"
+msgstr "Password"
+
+#: .\templates\login.html:27
+msgid "Войти"
+msgstr "Sing in"
+
+#: .\templates\login.html:29
+msgid "Забыли пароль?"
+msgstr "Forgot password?"
+
+#: .\templates\login.html:31 .\templates\registration.html:9
+#: .\templates\registration.html:15
+msgid "Регистрация"
+msgstr "Registration"
 
 #: .\templates\order\oneorder.html:29
 msgid "Дата заказа:"
-msgstr "Order date"
+msgstr "Order date:"
 
 #: .\templates\order\oneorder.html:39 .\templates\order\order_step_4.html:20
 msgid "ФИО:"
@@ -633,10 +706,6 @@ msgstr "Full name:"
 msgid "Телефон:"
 msgstr "Phone number:"
 
-#: .\templates\order\oneorder.html:71 .\templates\order\order_step_4.html:52
-msgid "Тип доставки:"
-msgstr "Delivery method:"
-
 #: .\templates\order\oneorder.html:81 .\templates\order\order_step_4.html:62
 msgid "Город:"
 msgstr "City:"
@@ -644,14 +713,6 @@ msgstr "City:"
 #: .\templates\order\oneorder.html:91 .\templates\order\order_step_4.html:72
 msgid "Адрес:"
 msgstr "Address:"
-
-#: .\templates\order\oneorder.html:101 .\templates\order\order_step_4.html:82
-msgid "Оплата:"
-msgstr "Payment:"
-
-#: .\templates\order\oneorder.html:111
-msgid "Статус:"
-msgstr "Status:"
 
 #: .\templates\order\oneorder.html:152 .\templates\order\oneorder.html:175
 #: .\templates\order\order_step_4.html:117
@@ -664,7 +725,8 @@ msgstr "rub."
 msgid "шт."
 msgstr "items"
 
-#: .\templates\order\order_step_1.html:15
+#: .\templates\order\order_step_1.html:15 .\templates\profile.html:27
+#: .\templates\profileSuccess.html:27
 msgid "ФИО"
 msgstr "Full name"
 
@@ -672,7 +734,8 @@ msgstr "Full name"
 msgid "Иванов Иван Иванович"
 msgstr "Joe Brown"
 
-#: .\templates\order\order_step_1.html:20
+#: .\templates\order\order_step_1.html:20 .\templates\profile.html:34
+#: .\templates\profileSuccess.html:34
 msgid "Телефон"
 msgstr "Phone number"
 
@@ -715,10 +778,8 @@ msgid "Доставка:"
 msgstr "Delivery:"
 
 #: .\templates\payment\payment.html:7 .\templates\payment\paymentsomeone.html:7
-#, fuzzy
-#| msgid "номер карты"
 msgid "Номер карты"
-msgstr "card number"
+msgstr "Card number"
 
 #: .\templates\payment\paymentsomeone.html:11
 msgid "Сгенерировать случайный счет"
@@ -740,33 +801,132 @@ msgstr "Additional info"
 msgid "Отзывы"
 msgstr "Reviews"
 
-#: .\templates\product.html:102
+#: .\templates\product.html:107
 msgid "Добавить в корзину"
 msgstr "Add to cart"
 
-#: .\templates\product.html:179
+#: .\templates\product.html:184
 msgid "Написать отзыв"
 msgstr "Make review"
 
-#: .\templates\product.html:186
+#: .\templates\product.html:191
 msgid "Ваш отзыв"
 msgstr "Your review"
 
-#: .\templates\product.html:190
+#: .\templates\product.html:195
 msgid "Отправить отзыв"
 msgstr "Send a review"
 
-#: .\templates\product.html:197
+#: .\templates\product.html:202
 msgid "Вы уже оставляли отзыв на данный товар"
 msgstr "You've already left a review"
 
-#: .\templates\product.html:202
+#: .\templates\product.html:207
 msgid "Чтобы оставить отзыв, вам нужно"
 msgstr "If you want to auth you need"
 
-#: .\templates\product.html:203
+#: .\templates\product.html:208
 msgid "авторизоваться"
 msgstr "auth"
+
+#: .\templates\profile.html:17 .\templates\profileSuccess.html:17
+msgid "Аватар"
+msgstr "Avatar"
+
+#: .\templates\profile.html:39 .\templates\profileSuccess.html:39
+msgid "E-mail"
+msgstr "E-mail"
+
+#: .\templates\profile.html:49 .\templates\profileSuccess.html:49
+msgid "Подтверждение пароля"
+msgstr "Password confirmation"
+
+#: .\templates\profileSuccess.html:58
+msgid "Профиль успешно сохранен"
+msgstr "Profile saved successfully"
+
+#: .\templates\registration.html:22
+msgid "Зарегистрироваться"
+msgstr "Register"
+
+#: .\templates\registration\password_reset.html:8
+#: .\templates\registration\password_reset_complete.html:8
+#: .\templates\registration\password_reset_confirm.html:8
+#: .\templates\registration\password_reset_done.html:8
+msgid "Восстановление пароля"
+msgstr "Password recovery"
+
+#: .\templates\registration\password_reset.html:14
+#: .\templates\registration\password_reset_done.html:14
+msgid "Восстановление пароля (1/2)"
+msgstr "Password recovery (1/2)"
+
+#: .\templates\registration\password_reset.html:15
+msgid ""
+"Для восстановления пароля введите адрес электронной почты, на которую "
+"зарегистрирована учетная запись"
+msgstr ""
+"To reset your password, please enter the email address you registered your "
+"account with"
+
+#: .\templates\registration\password_reset.html:25
+msgid "Получить проверочный код"
+msgstr "Get verification code"
+
+#: .\templates\registration\password_reset_complete.html:14
+#: .\templates\registration\password_reset_confirm.html:15
+#: .\templates\registration\password_reset_confirm.html:30
+msgid "Восстановление пароля (2/2)"
+msgstr "Password recovery (2/2)"
+
+#: .\templates\registration\password_reset_complete.html:15
+msgid "Ваш пароль установлен. Вы можете продолжить и "
+msgstr "Your password has been set. You can continue and"
+
+#: .\templates\registration\password_reset_complete.html:16
+msgid "войти"
+msgstr "sign in"
+
+#: .\templates\registration\password_reset_complete.html:17
+msgid "прямо сейчас."
+msgstr "right now."
+
+#: .\templates\registration\password_reset_confirm.html:16
+msgid "Придумайте новый пароль для учетной записи"
+msgstr "Create a new account password"
+
+#: .\templates\registration\password_reset_confirm.html:23
+msgid "Сохранить пароль"
+msgstr "Save password"
+
+#: .\templates\registration\password_reset_confirm.html:31
+msgid ""
+"Ссылка для сброса пароля недействительна, возможно, потому, что она уже "
+"использовалась."
+msgstr ""
+"The password reset link is invalid, possibly because it has already been "
+"used."
+
+#: .\templates\registration\password_reset_confirm.html:32
+msgid "Пожалуйста, запросите сброс нового пароля."
+msgstr "Please request a new password reset."
+
+#: .\templates\registration\password_reset_done.html:15
+msgid ""
+"Мы отправили вам инструкции по установке пароля, если существует учетная "
+"запись с указанным вами адресом электронной почты. Вы должны получить их в "
+"ближайшее время."
+msgstr ""
+"We have sent you instructions to set a password if an account existswith the "
+"email address you provided. You should receive themshortly."
+
+#: .\templates\registration\password_reset_done.html:16
+msgid ""
+"Если вы не получили электронное письмо, убедитесь, что вы ввели адрес, "
+"который вы указали при регистрации, и проверьте папку со спамом."
+msgstr ""
+"If you didn't receive an email, please make sure you entered the email "
+"addressyou provided during registration and check your spam folder."
 
 #: .\templates\seller.html:14
 msgid "О магазине"

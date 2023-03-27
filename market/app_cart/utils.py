@@ -3,6 +3,11 @@ from app_login.models import Profile
 
 
 def delete_product_auth_user(request, product_id):
+
+    """
+    Функция для удаления одного продукта из корзины пользователя
+    """
+
     current_product = AuthShoppingCart.objects.filter(user_id=request.user.id, products_id=product_id)
     current_product.delete()
 
