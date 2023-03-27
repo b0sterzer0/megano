@@ -15,5 +15,5 @@
   "min_amount_for_free_delivery":  2000,
   "express_delivery_cost": 500,
   "num_reviews_per_page": 2,
-  "num_products_per_page": 30
+  "num_products_per_page": 8
 }

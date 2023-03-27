@@ -27,13 +27,12 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = Product.objects.annotate(min_price=Min('sellers_products__price'))
         context['selected_categories'] = get_selected_categories()
         context['slider_banners'] = get_banners_list()
         # необходимое количество можно взять из конфига
-        context['popular_list'] = get_catalog_product()
-        context['hot_offer_list'] = products
-        context['limited_edition_list'] = products
+        context['popular_list'] = get_catalog_product()[:8]
+        context['hot_offer_list'] = get_catalog_product()[:8]
+        context['limited_edition_list'] = get_catalog_product()[:8]
         context['product_in_cart'] = get_count_product_in_cart(self.request)
         return context
 
