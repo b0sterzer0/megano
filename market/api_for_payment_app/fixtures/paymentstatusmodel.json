@@ -30,5 +30,21 @@
     "status_code": "S200",
     "status_description": "Оплата прошла успешно"
   }
+},
+{
+  "model": "api_for_payment_app.paymentstatusmodel",
+  "pk": 5,
+  "fields": {
+    "status_code": "S204",
+    "status_description": "Ошибка: не удалось связаться с банком"
+  }
+},
+{
+  "model": "api_for_payment_app.paymentstatusmodel",
+  "pk": 6,
+  "fields": {
+    "status_code": "S001",
+    "status_description": "Ошибка: ваш заказ не найден"
+  }
 }
 ]
