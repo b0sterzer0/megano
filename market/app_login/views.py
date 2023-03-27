@@ -23,9 +23,7 @@ class LoginUserView(View):
     def get(self, request):
 
         auth_form = AuthForm()
-        return render(request, 'login.html', context={'auth_form': auth_form,
-                                                      'middle_title_left': 'Войти на сайт',
-                                                      'middle_title_right': 'Войти на сайт'})
+        return render(request, 'login.html', context={'auth_form': auth_form})
 
     def post(self, request):
 
@@ -40,15 +38,15 @@ class LoginUserView(View):
             login(request, user)
             return HttpResponseRedirect('/')
 
-        return render(request, 'login.html', context={'auth_form': auth_form,
-                                                      'middle_title_left': 'Войти на сайт',
-                                                      'middle_title_right': 'Войти на сайт'})
+        return render(request, 'login.html', context={'auth_form': auth_form})
 
 
 class LogoutUserView(LogoutView):
+
     """
     Завершение сессии пользователя
     """
+
     next_page = '/'
 
 
@@ -57,7 +55,7 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            Profile.objects.create(user=user)
+            Profile.objects.create(user=user, full_name=f'user_{user.id}')
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
@@ -67,46 +65,40 @@ def register_view(request):
     else:
         form = RegisterForm()
     return render(request, 'registration.html', {'form': form,
-                                                 'categories': categories,
-                                                 'middle_title_left': 'зарегистрироваться',
-                                                 'middle_title_right': 'зарегистрироваться'})
+                                                 'categories': categories})
 
 
 class UserResetPasswordView(PasswordResetView):
-    template_name = 'registration/password_reset.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['middle_title_left'] = 'Восстановление пароля'
-        context['middle_title_right'] = 'Восстановление пароля'
-        return context
+    """
+    Начальный этап сброса пароля пользователя
+    """
+
+    template_name = 'registration/password_reset.html'
 
 
 class UserPasswordResetDoneView(PasswordResetDoneView):
-    template_name = 'registration/password_reset_done.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['middle_title_left'] = 'Восстановление пароля'
-        context['middle_title_right'] = 'Восстановление пароля'
-        return context
+    """
+    Успешный сброс пароля пользователя
+    """
+
+    template_name = 'registration/password_reset_done.html'
 
 
 class UserPasswordResetConfirmView(PasswordResetConfirmView):
-    template_name = 'registration/password_reset_confirm.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['middle_title_left'] = 'Восстановление пароля'
-        context['middle_title_right'] = 'Восстановление пароля'
-        return context
+    """
+    Ввод нового пороля и подтверждение для сброса пароля пользователя
+    """
+
+    template_name = 'registration/password_reset_confirm.html'
 
 
 class UserPasswordResetCompleteView(PasswordResetCompleteView):
-    template_name = 'registration/password_reset_complete.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['middle_title_left'] = 'Восстановление пароля'
-        context['middle_title_right'] = 'Восстановление пароля'
-        return context
+    """
+    Завершение сброса пароля и возможность залогиниться с новым паролем
+    """
+
+    template_name = 'registration/password_reset_complete.html'

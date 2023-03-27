@@ -63,8 +63,6 @@ class ShoppingCartView(View):
 
         return render(request, 'cart.html', {'context': shopping_cart,
                                              'total_price': total,
-                                             'middle_title_left': 'корзина',
-                                             'middle_title_right': 'корзина',
                                              'product_in_cart': count_in_cart})
 
 

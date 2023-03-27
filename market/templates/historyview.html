@@ -1,5 +1,6 @@
 {% extends "base/profile_base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block profile_content %}
 
@@ -14,16 +15,20 @@
           </div>
       {% endfor %}
     {% else %}
-        <span>Вы пока не просмотрели ни один товар</span>
+        <span>{% trans "Вы пока не просмотрели ни один товар" %}</span>
     {% endif %}
 
-    {% for card in history_view_list|slice:"18:" %}
+    {% if history_view_list %}
+      {% for card in history_view_list|slice:"18:" %}
 
-      <div class="Card hide_1450">
-        {% include 'include/card.html' %}
-      </div>
+        <div class="Card hide_1450">
+          {% include 'include/card.html' %}
+        </div>
 
-    {% endfor %}
+      {% endfor %}
+    {% else %}
+        <span>{% trans "Вы пока не просмотрели ни один товар" %}</span>
+    {% endif %}
 
   </div>
 

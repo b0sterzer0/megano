@@ -12,9 +12,9 @@ def active_order(request):
         for current_order in order:
             current_order_id = current_order.id
             order_data = json.loads(current_order.json_order_data)
-            current_dict_order = {'order_id': current_order_id}
+            current_dict_order = {'order_id': current_order_id,
+                                  'total_price': order_data['t_price']}
             current_dict_order.update(order_data['order_dict'])
-            current_dict_order.update(order_data['t_price'])
             all_active_order.append(current_dict_order)
     elif len(order) == 1:
         order = OrderModel.objects.get(user_id=request.user.id, activity=True)
